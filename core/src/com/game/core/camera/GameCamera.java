@@ -10,7 +10,9 @@ import com.game.core.util.constants.ScreenConstants;
  */
 public class GameCamera {
 
-	private static final int CAMERA_OFFSET_MAX = ScreenConstants.NB_HORIZONTAL_TILES/2;
+	private float CAMERA_OFFSET_MAX = (float)(ScreenConstants.NB_HORIZONTAL_TILES/2);
+	
+	private float CAMERA_OFFSET_MIN;
 
 	private OrthographicCamera camera;
 	
@@ -35,7 +37,8 @@ public class GameCamera {
 		this.scrollableVertically = mapDimensions.y > ScreenConstants.NB_VERTICAL_TILES;
 		this.followedSprite = followedSprite;						
 		this.initialY = camera.viewportHeight / 2f;
-		this.mapDimensions = mapDimensions;
+		this.mapDimensions = mapDimensions;	
+		this.CAMERA_OFFSET_MIN = this.CAMERA_OFFSET_MAX + (float)(this.followedSprite.getWidth()/2) - (float)(this.followedSprite.getOffset().x/2);
 	}
 	
 	public OrthographicCamera getCamera() {
@@ -69,7 +72,7 @@ public class GameCamera {
 					cameraOffset = cameraOffset + move;
 				}
 			}
-			if (followedSprite.getX() < camera.position.x - CAMERA_OFFSET_MAX) {					
+			if (followedSprite.getX() < camera.position.x - CAMERA_OFFSET_MIN) {					
 				followedSprite.setX(followedSprite.getOldPosition().x);
 				followedSprite.getAcceleration().x = 0;
 				cameraOffset = cameraOffset - move;

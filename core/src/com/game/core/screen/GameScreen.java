@@ -3,11 +3,13 @@ package com.game.core.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -69,6 +71,8 @@ public class GameScreen implements Screen  {
 	private boolean debugShowFps = false;
 	
 	private Player player;
+	
+	private boolean canJump;
 				
 	public GameScreen() {
 										
@@ -184,11 +188,14 @@ public class GameScreen implements Screen  {
 		}
 								
 		if (Gdx.input.isKeyPressed(KEY_UP)) {
-			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING) {
+			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING && canJump) {
 				player.setOnFloor(false);
 				player.setState(SpriteMoveEnum.JUMPING);
-				player.getAcceleration().y = 0.30f;
+				player.getAcceleration().y = 0.20f;				
 			}			
+			canJump = false;
+		} else {
+			canJump = true;
 		}
 		
 		handleDebugKeys();
@@ -215,7 +222,7 @@ public class GameScreen implements Screen  {
 		if (debugShowText) {
 			
 			int x = 10;
-			int y = 500;
+			int y = ScreenConstants.HEIGHT-10;
 			
 			spriteBatch.begin();
 			debugFont.draw(spriteBatch, "mario.position=" + String.format("%.3f", player.getX()) + " | " + String.format("%.3f", player.getY()), x, y);
@@ -230,7 +237,30 @@ public class GameScreen implements Screen  {
 			y = y -20;			
 			debugFont.draw(spriteBatch, "move vector: " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
 			spriteBatch.end();
-		}				
+		}
+		
+		if (debugShowFps) {
+			spriteBatch.begin();
+			debugFont.draw(spriteBatch, Integer.toString(Gdx.graphics.getFramesPerSecond()), ScreenConstants.WIDTH - 20, ScreenConstants.HEIGHT-10);
+			spriteBatch.end();
+		}
+
+		if (debugShowBounds) {
+			// Green rectangle around Mario
+			batch = tilemapRenderer.getBatch();
+			batch.begin();
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			
+			shapeRenderer.setProjectionMatrix(camera.getCamera().combined);
+			shapeRenderer.begin(ShapeType.Filled);
+			shapeRenderer.setColor(new Color(0, 1, 0, 0.5f));
+			shapeRenderer.rect(player.getX() + player.getOffset().x, player.getY(), player.getWidth(), player.getHeight());
+			
+			shapeRenderer.end();
+			Gdx.gl.glDisable(GL20.GL_BLEND);
+			batch.end();
+		}
 	}
 	
 	@Override

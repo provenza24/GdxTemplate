@@ -44,8 +44,8 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	protected SpriteMoveEnum state;	
 		
-	/** Physics */
-	protected float GRAVITY_COEF = 0.018f;
+	/** Physics : default is 0.018f */
+	protected float GRAVITY_COEF = 0.01f;
 	
 	protected Vector2 acceleration;
 

@@ -14,6 +14,9 @@ public class DesktopLauncher {
 		config.width = ScreenConstants.WIDTH;
 		config.height = ScreenConstants.HEIGHT;
 		
+		config.resizable = false;
+		config.title = "Libgdx 2D Demo";
+		
 		System.out.println("Starting game with size "+config.width+"x"+config.height);
 					
 		new LwjglApplication(GameManager.getGameManager(), config);

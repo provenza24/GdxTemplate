@@ -31,6 +31,10 @@ public class Player extends AbstractTileObjectSprite {
 	private Animation runningRightAnimation;
 	
 	private Animation runningLeftAnimation;
+	
+	private Animation jumpLeftAnimation;
+	
+	private Animation jumpRightAnimation;
 
 	public Player(MapObject mapObject) {
 		super(mapObject, new Vector2(0.2f,0.2f));				
@@ -52,6 +56,8 @@ public class Player extends AbstractTileObjectSprite {
 		idleAnimationLeft = AnimationBuilder.getInstance().build(textureRegions, new int[]{5}, 5, 1f);
 		runningRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{1,1,2,3,4,4,3,2}, 5, 0.075f);
 		runningLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{6,6,7,8,9,9,8,7}, 5, 0.075f);
+		jumpRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{1}, 5, 0.075f);
+		jumpLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{6}, 5, 0.075f);
 		currentAnimation = idleAnimationRight;
 	}
 
@@ -84,7 +90,7 @@ public class Player extends AbstractTileObjectSprite {
 		stateTime = stateTime > 10 ? 0 : stateTime + delta;
 
 		if (!onFloor) {
-			currentAnimation = direction == DirectionEnum.RIGHT ? runningRightAnimation : runningLeftAnimation;
+			currentAnimation = direction == DirectionEnum.RIGHT ? jumpRightAnimation : jumpLeftAnimation;
 		} else {
 			float xMove = getX() - getOldPosition().x;
 			if (xMove == 0) {	
