@@ -1,0 +1,277 @@
+package com.game.core.screen;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
+import com.game.core.background.IScrollingBackground;
+import com.game.core.background.impl.LeftScrollingBackground;
+import com.game.core.camera.GameCamera;
+import com.game.core.sprite.AbstractSprite;
+import com.game.core.sprite.impl.player.Player;
+import com.game.core.tilemap.TmxMap;
+import com.game.core.util.constants.KeysConstants;
+import com.game.core.util.constants.ScreenConstants;
+import com.game.core.util.enums.BackgroundTypeEnum;
+import com.game.core.util.enums.DirectionEnum;
+import com.game.core.util.enums.SpriteMoveEnum;
+
+public class GameScreen implements Screen  {
+			
+	/** KEYS CONSTANTS */
+	private static final int KEY_LEFT =  KeysConstants.KEY_LEFT;
+	
+	private static final int KEY_RIGHT =  KeysConstants.KEY_RIGHT;
+			
+	private static final int KEY_DOWN = KeysConstants.KEY_DOWN;
+	
+	private static final int KEY_UP = KeysConstants.KEY_UP;
+	
+	/** The stage with actors */
+	private Stage stage;
+	
+	/** Camera following Mario */
+	private GameCamera camera;
+	
+	/** Tilemap loaded from a TMX file */
+	private TmxMap tilemap;
+
+	/** Tilemap renderer: render tilemap and all sprites owned by the tilemap */
+	private OrthogonalTiledMapRenderer tilemapRenderer;
+
+	/** Sprite batch used to render fixed sprites (Status bar sprites) and text (debug, end scene text) */
+	private SpriteBatch spriteBatch;
+	
+	/** Used in debug mode to draw bounding boxes of sprites */
+	private ShapeRenderer shapeRenderer;
+	
+	/** Main batch used to draw elements */
+	private Batch batch;
+
+	/** Backgrounds displayed un game */
+	private Array<IScrollingBackground> backgrounds;
+					
+	/** Debug font */
+	private BitmapFont debugFont;
+	
+	/** Debug parameters */
+	private boolean debugShowText = false;
+
+	private boolean debugShowBounds = false;
+
+	private boolean debugShowFps = false;
+	
+	private Player player;
+				
+	public GameScreen() {
+										
+		// Initialize fonts
+		debugFont = new BitmapFont();		
+		debugFont.setColor(1, 1, 1, 1);		
+		
+		// Sprite batch, used to draw background and debug text 
+		spriteBatch = new SpriteBatch();
+	
+		// Shape renderer, used to draw rectangles around sprites in debug mode
+		shapeRenderer = new ShapeRenderer();
+				
+		// Load the tilemap, set the unit scale to 1/32 (1 unit == 32 pixels)
+		tilemap = new TmxMap("tilemaps/tilemap.tmx");
+		// Renderer used to draw tilemap
+		tilemapRenderer = new OrthogonalTiledMapRenderer(tilemap.getMap(), 1 / ScreenConstants.MAP_UNIT_PIXELS);				
+
+		player = tilemap.getPlayer();
+		
+		// create an orthographic camera, shows us 16x12 units of the world
+		camera = new GameCamera(player, tilemap.getDimensions());
+		camera.setCameraOffset(player.getX());
+				
+		//cameraSpriteBatch.setProjectionMatrix(camera.getCamera().combined);
+		
+		// Initialize backgrounds, which are defined in each TMX map with Tiled
+		backgrounds = new Array<IScrollingBackground>();
+		int i=0;
+		for (BackgroundTypeEnum backgroundTypeEnum : tilemap.getBackgroundTypesEnum()) {
+			IScrollingBackground scrollingBackground = new LeftScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 16 : 24);
+			backgrounds.add(scrollingBackground);			
+			i++;
+		}
+		
+		// Initialize stage, the stage is used for sprites actions
+		stage = new Stage();																	
+	}
+		
+	@Override
+	public void render(float delta) {
+				
+		AbstractSprite.updateCommonStateTime(delta);
+		handleInput();
+		player.update(tilemap, camera.getCamera(), delta);
+		// Draw the scene
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			
+		// Move camera
+		camera.moveCamera();
+		
+		// Move backgrounds
+		if (backgrounds!=null && backgrounds.size>0) {
+			backgrounds.get(0).update();
+			backgrounds.get(0).render();
+			if (backgrounds.size>1) {
+				backgrounds.get(1).update();
+				backgrounds.get(1).render();
+			}
+		}							
+		// Render tilemap
+		tilemapRenderer.setView(camera.getCamera());
+		tilemapRenderer.render();		
+		
+		// Render Mario		
+		player.render(tilemapRenderer.getBatch());		
+		
+		// Draw stage for moving actors		
+		stage.draw();
+		
+		// Render debug mode
+				renderDebugMode();
+	}
+				
+	
+	private void handleInput() {
+									
+		if (Gdx.input.isKeyPressed(KEY_RIGHT)) {
+			if (player.getDirection() == DirectionEnum.LEFT) {
+				// Sliding on the right				
+				player.changeState(SpriteMoveEnum.SLIDING_LEFT);
+				player.decelerate(1.5f);
+				if (player.getAcceleration().x <= 0) {
+					// Not sliding anymore
+					player.getAcceleration().x = 0;
+					player.setDirection(DirectionEnum.RIGHT);						
+				}							
+			} else {
+				// Running right
+				player.accelerate();
+				player.setDirection(DirectionEnum.RIGHT);
+				player.changeState(SpriteMoveEnum.RUNNING_RIGHT);
+			}
+		} else if (Gdx.input.isKeyPressed(KEY_LEFT)) {
+			if (player.getDirection() == DirectionEnum.RIGHT) {
+				// Sliding on the left	
+				player.changeState(SpriteMoveEnum.SLIDING_RIGHT);
+				player.decelerate(1.5f);
+				if (player.getAcceleration().x <= 0) {
+					// Not sliding anymore
+					player.getAcceleration().x = 0;
+					player.setDirection(DirectionEnum.LEFT);
+				}							
+			} else {
+				// Running left, not crouched
+				player.accelerate();
+				player.setDirection(DirectionEnum.LEFT);
+				player.changeState(SpriteMoveEnum.RUNNING_LEFT);
+			} 
+		} else {
+			player.decelerate(1);			
+		}
+								
+		if (Gdx.input.isKeyPressed(KEY_UP)) {
+			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING) {
+				player.setOnFloor(false);
+				player.setState(SpriteMoveEnum.JUMPING);
+				player.getAcceleration().y = 0.30f;
+			}			
+		}
+		
+		handleDebugKeys();
+	}
+
+	private void handleDebugKeys() {
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F1)) {
+			debugShowFps = !debugShowFps;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F2)) {
+			debugShowText = !debugShowText;
+		}						
+
+		if (Gdx.input.isKeyJustPressed(Keys.F3)) {
+			debugShowBounds = !debugShowBounds;
+		}
+
+	}
+		
+	private void renderDebugMode() {
+						
+		if (debugShowText) {
+			
+			int x = 10;
+			int y = 500;
+			
+			spriteBatch.begin();
+			debugFont.draw(spriteBatch, "mario.position=" + String.format("%.3f", player.getX()) + " | " + String.format("%.3f", player.getY()), x, y);
+			y = y -20;
+			debugFont.draw(spriteBatch, "mario.acceleration=" + String.format("%.1f", player.getAcceleration().x) + " | " + String.format("%.1f", player.getAcceleration().y), x, y);
+			y = y -20;
+			debugFont.draw(spriteBatch, "state=" + player.getState().toString(), x, y);
+			y = y -20;
+			debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
+			y = y -20;			
+			debugFont.draw(spriteBatch, "isOnFloor=" + player.isOnFloor(), x, y);
+			y = y -20;			
+			debugFont.draw(spriteBatch, "move vector: " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
+			spriteBatch.end();
+		}				
+	}
+	
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispose() {		
+		stage.dispose();
+		tilemap.dispose();		
+		tilemapRenderer.dispose();		
+		shapeRenderer.dispose();		
+		debugFont.dispose();
+		spriteBatch.dispose();					
+	}
+
+}
