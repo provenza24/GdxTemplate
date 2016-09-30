@@ -2,6 +2,7 @@ package com.game.core.collision.tilemap.impl;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
 import com.game.core.collision.tilemap.AbstractTilemapCollisionHandler;
@@ -110,13 +111,13 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 							sprite.getAcceleration().x = 0;									
 						} else {	
 							float xDelta = collisionPoint.getPoint().x - collisionPoint.getCell().getX();
-							float yDelta = (collisionPoint.getCell().getY() + 1) - collisionPoint.getPoint().y;
-							if (xDelta>yDelta) {				
+							float yDelta = (collisionPoint.getCell().getY() + 1) - collisionPoint.getPoint().y;														
+							if (sprite.getMapCollisionEvent().getCollisionPoints().size()>1 || xDelta>yDelta) {								
 								newPosition.y = (int) sprite.getY() + 1f;						
 								sprite.getAcceleration().y = 0;
 								sprite.setOnFloor(true);		
 								sprite.setState(SpriteMoveEnum.IDLE);
-							} else {
+							} else {								
 								newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
 								sprite.getAcceleration().x = 0;										
 							}
@@ -133,7 +134,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 						} else {
 							float xDelta = (collisionPoint.getCell().getX()+1) - collisionPoint.getPoint().x;
 							float yDelta = (collisionPoint.getCell().getY()+1) - collisionPoint.getPoint().y;
-							if (xDelta>yDelta) {
+							if (sprite.getMapCollisionEvent().getCollisionPoints().size()>1 || xDelta>yDelta) {
 								newPosition.y = (int) sprite.getY() + 1f;
 								sprite.getAcceleration().y = 0;
 								sprite.setOnFloor(true);
