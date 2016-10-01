@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.game.core.background.IScrollingBackground;
 import com.game.core.background.impl.LeftScrollingBackground;
-import com.game.core.camera.GameCamera;
+import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.tilemap.TmxMap;
@@ -40,13 +40,13 @@ public class GameScreen implements Screen  {
 	
 	private static final Color[] fontColors = new Color[]{Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE};
 	
-	private static int currentColor = 0;
+	private static int currentColor = 4;
 	
 	/** The stage with actors */
 	private Stage stage;
 	
 	/** Camera following Player */
-	private GameCamera camera;
+	private AbstractGameCamera camera;
 	
 	/** Tilemap loaded from a TMX file */
 	private TmxMap tilemap;
@@ -84,7 +84,7 @@ public class GameScreen implements Screen  {
 										
 		// Initialize fonts
 		debugFont = new BitmapFont();		
-		debugFont.setColor(1, 1, 1, 1);		
+		debugFont.setColor(fontColors[currentColor]);		
 		
 		// Sprite batch, used to draw background and debug text 
 		spriteBatch = new SpriteBatch();
@@ -93,7 +93,7 @@ public class GameScreen implements Screen  {
 		shapeRenderer = new ShapeRenderer();
 				
 		// Load the tilemap, set the unit scale to 1/32 (1 unit == 32 pixels)
-		tilemap = new TmxMap("tilemaps/tilemap.tmx");
+		tilemap = new TmxMap("tilemaps/tilemap2.tmx");
 		// Renderer used to draw tilemap
 		tilemapRenderer = new OrthogonalTiledMapRenderer(tilemap.getMap(), 1 / ScreenConstants.MAP_UNIT_PIXELS);				
 
@@ -101,8 +101,7 @@ public class GameScreen implements Screen  {
 		player = tilemap.getPlayer();
 		
 		// create an orthographic camera, shows us 16x12 units of the world
-		camera = new GameCamera(player, tilemap.getDimensions());
-		camera.setCameraOffset(player.getX());
+		camera = AbstractGameCamera.createCamera(tilemap.getCameraEnum(),player, tilemap.getDimensions());
 				
 		//cameraSpriteBatch.setProjectionMatrix(camera.getCamera().combined);
 		
@@ -219,7 +218,7 @@ public class GameScreen implements Screen  {
 		if (Gdx.input.isKeyJustPressed(Keys.F3)) {
 			debugShowBounds = !debugShowBounds;
 		}
-
+	
 		if (Gdx.input.isKeyJustPressed(Keys.F12)) {		
 			currentColor++;
 			currentColor = fontColors.length == currentColor ? 0 : currentColor;
@@ -245,7 +244,13 @@ public class GameScreen implements Screen  {
 			y = y -20;			
 			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);
 			y = y -20;			
-			debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
+			debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);
+			
+			x = 400;
+			y = ScreenConstants.HEIGHT-10;
+			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);
+			
+			
 			spriteBatch.end();
 		}
 		

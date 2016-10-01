@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.game.core.background.IScrollingBackground;
-import com.game.core.camera.GameCamera;
+import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.util.ResourcesLoader;
 import com.game.core.util.constants.ScreenConstants;
@@ -30,7 +30,7 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 	protected Batch batch;
 	
 	/** Camera */
-	protected GameCamera camera;
+	protected AbstractGameCamera camera;
 	
 	/** Followed sprite */
 	protected AbstractSprite followedSprite;
@@ -51,7 +51,7 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 		BACKGROUND_IMAGES.put(BackgroundTypeEnum.FOREST, ResourcesLoader.getBackgroundForest());
 	}
 		
-	public AbstractScrollingBackground(GameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType) {
+	public AbstractScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType) {
 		super(BACKGROUND_IMAGES.get(backgroundType));
 		this.batch = batch;
 		this.followedSprite = followedSprite;

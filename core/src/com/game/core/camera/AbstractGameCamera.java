@@ -2,33 +2,36 @@ package com.game.core.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.game.core.camera.impl.FreeGameCamera;
+import com.game.core.camera.impl.MarioLikeGameCamera;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.util.constants.ScreenConstants;
+import com.game.core.util.enums.CameraEnum;
 
 /**
  * Class used to define an orthographic camera which will follow a chosen sprite
  */
-public class GameCamera {
+public abstract class AbstractGameCamera implements IGameCamera {
 
-	private float CAMERA_OFFSET_MAX = (float)(ScreenConstants.NB_HORIZONTAL_TILES/2);
+	protected float CAMERA_OFFSET_MAX = (float)(ScreenConstants.NB_HORIZONTAL_TILES/2);
 	
-	private float CAMERA_OFFSET_MIN;
+	protected float CAMERA_OFFSET_MIN;
 
-	private OrthographicCamera camera;
+	protected OrthographicCamera camera;
 	
-	private float cameraOffset = 0;
+	protected float cameraOffset = 0;
 	
-	private boolean scrollableHorizontally;
+	protected boolean scrollableHorizontally;
 	
-	private boolean scrollableVertically;
+	protected boolean scrollableVertically;
 	
-	private AbstractSprite followedSprite;
+	protected AbstractSprite followedSprite;
 	
-	private float initialY;
+	protected float initialY;
 	
-	private Vector2 mapDimensions;
+	protected Vector2 mapDimensions;
 
-	public GameCamera(AbstractSprite followedSprite, Vector2 mapDimensions) {
+	public AbstractGameCamera(AbstractSprite followedSprite, Vector2 mapDimensions) {
 		this.camera = new OrthographicCamera();
 		this.camera.setToOrtho(false, ScreenConstants.NB_HORIZONTAL_TILES, ScreenConstants.NB_VERTICAL_TILES);
 		this.camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -39,7 +42,14 @@ public class GameCamera {
 		this.initialY = camera.viewportHeight / 2f;
 		this.mapDimensions = mapDimensions;	
 		this.CAMERA_OFFSET_MIN = this.CAMERA_OFFSET_MAX + (float)(this.followedSprite.getWidth()/2) - (float)(this.followedSprite.getOffset().x/2);
+		this.cameraOffset = followedSprite.getX();
 	}
+	
+	public static AbstractGameCamera createCamera(CameraEnum cameraEnum, AbstractSprite followedSprite, Vector2 mapDimensions) {
+		return cameraEnum==CameraEnum.FREE ? new FreeGameCamera(followedSprite, mapDimensions) : new MarioLikeGameCamera(followedSprite, mapDimensions);			
+	}
+	
+	public abstract void moveCamera();
 	
 	public OrthographicCamera getCamera() {
 		return camera;
@@ -57,36 +67,6 @@ public class GameCamera {
 		this.cameraOffset = cameraOffset;
 	}	
 	
-	public void moveCamera() {
-				
-		// Adjust camera horizontally
-		if (this.isScrollableHorizontally()) {
-			float move = followedSprite.getX() - followedSprite.getOldPosition().x;				
-			
-			if (cameraOffset < CAMERA_OFFSET_MAX) {
-				cameraOffset = cameraOffset + move;
-			} else {
-				if (move > 0) {
-					camera.position.x = camera.position.x + move;
-				} else {
-					cameraOffset = cameraOffset + move;
-				}
-			}
-			if (followedSprite.getX() < camera.position.x - CAMERA_OFFSET_MIN) {					
-				followedSprite.setX(followedSprite.getOldPosition().x);
-				followedSprite.getAcceleration().x = 0;
-				cameraOffset = cameraOffset - move;
-			}
-		}
-				
-		// Adjust camera vertically
-		if (this.isScrollableVertically()) {
-			camera.position.y = followedSprite.getY() >= mapDimensions.y - 6 ? mapDimensions.y - 6 : followedSprite.getY() >= this.initialY ? followedSprite.getY() : initialY;
-		}
-		
-		camera.update();
-	}
-
 	public boolean isScrollableVertically() {
 		return scrollableVertically;
 	}

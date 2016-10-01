@@ -1,5 +1,6 @@
 package com.game.core.tilemap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.util.constants.TilemapConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
+import com.game.core.util.enums.CameraEnum;
 
 public class TmxMap {
 
@@ -29,6 +31,8 @@ public class TmxMap {
 	private Player player;
 	
 	private Vector2 dimensions;
+	
+	private CameraEnum cameraEnum;
 
 	public TmxMap(String levelName) {
 		map = new TmxMapLoader().load(levelName);
@@ -37,17 +41,21 @@ public class TmxMap {
 		properties = tileLayer.getProperties();
 		initBackgrounds();
 		initMapObjects();
-		dimensions = new Vector2((Integer)map.getProperties().get("width"), (Integer)map.getProperties().get("height"));		
+		dimensions = new Vector2((Integer)map.getProperties().get("width"), (Integer)map.getProperties().get("height"));
+		cameraEnum = CameraEnum.valueOf(((String) properties.get(TilemapConstants.CAMERA)).toUpperCase());		
 	}
 
 	private void initBackgrounds() {
 
 		backgroundTypesEnum = new Array<BackgroundTypeEnum>();
-
-		String backgrounds[] = ((String) properties.get(TilemapConstants.BACKGROUNDS)).toUpperCase().split(",");		
-		for (String background : backgrounds) {
-			if (background!=null && background.compareTo("")!=0)
-				backgroundTypesEnum.add(BackgroundTypeEnum.valueOf(background.toUpperCase()));
+		try {
+			String backgrounds[] = ((String) properties.get(TilemapConstants.BACKGROUNDS)).toUpperCase().split(",");		
+			for (String background : backgrounds) {
+				if (background!=null && background.compareTo("")!=0)
+					backgroundTypesEnum.add(BackgroundTypeEnum.valueOf(background.toUpperCase()));
+			}
+		} catch(Exception e) {
+			Gdx.app.log("TMX MAP LOADING", "Initialising backgrounds failure.");
 		}
 	}
 
@@ -131,6 +139,14 @@ public class TmxMap {
 
 	public void setDimensions(Vector2 dimensions) {
 		this.dimensions = dimensions;
+	}
+
+	public CameraEnum getCameraEnum() {
+		return cameraEnum;
+	}
+
+	public void setCameraEnum(CameraEnum cameraEnum) {
+		this.cameraEnum = cameraEnum;
 	}
 
 }

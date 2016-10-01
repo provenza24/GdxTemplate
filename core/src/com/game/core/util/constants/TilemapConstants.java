@@ -6,4 +6,6 @@ public class TilemapConstants {
 	
 	public static final String BACKGROUNDS = "backgrounds";
 	
+	public static final String CAMERA = "camera";
+	
 }
