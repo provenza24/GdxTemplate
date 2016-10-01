@@ -36,10 +36,16 @@ public class GameScreen implements Screen  {
 	
 	private static final int KEY_UP = KeysConstants.KEY_UP;
 	
+	private static final Color DEBUG_BOUNDS_COLOR = new Color(0, 1, 0, 0.5f);
+	
+	private static final Color[] fontColors = new Color[]{Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE};
+	
+	private static int currentColor = 0;
+	
 	/** The stage with actors */
 	private Stage stage;
 	
-	/** Camera following Mario */
+	/** Camera following Player */
 	private GameCamera camera;
 	
 	/** Tilemap loaded from a TMX file */
@@ -91,6 +97,7 @@ public class GameScreen implements Screen  {
 		// Renderer used to draw tilemap
 		tilemapRenderer = new OrthogonalTiledMapRenderer(tilemap.getMap(), 1 / ScreenConstants.MAP_UNIT_PIXELS);				
 
+		// Player
 		player = tilemap.getPlayer();
 		
 		// create an orthographic camera, shows us 16x12 units of the world
@@ -138,7 +145,7 @@ public class GameScreen implements Screen  {
 		tilemapRenderer.setView(camera.getCamera());
 		tilemapRenderer.render();		
 		
-		// Render Mario		
+		// Render Player		
 		player.render(tilemapRenderer.getBatch());		
 		
 		// Draw stage for moving actors		
@@ -147,8 +154,7 @@ public class GameScreen implements Screen  {
 		// Render debug mode
 				renderDebugMode();
 	}
-				
-	
+					
 	private void handleInput() {
 									
 		if (Gdx.input.isKeyPressed(KEY_RIGHT)) {
@@ -195,9 +201,8 @@ public class GameScreen implements Screen  {
 			}			
 			canJump = false;
 		} else {
+		}		
 			canJump = true;
-		}
-		
 		handleDebugKeys();
 	}
 
@@ -215,6 +220,11 @@ public class GameScreen implements Screen  {
 			debugShowBounds = !debugShowBounds;
 		}
 
+		if (Gdx.input.isKeyJustPressed(Keys.F12)) {		
+			currentColor++;
+			currentColor = fontColors.length == currentColor ? 0 : currentColor;
+			debugFont.setColor(fontColors[currentColor]);
+		}
 	}
 		
 	private void renderDebugMode() {
@@ -223,19 +233,19 @@ public class GameScreen implements Screen  {
 			
 			int x = 10;
 			int y = ScreenConstants.HEIGHT-10;
-			
+						
 			spriteBatch.begin();
-			debugFont.draw(spriteBatch, "mario.position=" + String.format("%.3f", player.getX()) + " | " + String.format("%.3f", player.getY()), x, y);
+			debugFont.draw(spriteBatch, "position=" + String.format("%.3f", player.getX()) + " | " + String.format("%.3f", player.getY()), x, y);
 			y = y -20;
-			debugFont.draw(spriteBatch, "mario.acceleration=" + String.format("%.1f", player.getAcceleration().x) + " | " + String.format("%.1f", player.getAcceleration().y), x, y);
+			debugFont.draw(spriteBatch, "acceleration=" + String.format("%.1f", player.getAcceleration().x) + " | " + String.format("%.1f", player.getAcceleration().y), x, y);
 			y = y -20;
 			debugFont.draw(spriteBatch, "state=" + player.getState().toString(), x, y);
 			y = y -20;
 			debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
 			y = y -20;			
-			debugFont.draw(spriteBatch, "isOnFloor=" + player.isOnFloor(), x, y);
+			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);
 			y = y -20;			
-			debugFont.draw(spriteBatch, "move vector: " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
+			debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
 			spriteBatch.end();
 		}
 		
@@ -246,7 +256,7 @@ public class GameScreen implements Screen  {
 		}
 
 		if (debugShowBounds) {
-			// Green rectangle around Mario
+			// Green rectangle around Player
 			batch = tilemapRenderer.getBatch();
 			batch.begin();
 			Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -254,7 +264,7 @@ public class GameScreen implements Screen  {
 			
 			shapeRenderer.setProjectionMatrix(camera.getCamera().combined);
 			shapeRenderer.begin(ShapeType.Filled);
-			shapeRenderer.setColor(new Color(0, 1, 0, 0.5f));
+			shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
 			shapeRenderer.rect(player.getX() + player.getOffset().x, player.getY(), player.getWidth(), player.getHeight());
 			
 			shapeRenderer.end();

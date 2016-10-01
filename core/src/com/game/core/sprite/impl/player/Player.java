@@ -103,8 +103,8 @@ public class Player extends AbstractTileObjectSprite {
 			}			
 			currentAnimation = 						
 				state == SpriteMoveEnum.IDLE ? direction == DirectionEnum.RIGHT ? idleAnimationRight : idleAnimationLeft :
-					state == SpriteMoveEnum.RUNNING_RIGHT ? runningRightAnimation :
-						state == SpriteMoveEnum.RUNNING_LEFT ? runningLeftAnimation :
+					state == SpriteMoveEnum.RUNNING_RIGHT || state == SpriteMoveEnum.SLIDING_RIGHT ? runningRightAnimation :
+						state == SpriteMoveEnum.RUNNING_LEFT || state == SpriteMoveEnum.SLIDING_LEFT ? runningLeftAnimation :
 							idleAnimationRight;
 		}
 		currentFrame = currentAnimation.getKeyFrame(stateTime, true);		

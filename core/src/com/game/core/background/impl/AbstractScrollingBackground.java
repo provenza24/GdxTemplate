@@ -66,10 +66,10 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 	public void update() {
 					
 		if (scrollableHorizontally && Math.floor(camera.getCameraOffset()) == 8) {
-			float xMarioMove = (followedSprite.getX() - followedSprite.getOldPosition().x);
-			if (xMarioMove>0) {
+			float xPlayerMove = (followedSprite.getX() - followedSprite.getOldPosition().x);
+			if (xPlayerMove>0) {
 				// Scroll only if player is going to the right of the screen
-				setX(getX() + xMarioMove * velocity);			
+				setX(getX() + xPlayerMove * velocity);			
 			}				
 			// Reset image position when needed
 			if (getX() <= 0){			

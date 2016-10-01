@@ -2,7 +2,6 @@ package com.game.core.collision.tilemap.impl;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
 import com.game.core.collision.tilemap.AbstractTilemapCollisionHandler;

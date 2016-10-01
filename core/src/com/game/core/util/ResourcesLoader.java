@@ -11,7 +11,7 @@ public class ResourcesLoader {
 	
 	public static Texture getBackgroundForest() {
 
-		Pixmap pixmap200 = new Pixmap(Gdx.files.internal("background/forest.jpg"));		
+		Pixmap pixmap200 = new Pixmap(Gdx.files.internal("background/forest.png"));		
 		Pixmap pixmap100 = new Pixmap(ScreenConstants.WIDTH *2, ScreenConstants.HEIGHT*2, pixmap200.getFormat());
 		pixmap100.drawPixmap(pixmap200,
 		        0, 0, pixmap200.getWidth(), pixmap200.getHeight(),
