@@ -28,7 +28,7 @@ public class MarioLikeGameCamera extends AbstractGameCamera {
 			}
 			if (followedSprite.getX() < camera.position.x - CAMERA_OFFSET_MIN) {					
 				followedSprite.setX(followedSprite.getOldPosition().x);
-				followedSprite.getAcceleration().x = 0;
+				followedSprite.getAcceleration().x = 0;				
 				cameraOffset = cameraOffset - move;
 			}
 		}

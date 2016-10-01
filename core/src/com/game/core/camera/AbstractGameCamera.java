@@ -13,7 +13,7 @@ import com.game.core.util.enums.CameraEnum;
  */
 public abstract class AbstractGameCamera implements IGameCamera {
 
-	protected float CAMERA_OFFSET_MAX = (float)(ScreenConstants.NB_HORIZONTAL_TILES/2);
+	protected float CAMERA_OFFSET_MAX = (float)(ScreenConstants.NB_HORIZONTAL_TILES/2) - 0.5f;
 	
 	protected float CAMERA_OFFSET_MIN;
 
@@ -41,7 +41,7 @@ public abstract class AbstractGameCamera implements IGameCamera {
 		this.followedSprite = followedSprite;						
 		this.initialY = camera.viewportHeight / 2f;
 		this.mapDimensions = mapDimensions;	
-		this.CAMERA_OFFSET_MIN = this.CAMERA_OFFSET_MAX + (float)(this.followedSprite.getWidth()/2) - (float)(this.followedSprite.getOffset().x/2);
+		this.CAMERA_OFFSET_MIN = this.CAMERA_OFFSET_MAX + (float)(this.followedSprite.getWidth()) + (float)(this.followedSprite.getOffset().x/2);
 		this.cameraOffset = followedSprite.getX();
 	}
 	

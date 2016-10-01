@@ -20,16 +20,16 @@ public class FreeGameCamera extends AbstractGameCamera {
 			if (followedSprite.getX() < 0) {
 				followedSprite.setX(followedSprite.getOldPosition().x);
 				followedSprite.getAcceleration().x = 0;				
-			} else if (followedSprite.getX() < 8) {
+			} else if (followedSprite.getX() < 7.5) {
 				cameraOffset = cameraOffset + move;
-			}  else if (followedSprite.getX() > mapDimensions.x - 8) {
+			}  else if (followedSprite.getX() > mapDimensions.x - 8.5) {
 				cameraOffset = cameraOffset + move;
 			} else if (cameraOffset < CAMERA_OFFSET_MAX) {
 				cameraOffset = cameraOffset + move;
 			} else {
-				if (cameraOffset!=8) {
+				if (cameraOffset!=7.5) {
 					float diff = CAMERA_OFFSET_MAX - cameraOffset;
-					cameraOffset = 8;
+					cameraOffset = 7.5f;
 					camera.position.x = camera.position.x - diff;
 				}				
 				camera.position.x = camera.position.x + move;

@@ -36,11 +36,13 @@ public class GameScreen implements Screen  {
 	
 	private static final int KEY_UP = KeysConstants.KEY_UP;
 	
-	private static final Color DEBUG_BOUNDS_COLOR = new Color(0, 1, 0, 0.5f);
+	private static Color DEBUG_BOUNDS_COLOR;
 	
 	private static final Color[] fontColors = new Color[]{Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE};
 	
-	private static int currentColor = 4;
+	private static final Color[] debugBounds = new Color[]{new Color(1, 1, 1, 0.5f), new Color(0, 0, 0, 0.5f), new Color(1, 0, 0, 0.5f), new Color(0, 1, 0, 0.5f), new Color(0, 0, 1, 0.5f)};
+	
+	private static int currentDebugColor = 4;	
 	
 	/** The stage with actors */
 	private Stage stage;
@@ -84,7 +86,8 @@ public class GameScreen implements Screen  {
 										
 		// Initialize fonts
 		debugFont = new BitmapFont();		
-		debugFont.setColor(fontColors[currentColor]);		
+		debugFont.setColor(fontColors[currentDebugColor]);	
+		DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
 		
 		// Sprite batch, used to draw background and debug text 
 		spriteBatch = new SpriteBatch();
@@ -93,7 +96,7 @@ public class GameScreen implements Screen  {
 		shapeRenderer = new ShapeRenderer();
 				
 		// Load the tilemap, set the unit scale to 1/32 (1 unit == 32 pixels)
-		tilemap = new TmxMap("tilemaps/tilemap2.tmx");
+		tilemap = new TmxMap("tilemaps/tilemap.tmx");
 		// Renderer used to draw tilemap
 		tilemapRenderer = new OrthogonalTiledMapRenderer(tilemap.getMap(), 1 / ScreenConstants.MAP_UNIT_PIXELS);				
 
@@ -151,7 +154,7 @@ public class GameScreen implements Screen  {
 		stage.draw();
 		
 		// Render debug mode
-				renderDebugMode();
+		renderDebugMode();
 	}
 					
 	private void handleInput() {
@@ -218,11 +221,12 @@ public class GameScreen implements Screen  {
 		if (Gdx.input.isKeyJustPressed(Keys.F3)) {
 			debugShowBounds = !debugShowBounds;
 		}
-	
+
 		if (Gdx.input.isKeyJustPressed(Keys.F12)) {		
-			currentColor++;
-			currentColor = fontColors.length == currentColor ? 0 : currentColor;
-			debugFont.setColor(fontColors[currentColor]);
+			currentDebugColor++;
+			currentDebugColor = fontColors.length == currentDebugColor ? 0 : currentDebugColor;
+			debugFont.setColor(fontColors[currentDebugColor]);
+			DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
 		}
 	}
 		
@@ -248,8 +252,9 @@ public class GameScreen implements Screen  {
 			
 			x = 400;
 			y = ScreenConstants.HEIGHT-10;
-			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);
-			
+			debugFont.draw(spriteBatch, "camera.position=" + String.format("%.3f", camera.getCamera().position.x) + " | " + String.format("%.3f", camera.getCamera().position.y), x, y);			
+			y = y -20;			
+			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);			
 			
 			spriteBatch.end();
 		}
