@@ -72,11 +72,11 @@ public class GameScreen implements Screen  {
 	private BitmapFont debugFont;
 	
 	/** Debug parameters */
-	private boolean debugShowText = false;
+	private boolean debugShowText = true;
 
-	private boolean debugShowBounds = false;
+	private boolean debugShowBounds = true;
 
-	private boolean debugShowFps = false;
+	private boolean debugShowFps = true;
 	
 	private Player player;
 	
@@ -252,6 +252,8 @@ public class GameScreen implements Screen  {
 			
 			x = 400;
 			y = ScreenConstants.HEIGHT-10;
+			debugFont.draw(spriteBatch, "camera.type=" + tilemap.getCameraEnum(), x, y);			
+			y = y -20;
 			debugFont.draw(spriteBatch, "camera.position=" + String.format("%.3f", camera.getCamera().position.x) + " | " + String.format("%.3f", camera.getCamera().position.y), x, y);			
 			y = y -20;			
 			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);			

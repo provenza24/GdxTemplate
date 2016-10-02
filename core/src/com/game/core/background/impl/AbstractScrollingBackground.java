@@ -65,7 +65,8 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 	@Override
 	public void update() {
 					
-		if (scrollableHorizontally && Math.floor(camera.getCameraOffset()) == 7.5) {
+		
+		if (scrollableHorizontally && camera.getCameraOffset() == 7.5) {
 			float xPlayerMove = (followedSprite.getX() - followedSprite.getOldPosition().x);
 			if (xPlayerMove>0) {
 				// Scroll only if player is going to the right of the screen
