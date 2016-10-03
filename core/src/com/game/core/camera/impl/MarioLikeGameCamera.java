@@ -3,6 +3,7 @@ package com.game.core.camera.impl;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractSprite;
+import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.CameraEnum;
 
 public class MarioLikeGameCamera extends AbstractGameCamera {
@@ -27,12 +28,7 @@ public class MarioLikeGameCamera extends AbstractGameCamera {
 				} else {
 					cameraOffset = cameraOffset + move;
 				}
-			}
-			/*if (followedSprite.getX() < camera.position.x - CAMERA_OFFSET_MIN) {					
-				followedSprite.setX(followedSprite.getOldPosition().x);
-				followedSprite.getAcceleration().x = 0;				
-				cameraOffset = cameraOffset - move;
-			}*/
+			}		
 			if (cameraOffset<=0) {
 				cameraOffset = 0;
 				followedSprite.setX(getCamera().position.x - CAMERA_OFFSET_MIN);
@@ -42,7 +38,8 @@ public class MarioLikeGameCamera extends AbstractGameCamera {
 				
 		// Adjust camera vertically
 		if (this.isScrollableVertically()) {
-			camera.position.y = followedSprite.getY() >= mapDimensions.y - 6 ? mapDimensions.y - 6 : followedSprite.getY() >= this.initialY ? followedSprite.getY() : initialY;
+			camera.position.y = followedSprite.getY() >= mapDimensions.y - ScreenConstants.VERTICAL_HALF_POSITION ? 
+					mapDimensions.y - ScreenConstants.VERTICAL_HALF_POSITION : followedSprite.getY() >= this.initialY ? followedSprite.getY() : initialY;
 		}
 		
 		camera.update();

@@ -8,6 +8,7 @@
  </tileset>
  <layer name="world" width="32" height="60">
   <properties>
+   <property name="backgrounds" value="forest"/>
    <property name="camera" value="free"/>
   </properties>
   <data encoding="csv">
