@@ -9,6 +9,8 @@ public class ResourcesLoader {
 	
 	public static final Texture PLAYER = new Texture(Gdx.files.internal("player/player.png"));
 	
+	public static final Texture FLAG = new Texture(Gdx.files.internal("items/flag.png"));
+	
 	public static Texture getBackgroundForest() {
 
 		Pixmap pixmap200 = new Pixmap(Gdx.files.internal("background/forest.png"));		
@@ -19,6 +21,6 @@ public class ResourcesLoader {
 		);
 		
 		return new Texture(pixmap100);
-	}	
+	}			
 		
 }

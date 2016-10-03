@@ -1,5 +1,7 @@
 package com.game.core.screen;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -13,12 +15,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.game.core.GameManager;
 import com.game.core.background.AbstractScrollingBackground;
 import com.game.core.background.IScrollingBackground;
 import com.game.core.camera.AbstractGameCamera;
+import com.game.core.sprite.AbstractItem;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.tilemap.TmxMap;
+import com.game.core.util.Level;
 import com.game.core.util.constants.KeysConstants;
 import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
@@ -81,8 +86,10 @@ public class GameScreen implements Screen  {
 	private Player player;
 	
 	private boolean canJump;
+	
+	private boolean levelFinished = false;
 				
-	public GameScreen() {
+	public GameScreen(Level level) {
 										
 		// Initialize fonts
 		debugFont = new BitmapFont();		
@@ -96,7 +103,7 @@ public class GameScreen implements Screen  {
 		shapeRenderer = new ShapeRenderer();
 				
 		// Load the tilemap, set the unit scale to 1/32 (1 unit == 32 pixels)
-		tilemap = new TmxMap("tilemaps/tilemap.tmx");
+		tilemap = new TmxMap("tilemaps/"+level.getTmxName());
 		// Renderer used to draw tilemap
 		tilemapRenderer = new OrthogonalTiledMapRenderer(tilemap.getMap(), 1 / ScreenConstants.MAP_UNIT_PIXELS);				
 
@@ -124,37 +131,45 @@ public class GameScreen implements Screen  {
 	@Override
 	public void render(float delta) {
 				
-		AbstractSprite.updateCommonStateTime(delta);
-		handleInput();
-		player.update(tilemap, camera.getCamera(), delta);
-		// Draw the scene
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if (levelFinished) {
+			GameManager.getGameManager().nextLevel();
+		} else {
+			AbstractSprite.updateCommonStateTime(delta);
+			handleInput();
+			player.update(tilemap, camera.getCamera(), delta);
+			// Draw the scene
+			Gdx.gl.glClearColor(0, 0, 0, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+				
+			// Move camera
+			camera.moveCamera();
 			
-		// Move camera
-		camera.moveCamera();
+			// Move backgrounds
+			if (backgrounds!=null && backgrounds.size>0) {
+				backgrounds.get(0).update();
+				backgrounds.get(0).render();
+				if (backgrounds.size>1) {
+					backgrounds.get(1).update();
+					backgrounds.get(1).render();
+				}
+			}							
+			// Render tilemap
+			tilemapRenderer.setView(camera.getCamera());
+			tilemapRenderer.render();		
+			
+			// Move items, check collisions, render
+			handleItems(delta);
+			
+			// Render Player		
+			player.render(tilemapRenderer.getBatch());		
+			
+			// Draw stage for moving actors		
+			stage.draw();
+			
+			// Render debug mode
+			renderDebugMode();
+		}
 		
-		// Move backgrounds
-		if (backgrounds!=null && backgrounds.size>0) {
-			backgrounds.get(0).update();
-			backgrounds.get(0).render();
-			if (backgrounds.size>1) {
-				backgrounds.get(1).update();
-				backgrounds.get(1).render();
-			}
-		}							
-		// Render tilemap
-		tilemapRenderer.setView(camera.getCamera());
-		tilemapRenderer.render();		
-		
-		// Render Player		
-		player.render(tilemapRenderer.getBatch());		
-		
-		// Draw stage for moving actors		
-		stage.draw();
-		
-		// Render debug mode
-		renderDebugMode();
 	}
 					
 	private void handleInput() {
@@ -207,6 +222,23 @@ public class GameScreen implements Screen  {
 			canJump = true;
 		handleDebugKeys();
 	}
+	
+	private void handleItems(float deltaTime) {
+		List<AbstractItem> items = tilemap.getItems();		
+		for (int i = 0; i < items.size(); i++) {
+			AbstractItem item = items.get(i);						
+			item.update(tilemap, camera.getCamera(), deltaTime);
+			boolean collidePlayer = item.overlaps(player);						
+			if (collidePlayer) {
+				levelFinished = true;				
+			}
+			if (item.isDeletable()) {				
+				items.remove(i--);
+			} else if (item.isVisible()) {
+				item.render(tilemapRenderer.getBatch());
+			}
+		}
+	}
 
 	private void handleDebugKeys() {
 		
@@ -221,7 +253,7 @@ public class GameScreen implements Screen  {
 		if (Gdx.input.isKeyJustPressed(Keys.F3)) {
 			debugShowBounds = !debugShowBounds;
 		}
-
+		
 		if (Gdx.input.isKeyJustPressed(Keys.F12)) {		
 			currentDebugColor++;
 			currentDebugColor = fontColors.length == currentDebugColor ? 0 : currentDebugColor;
