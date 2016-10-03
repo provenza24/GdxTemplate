@@ -1,4 +1,4 @@
-package com.game.core.background.impl;
+package com.game.core.background;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,8 @@ import java.util.Map;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.game.core.background.IScrollingBackground;
+import com.game.core.background.impl.FreeScrollingBackground;
+import com.game.core.background.impl.MarioLikeScrollingBackground;
 import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.util.ResourcesLoader;
