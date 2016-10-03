@@ -10,8 +10,8 @@ import com.game.core.background.IScrollingBackground;
 import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.util.ResourcesLoader;
-import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
+import com.game.core.util.enums.CameraEnum;
 
 /**
  * Abstract class which provides scrolling support
@@ -61,30 +61,15 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 		this.scrollableVertically = camera.isScrollableVertically();
 		this.camera = camera;
 	}
+	
+	public static AbstractScrollingBackground createScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float velocity) {
+		return camera.getCameraType()==CameraEnum.FREE ? 
+				new FreeScrollingBackground(camera, followedSprite, batch, backgroundType, velocity) 
+				: new MarioLikeScrollingBackground(camera, followedSprite, batch, backgroundType, velocity);			
+	}
 			
 	@Override
-	public void update() {
-					
-		
-		if (scrollableHorizontally && camera.getCameraOffset() == 7.5) {
-			float xPlayerMove = (followedSprite.getX() - followedSprite.getOldPosition().x);
-			if (xPlayerMove>0) {
-				// Scroll only if player is going to the right of the screen
-				setX(getX() + xPlayerMove * velocity);			
-			}				
-			// Reset image position when needed
-			if (getX() <= 0){			
-				setX(width);
-			} else if (getX()>=width) {
-				setX(0);
-			}
-		}
-				
-		if (scrollableVertically) {
-			setY(followedSprite.getY()> camera.getMapDimensions().y - 6 ? - (camera.getMapDimensions().y-12) * ScreenConstants.MAP_UNIT_PIXELS 
-				:  followedSprite.getY() > 6 ? (6 - followedSprite.getY()) * ScreenConstants.MAP_UNIT_PIXELS : 0);
-		}
-	}
+	public abstract void update();					
 	
 	@Override
 	public void render() {		

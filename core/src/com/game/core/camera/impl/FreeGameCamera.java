@@ -3,6 +3,7 @@ package com.game.core.camera.impl;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractSprite;
+import com.game.core.util.enums.CameraEnum;
 
 public class FreeGameCamera extends AbstractGameCamera {
 
@@ -43,6 +44,11 @@ public class FreeGameCamera extends AbstractGameCamera {
 		}
 		
 		camera.update();
+	}
+
+	@Override
+	public CameraEnum getCameraType() {		
+		return CameraEnum.FREE;
 	}
 
 }

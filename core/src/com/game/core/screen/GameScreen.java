@@ -14,7 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.game.core.background.IScrollingBackground;
-import com.game.core.background.impl.LeftScrollingBackground;
+import com.game.core.background.impl.AbstractScrollingBackground;
 import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.sprite.impl.player.Player;
@@ -112,7 +112,7 @@ public class GameScreen implements Screen  {
 		backgrounds = new Array<IScrollingBackground>();
 		int i=0;
 		for (BackgroundTypeEnum backgroundTypeEnum : tilemap.getBackgroundTypesEnum()) {
-			IScrollingBackground scrollingBackground = new LeftScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 16 : 24);
+			IScrollingBackground scrollingBackground = AbstractScrollingBackground.createScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 16 : 24);
 			backgrounds.add(scrollingBackground);			
 			i++;
 		}

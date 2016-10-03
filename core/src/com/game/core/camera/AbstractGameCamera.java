@@ -51,6 +51,8 @@ public abstract class AbstractGameCamera implements IGameCamera {
 	
 	public abstract void moveCamera();
 	
+	public abstract CameraEnum getCameraType();
+	
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
