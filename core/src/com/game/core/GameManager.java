@@ -5,54 +5,48 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Screen;
-import com.game.core.screen.GameScreen;
+import com.game.core.screen.game.AbstractGameScreen;
+import com.game.core.screen.game.GameScreen;
+import com.game.core.screen.transition.AbstractScreenTransition;
+import com.game.core.screen.transition.AbstractScreenTransition.ScreenTransitionEnum;
 import com.game.core.util.Level;
 import com.game.core.util.enums.ScreenEnum;
 
-public class GameManager extends Game {
+public class GameManager extends AbstractGameManager {
 
-	private static final Map<ScreenEnum, Screen> SCREENS = new HashMap<ScreenEnum, Screen>();
+	private static final Map<ScreenEnum, AbstractGameScreen> SCREENS = new HashMap<ScreenEnum, AbstractGameScreen>();
 
 	private static final GameManager gameManager = new GameManager();
-
-	private static GameScreen gameScreen;
 	
 	private List<Level> levels = new ArrayList<Level>();
 	
-	private static int currentLevelIndex;
-		
+	private static int currentLevelIndex;		
+	
 	@Override
-	public void create() {
-		
+	public void create() {		
+		currentLevelIndex=0;		
+		levels.add(new Level(1,1,"tilemap.tmx"));
+		levels.add(new Level(1,2,"tilemap2.tmx"));				
 		levels.add(new Level(1,1,"tilemap.tmx"));
 		levels.add(new Level(1,2,"tilemap2.tmx"));
-		
-		gameScreen = new GameScreen(levels.get(currentLevelIndex));		
-		SCREENS.put(ScreenEnum.GAME, gameScreen);
-				
-		setScreen(SCREENS.get(ScreenEnum.GAME));
+		levels.add(new Level(1,1,"tilemap.tmx"));
+		levels.add(new Level(1,2,"tilemap2.tmx"));
+		levels.add(new Level(1,1,"tilemap.tmx"));
+		levels.add(new Level(1,2,"tilemap2.tmx"));
+		levels.add(new Level(1,1,"tilemap.tmx"));
+		levels.add(new Level(1,2,"tilemap2.tmx"));
+		setScreen(new GameScreen(levels.get(currentLevelIndex)));
 	}
 	
-	public static GameManager getGameManager() {
+	public void nextLevel() {
+		setInit(false);
+		currentLevelIndex++;		
+		AbstractGameScreen nextGameScreen = new GameScreen(levels.get(currentLevelIndex));				
+		setScreen(nextGameScreen, AbstractScreenTransition.getScreenTransition(ScreenTransitionEnum.SLICE));		
+	}
+
+	public static GameManager getGameMamanger() {
 		return gameManager;
 	}
 
-	public void changeScreen(ScreenEnum screenEnum) {
-		setScreen(SCREENS.get(screenEnum));
-	}
-
-	public Screen getScreen(ScreenEnum screenEnum) {
-		return SCREENS.get(screenEnum);
-	}	
-	
-	public void nextLevel() {
-		currentLevelIndex++;
-		gameScreen.dispose();		
-		gameScreen = new GameScreen(levels.get(currentLevelIndex));
-		SCREENS.put(ScreenEnum.GAME, gameScreen);			
-		changeScreen(ScreenEnum.GAME);
-	}
-	
 }

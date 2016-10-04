@@ -11,16 +11,22 @@ public class ResourcesLoader {
 	
 	public static final Texture FLAG = new Texture(Gdx.files.internal("items/flag.png"));
 	
+	public static Texture BACKGROUND_FOREST;
+	
 	public static Texture getBackgroundForest() {
 
-		Pixmap pixmap200 = new Pixmap(Gdx.files.internal("background/forest.png"));		
-		Pixmap pixmap100 = new Pixmap(ScreenConstants.WIDTH *2, ScreenConstants.HEIGHT*2, pixmap200.getFormat());
-		pixmap100.drawPixmap(pixmap200,
-		        0, 0, pixmap200.getWidth(), pixmap200.getHeight(),
-		        0, 0, pixmap100.getWidth(), pixmap100.getHeight()
-		);
+		if (BACKGROUND_FOREST==null) {
 		
-		return new Texture(pixmap100);
+			Pixmap pixmap200 = new Pixmap(Gdx.files.internal("background/forest.png"));		
+			Pixmap pixmap100 = new Pixmap(ScreenConstants.WIDTH *2, ScreenConstants.HEIGHT*2, pixmap200.getFormat());
+			pixmap100.drawPixmap(pixmap200,
+			        0, 0, pixmap200.getWidth(), pixmap200.getHeight(),
+			        0, 0, pixmap100.getWidth(), pixmap100.getHeight()
+			);
+			BACKGROUND_FOREST = new Texture(pixmap100);
+		}
+		
+		return BACKGROUND_FOREST;
 	}			
 		
 }

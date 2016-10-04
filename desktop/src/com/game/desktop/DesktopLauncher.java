@@ -17,6 +17,6 @@ public class DesktopLauncher {
 		config.resizable = false;
 		config.title = "Libgdx 2D Demo";			
 					
-		new LwjglApplication(GameManager.getGameManager(), config);
+		new LwjglApplication(GameManager.getGameMamanger(), config);
 	}
 }
