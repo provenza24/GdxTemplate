@@ -28,6 +28,7 @@ import com.game.core.util.constants.KeysConstants;
 import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
 import com.game.core.util.enums.DirectionEnum;
+import com.game.core.util.enums.ScreenEnum;
 import com.game.core.util.enums.ScreenStateEnum;
 import com.game.core.util.enums.SpriteMoveEnum;
 
@@ -88,9 +89,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private boolean canJump;
 	
-	private boolean levelFinished = false;
-	
-	private ScreenStateEnum screenState = ScreenStateEnum.RUNNING;
+	private boolean levelFinished = false;		
 				
 	public GameScreen(Level level) {
 										
@@ -137,7 +136,7 @@ public class GameScreen extends AbstractGameScreen  {
 		switch(screenState){
 		case RUNNING:
 			if (levelFinished) {
-				GameManager.getGameMamanger().nextLevel();
+				GameManager.getGameManager().setScreen(ScreenEnum.LEVEL_MENU);
 			} else {
 				renderGame(delta);
 			}

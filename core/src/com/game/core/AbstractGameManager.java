@@ -11,12 +11,19 @@ import com.game.core.screen.transition.IScreenTransition;
 public abstract class AbstractGameManager implements ApplicationListener {
 
 	private boolean init;
+	
 	private AbstractGameScreen currScreen;
+	
 	private AbstractGameScreen nextScreen;
+	
 	private FrameBuffer currFbo;
+	
 	private FrameBuffer nextFbo;
+	
 	private SpriteBatch batch;
+	
 	private float t;
+	
 	private IScreenTransition screenTransition;
 
 	public void setScreen(AbstractGameScreen screen) {

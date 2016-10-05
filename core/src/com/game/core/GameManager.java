@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.game.core.screen.game.AbstractGameScreen;
 import com.game.core.screen.game.GameScreen;
+import com.game.core.screen.menu.impl.LevelMenuScreen;
+import com.game.core.screen.menu.impl.MainMenuScreen;
 import com.game.core.screen.transition.AbstractScreenTransition;
 import com.game.core.screen.transition.AbstractScreenTransition.ScreenTransitionEnum;
 import com.game.core.util.Level;
@@ -23,30 +25,35 @@ public class GameManager extends AbstractGameManager {
 	private static int currentLevelIndex;		
 	
 	@Override
-	public void create() {		
-		currentLevelIndex=0;		
-		levels.add(new Level(1,1,"tilemap.tmx"));
-		levels.add(new Level(1,2,"tilemap2.tmx"));				
-		levels.add(new Level(1,1,"tilemap.tmx"));
-		levels.add(new Level(1,2,"tilemap2.tmx"));
-		levels.add(new Level(1,1,"tilemap.tmx"));
-		levels.add(new Level(1,2,"tilemap2.tmx"));
-		levels.add(new Level(1,1,"tilemap.tmx"));
-		levels.add(new Level(1,2,"tilemap2.tmx"));
-		levels.add(new Level(1,1,"tilemap.tmx"));
-		levels.add(new Level(1,2,"tilemap2.tmx"));
-		setScreen(new GameScreen(levels.get(currentLevelIndex)));
+	public void create() {
+		
+		SCREENS.put(ScreenEnum.MAIN_MENU, new MainMenuScreen());
+		SCREENS.put(ScreenEnum.LEVEL_MENU, new LevelMenuScreen());
+		
+		currentLevelIndex=0;				
+		levels.add(new Level.Builder("tilemap.tmx").levelNumber(1).levelName("FOREST").build());
+		levels.add(new Level.Builder("tilemap2.tmx").levelNumber(1).levelName("FOREST").build());
+		setScreen(SCREENS.get(ScreenEnum.MAIN_MENU));
 	}
 	
-	public void nextLevel() {
-		setInit(false);
+	public void startGame() {
+		currentLevelIndex=0;		
+		AbstractGameScreen nextGameScreen = new GameScreen(levels.get(currentLevelIndex));				
+		setScreen(nextGameScreen, AbstractScreenTransition.getScreenTransition(ScreenTransitionEnum.SLICE));		
+	}
+	
+	public void nextLevel() {		
 		currentLevelIndex++;		
 		AbstractGameScreen nextGameScreen = new GameScreen(levels.get(currentLevelIndex));				
 		setScreen(nextGameScreen, AbstractScreenTransition.getScreenTransition(ScreenTransitionEnum.SLICE));		
 	}
 
-	public static GameManager getGameMamanger() {
+	public static GameManager getGameManager() {
 		return gameManager;
+	}		
+	
+	public void setScreen(ScreenEnum screenEnum) {
+		setScreen(SCREENS.get(screenEnum));
 	}
 
 }
