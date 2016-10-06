@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.game.core.util.constants.ScreenConstants;
 
 public class ResourcesLoader {
 	
@@ -19,7 +18,7 @@ public class ResourcesLoader {
 		if (BACKGROUND_FOREST==null) {
 		
 			Pixmap pixmap200 = new Pixmap(Gdx.files.internal("backgrounds/forest.png"));		
-			Pixmap pixmap100 = new Pixmap(ScreenConstants.WIDTH *2, ScreenConstants.HEIGHT*2, pixmap200.getFormat());
+			Pixmap pixmap100 = new Pixmap(2645, 992, pixmap200.getFormat());
 			pixmap100.drawPixmap(pixmap200,
 			        0, 0, pixmap200.getWidth(), pixmap200.getHeight(),
 			        0, 0, pixmap100.getWidth(), pixmap100.getHeight()

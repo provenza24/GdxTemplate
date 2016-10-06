@@ -14,7 +14,7 @@ public abstract class AbstractScreenTransition implements IScreenTransition {
 	
 	static {		
 		TRANSITIONS.put(ScreenTransitionEnum.SLIDE, ScreenTransitionSlide.init(1, 2, false,Interpolation.linear));
-		TRANSITIONS.put(ScreenTransitionEnum.SLICE, ScreenTransitionSlice.init(2, ScreenTransitionSlice.UP_DOWN, 10, Interpolation.pow5Out));
+		TRANSITIONS.put(ScreenTransitionEnum.SLICE, ScreenTransitionSlice.init(2, ScreenTransitionSlice.UP_DOWN, 40, Interpolation.pow5Out));
 		TRANSITIONS.put(ScreenTransitionEnum.FADE, ScreenTransitionFade.init(2));
 	}
 	
