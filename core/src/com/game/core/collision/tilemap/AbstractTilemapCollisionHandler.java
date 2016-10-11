@@ -13,67 +13,50 @@ public abstract class AbstractTilemapCollisionHandler<T extends AbstractSprite> 
 	
 	@Override
 	public abstract void collideWithTilemap(TmxMap tileMap, T sprite);
-
-	protected void checkBottomMapCollision(TmxMap tilemap, AbstractSprite sprite) {
-		
-		sprite.reinitMapCollisionEvent();
-		sprite.getMapCollisionEvent().reinitCollisionPoints();
-		
-		Vector2 leftBottomCorner = new Vector2(sprite.getX() + sprite.getOffset().x, sprite.getY());		
-		Vector2 rightBottomCorner = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x, sprite.getY());
-		
-		int x = (int) leftBottomCorner.x;
-		int y = (int) leftBottomCorner.y;
-		boolean isCollision = tilemap.isCollisioningTileAt(x, y);		
-		sprite.getMapCollisionEvent().setCollidingBottomLeft(isCollision);
-	
-		x = (int) rightBottomCorner.x;
-		y = (int) rightBottomCorner.y;
-		isCollision = tilemap.isCollisioningTileAt(x, y);		
-		sprite.getMapCollisionEvent().setCollidingBottomRight(sprite.getMapCollisionEvent().isCollidingBottom() || isCollision);
-	}
 	
 	protected void checkMapCollision(TmxMap tilemap, AbstractSprite sprite) {
-		
+						
 		sprite.reinitMapCollisionEvent();
 		sprite.getMapCollisionEvent().reinitCollisionPoints();		
 
-		Vector2 leftBottomCorner = new Vector2(sprite.getX() + sprite.getOffset().x, sprite.getY());
-		Vector2 leftTopCorner = new Vector2(sprite.getX() + sprite.getOffset().x, sprite.getY() + sprite.getHeight());
-		Vector2 rightBottomCorner = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x, sprite.getY());
-		Vector2 rightTopCorner = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x, sprite.getY() + sprite.getHeight());
-
-		int x = (int) leftBottomCorner.x;
-		int y = (int) leftBottomCorner.y;
+		Vector2 middleTop = new Vector2(sprite.getX() + sprite.getWidth()/2, sprite.getY() + sprite.getHeight() - 0.5f);
+		Vector2 middleBottom = new Vector2(sprite.getX() + sprite.getWidth()/2, sprite.getY() + 0.5f);
+		
+		Vector2 middleRight = new Vector2(sprite.getX() + sprite.getWidth() - 0.5f, sprite.getY() + sprite.getHeight()/2);
+		Vector2 middleLeft = new Vector2(sprite.getX() + 0.5f, sprite.getY() + sprite.getHeight()/2);
+		
+		int x = (int) middleBottom.x;
+		int y = (int) middleBottom.y;
 		boolean isCollision = tilemap.isCollisioningTileAt(x, y);
-		sprite.getMapCollisionEvent().setCollidingBottomLeft(isCollision);
+		sprite.getMapCollisionEvent().setCollidingBottom(isCollision);
 		if (isCollision) {
-			sprite.getMapCollisionEvent().getCollisionPoints().add(new CollisionPoint(leftBottomCorner, new TmxCell(tilemap.getTileAt(x, y), x, y)));
-		}
-
-		x = (int) leftTopCorner.x;
-		y = (int) leftTopCorner.y;
+			sprite.getMapCollisionEvent().getCollisionPoints().add(new CollisionPoint(middleBottom, new TmxCell(tilemap.getTileAt(x, y), x, y)));
+		}		
+		
+		x = (int) middleTop.x;
+		y = (int) middleTop.y;
 		isCollision = tilemap.isCollisioningTileAt(x, y);
-		sprite.getMapCollisionEvent().setCollidingTopLeft(isCollision);
+		sprite.getMapCollisionEvent().setCollidingTop(isCollision);
 		if (isCollision) {
-			sprite.getMapCollisionEvent().getCollisionPoints().add(new CollisionPoint(leftTopCorner, new TmxCell(tilemap.getTileAt(x, y), x, y)));
-		}
-
-		x = (int) rightBottomCorner.x;
-		y = (int) rightBottomCorner.y;
+			sprite.getMapCollisionEvent().getCollisionPoints().add(new CollisionPoint(middleTop, new TmxCell(tilemap.getTileAt(x, y), x, y)));
+		}	
+		
+		x = (int) middleRight.x;
+		y = (int) middleRight.y;
 		isCollision = tilemap.isCollisioningTileAt(x, y);
-		sprite.getMapCollisionEvent().setCollidingBottomRight(isCollision);
+		sprite.getMapCollisionEvent().setCollidingRight(isCollision);
 		if (isCollision) {
-			sprite.getMapCollisionEvent().getCollisionPoints().add(new CollisionPoint(rightBottomCorner, new TmxCell(tilemap.getTileAt(x, y), x, y)));
+			sprite.getMapCollisionEvent().getCollisionPoints().add(new CollisionPoint(middleRight, new TmxCell(tilemap.getTileAt(x, y), x, y)));
 		}
-
-		x = (int) rightTopCorner.x;
-		y = (int) rightTopCorner.y;
+		
+		x = (int) middleLeft.x;
+		y = (int) middleLeft.y;
 		isCollision = tilemap.isCollisioningTileAt(x, y);
-		sprite.getMapCollisionEvent().setCollidingTopRight(isCollision);
+		sprite.getMapCollisionEvent().setCollidingLeft(isCollision);
 		if (isCollision) {
-			sprite.getMapCollisionEvent().getCollisionPoints().add(new CollisionPoint(rightTopCorner, new TmxCell(tilemap.getTileAt(x, y), x, y)));
-		}
+			sprite.getMapCollisionEvent().getCollisionPoints().add(new CollisionPoint(middleLeft, new TmxCell(tilemap.getTileAt(x, y), x, y)));
+		}	
+		
 		
 	}
 

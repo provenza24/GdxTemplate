@@ -2,6 +2,7 @@ package com.game.core.camera;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.game.core.camera.impl.FixedCamera;
 import com.game.core.camera.impl.FreeGameCamera;
 import com.game.core.camera.impl.MarioLikeGameCamera;
 import com.game.core.sprite.AbstractSprite;
@@ -46,7 +47,8 @@ public abstract class AbstractGameCamera implements IGameCamera {
 	}
 	
 	public static AbstractGameCamera createCamera(CameraEnum cameraEnum, AbstractSprite followedSprite, Vector2 mapDimensions) {
-		return cameraEnum==CameraEnum.FREE ? new FreeGameCamera(followedSprite, mapDimensions) : new MarioLikeGameCamera(followedSprite, mapDimensions);			
+		return cameraEnum==CameraEnum.FREE ? new FreeGameCamera(followedSprite, mapDimensions) : 
+			cameraEnum==CameraEnum.MARIO_LIKE ?  new MarioLikeGameCamera(followedSprite, mapDimensions) : new FixedCamera(followedSprite, mapDimensions);			
 	}
 	
 	public abstract void moveCamera();

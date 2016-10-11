@@ -6,20 +6,14 @@ import java.util.List;
 public class CollisionEvent {
 
 	private List<CollisionPoint> collisionPoints;
+		
+	boolean collidingTop;
 	
-	boolean collidingBottomLeft;
-
-	boolean collidingBottomRight;
+	boolean collidingBottom;
 	
-	boolean collidingTopLeft;
+	boolean collidingRight;
 	
-	boolean collidingTopRight;
-	
-	boolean collidingMiddleRight;
-	
-	boolean collidingMiddleLeft;
-	
-	boolean collidingMiddleTop;
+	boolean collidingLeft;
 		
 	public CollisionEvent() {
 		collisionPoints = new ArrayList<CollisionPoint>();
@@ -32,111 +26,43 @@ public class CollisionEvent {
 	public void setCollisionPoints(List<CollisionPoint> collisionPoints) {
 		this.collisionPoints = collisionPoints;
 	}
-	
-	public void reinitCollisionPoints() {
-		this.collisionPoints = new ArrayList<CollisionPoint>();
-	}
 
-	public boolean isCollidingBottomLeft() {
-		return collidingBottomLeft;
-	}
-
-	public void setCollidingBottomLeft(boolean collidingBottomLeft) {
-		this.collidingBottomLeft = collidingBottomLeft;
-	}
-
-	public boolean isCollidingBottomRight() {
-		return collidingBottomRight;
-	}
-
-	public void setCollidingBottomRight(boolean collidingBottomRight) {
-		this.collidingBottomRight = collidingBottomRight;
-	}
-
-	public boolean isCollidingTopLeft() {
-		return collidingTopLeft;
-	}
-
-	public void setCollidingTopLeft(boolean collidingTopLeft) {
-		this.collidingTopLeft = collidingTopLeft;
-	}
-
-	public boolean isCollidingTopRight() {
-		return collidingTopRight;
-	}
-
-	public void setCollidingTopRight(boolean collidingTopRight) {
-		this.collidingTopRight = collidingTopRight;
-	}
-
-	// Collision TOP, BOTTOM, LEFT, RIGHT	
 	public boolean isCollidingTop() {
-		return collidingTopLeft || collidingTopRight;
+		return collidingTop;
+	}
+
+	public void setCollidingTop(boolean collidingTop) {
+		this.collidingTop = collidingTop;
+	}
+
+	public void reinitCollisionPoints() {
+		collisionPoints = new ArrayList<CollisionPoint>();
 	}
 
 	public boolean isCollidingBottom() {
-		return collidingBottomLeft || collidingBottomRight;
+		return collidingBottom;
 	}
 
-	
-	public boolean isCollidingLeft() {
-		return collidingTopLeft || collidingBottomLeft;
+	public void setCollidingBottom(boolean collidingBottom) {
+		this.collidingBottom = collidingBottom;
 	}
 
 	public boolean isCollidingRight() {
-		return collidingTopRight || collidingBottomRight;
+		return collidingRight;
 	}
 
-	public boolean isCollidingMiddleRight() {
-		return collidingMiddleRight;
+	public void setCollidingRight(boolean collidingRight) {
+		this.collidingRight = collidingRight;
 	}
 
-	public void setCollidingMiddleRight(boolean collidingMiddleRight) {
-		this.collidingMiddleRight = collidingMiddleRight;
+	public boolean isCollidingLeft() {
+		return collidingLeft;
 	}
 
-	public boolean isCollidingMiddleLeft() {
-		return collidingMiddleLeft;
+	public void setCollidingLeft(boolean collidingLeft) {
+		this.collidingLeft = collidingLeft;
 	}
 
-	public void setCollidingMiddleLeft(boolean collidingMiddleLeft) {
-		this.collidingMiddleLeft = collidingMiddleLeft;
-	}
-	
-	public boolean isBlockedRight() {
-		return (collidingTopRight && collidingBottomRight) 
-				|| (collidingTopRight && collidingMiddleRight)
-				|| (collidingMiddleRight && collidingBottomRight);				
-	}
-	
-	public boolean isBlockedLeft() {
-		return (collidingTopLeft && collidingBottomLeft) 
-				|| (collidingTopLeft && collidingMiddleLeft)
-				|| (collidingMiddleLeft && collidingBottomLeft);				
-	}
-	
-	public boolean isBlockedTop() {
-		return (collidingTopLeft && collidingTopRight);						
-	}
-	
-	public boolean isBlockedBottom() {
-		return (collidingBottomLeft && collidingBottomRight);						
-	}
 
-	public boolean isCollidingMiddleTop() {
-		return collidingMiddleTop;
-	}
 
-	public void setCollidingMiddleTop(boolean collidingMiddleTop) {
-		this.collidingMiddleTop = collidingMiddleTop;
-	}
-	
-	public boolean isCollidingUpperBlock() {
-		return (collidingTopLeft || collidingTopRight) && collidingMiddleTop;
-	}
-	
-	public boolean isBlockedBottomOnly() {
-		return (collidingBottomLeft || collidingBottomRight) 
-				&& !collidingTopLeft && !collidingTopRight;
-	}
 }

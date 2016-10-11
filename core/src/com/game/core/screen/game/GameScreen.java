@@ -2,6 +2,8 @@ package com.game.core.screen.game;
 
 import java.util.List;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
@@ -14,6 +16,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.Array;
 import com.game.core.GameManager;
 import com.game.core.background.AbstractScrollingBackground;
@@ -34,6 +38,8 @@ import com.game.core.util.enums.SpriteMoveEnum;
 
 public class GameScreen extends AbstractGameScreen  {
 			
+	private static final float ACCELERATION =  0.1f;
+	
 	/** KEYS CONSTANTS */
 	private static final int KEY_LEFT =  KeysConstants.KEY_LEFT;
 	
@@ -49,7 +55,9 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private static final Color[] debugBounds = new Color[]{new Color(1, 1, 1, 0.5f), new Color(0, 0, 0, 0.5f), new Color(1, 0, 0, 0.5f), new Color(0, 1, 0, 0.5f), new Color(0, 0, 1, 0.5f)};
 	
-	private static int currentDebugColor = 4;	
+	private static int currentDebugColor = 0;
+	
+	private int pressedKey = -1;
 	
 	/** The stage with actors */
 	private Stage stage;
@@ -127,7 +135,7 @@ public class GameScreen extends AbstractGameScreen  {
 		}
 		
 		// Initialize stage, the stage is used for sprites actions
-		stage = new Stage();																	
+		stage = new Stage();			
 	}
 		
 	@Override
@@ -149,9 +157,13 @@ public class GameScreen extends AbstractGameScreen  {
 	}
 
 	private void renderGame(float delta) {
+		
 		AbstractSprite.updateCommonStateTime(delta);
+		
 		handleInput();
+		
 		player.update(tilemap, camera.getCamera(), delta);
+		
 		// Draw the scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -192,13 +204,7 @@ public class GameScreen extends AbstractGameScreen  {
 		// Draw the scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);						
-		// Render backgrounds
-		if (backgrounds!=null && backgrounds.size>0) {
-			backgrounds.get(0).render();
-			if (backgrounds.size>1) {
-				backgrounds.get(1).render();
-			}
-		}							
+		// No background rendering					
 		// Render tilemap
 		tilemapRenderer.setView(camera.getCamera());
 		tilemapRenderer.render();					
@@ -209,53 +215,116 @@ public class GameScreen extends AbstractGameScreen  {
 	}
 					
 	private void handleInput() {
-									
+				
 		if (Gdx.input.isKeyPressed(KEY_RIGHT)) {
-			if (player.getDirection() == DirectionEnum.LEFT) {
-				// Sliding on the right				
-				player.changeState(SpriteMoveEnum.SLIDING_LEFT);
-				player.decelerate(1.5f);
-				if (player.getAcceleration().x <= 0) {
-					// Not sliding anymore
-					player.getAcceleration().x = 0;
-					player.setDirection(DirectionEnum.RIGHT);						
-				}							
-			} else {
-				// Running right
-				player.accelerate();
-				player.setDirection(DirectionEnum.RIGHT);
-				player.changeState(SpriteMoveEnum.RUNNING_RIGHT);
-			}
-		} else if (Gdx.input.isKeyPressed(KEY_LEFT)) {
-			if (player.getDirection() == DirectionEnum.RIGHT) {
-				// Sliding on the left	
-				player.changeState(SpriteMoveEnum.SLIDING_RIGHT);
-				player.decelerate(1.5f);
-				if (player.getAcceleration().x <= 0) {
-					// Not sliding anymore
-					player.getAcceleration().x = 0;
-					player.setDirection(DirectionEnum.LEFT);
-				}							
-			} else {
-				// Running left, not crouched
-				player.accelerate();
-				player.setDirection(DirectionEnum.LEFT);
-				player.changeState(SpriteMoveEnum.RUNNING_LEFT);
-			} 
-		} else {
-			player.decelerate(1);			
+			pressedKey = KEY_RIGHT;			
+		} else if (Gdx.input.isKeyPressed(KEY_LEFT)) {			
+			pressedKey = KEY_LEFT;
+		} else if (Gdx.input.isKeyPressed(KEY_UP)) {
+			pressedKey = KEY_UP;
+		} else if (Gdx.input.isKeyPressed(KEY_DOWN)) {
+			pressedKey = KEY_DOWN;
 		}
-								
-		if (Gdx.input.isKeyPressed(KEY_UP)) {
-			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING && canJump) {
-				player.setOnFloor(false);
-				player.setState(SpriteMoveEnum.JUMPING);
-				player.getAcceleration().y = 0.20f;				
-			}			
-			canJump = false;
+		
+		System.out.println(pressedKey);
+		
+		if (pressedKey !=-1) {
+			
+			if (pressedKey == KEY_RIGHT && player.getDirection()!=DirectionEnum.RIGHT) {
+				if (player.getActions().size==0) {					
+					int x = (int)(player.getX()+1.5f);
+					int y = (int)(player.getY()+player.getHeight()/2);
+					if (!tilemap.isCollisioningTileAt(x, y)) {
+						player.setDirection(DirectionEnum.RIGHT);	
+						player.addAction(Actions.moveTo(player.getX()+0.5f, player.getY(), 0.1f));
+						pressedKey = -1;
+					}				
+				}
+			} else {
+				pressedKey = -1;
+			}
+			if (pressedKey == KEY_LEFT && player.getDirection()!=DirectionEnum.LEFT) {
+				if (player.getActions().size==0) {
+					int x = (int)(player.getX());
+					int y = (int)(player.getY()+player.getHeight()/2);
+					if (!tilemap.isCollisioningTileAt(x, y)) {
+						player.addAction(Actions.moveTo(player.getX()-0.5f, player.getY(), 0.1f));
+						player.setDirection(DirectionEnum.LEFT);
+						pressedKey = -1;
+					}				
+				}							
+			} else {
+				pressedKey = -1;
+			}
+			if (pressedKey == KEY_UP && player.getDirection()!=DirectionEnum.UP) {
+				if (player.getActions().size==0) {
+					int x = (int)(player.getX()+player.getWidth()/2);
+					int y = (int)(player.getY()+player.getHeight()/2+0.5f);
+					if (!tilemap.isCollisioningTileAt(x, y)) {
+						player.addAction(Actions.moveTo(player.getX(), player.getY()+0.5f, 0.2f));
+						player.setDirection(DirectionEnum.UP);
+						pressedKey = -1;
+					}				
+				}				
+			} else {
+				pressedKey = -1;
+			}
+			if (pressedKey == KEY_DOWN && player.getDirection()!=DirectionEnum.DOWN) {
+
+				if (player.getActions().size==0) {
+					int x = (int)(player.getX()+player.getWidth()/2);
+					int y = (int)(player.getY()+player.getHeight()/2-0.5f);
+					if (!tilemap.isCollisioningTileAt(x, y)) {
+						player.addAction(Actions.moveTo(player.getX(), player.getY()-0.5f, 0.2f));
+						player.setDirection(DirectionEnum.DOWN);
+						pressedKey = -1;
+					}				
+				}	
+			} else {
+				pressedKey = -1;
+			}
+			
 		} else {
-		}		
-			canJump = true;
+			if (player.getDirection()==DirectionEnum.RIGHT) {
+				if (player.getActions().size==0) {
+					int x = (int)(player.getX()+1.5f);
+					int y = (int)(player.getY()+player.getHeight()/2);
+					if (!tilemap.isCollisioningTileAt(x, y)) {
+						player.addAction(Actions.moveTo(player.getX()+0.5f, player.getY(), 0.1f));
+					}				
+				}
+			} else if (player.getDirection()==DirectionEnum.LEFT) {
+				
+				if (player.getActions().size==0) {
+					int x = (int)(player.getX());
+					int y = (int)(player.getY()+player.getHeight()/2);
+					if (!tilemap.isCollisioningTileAt(x, y)) {
+						player.addAction(Actions.moveTo(player.getX()-0.5f, player.getY(), 0.1f));
+					}				
+				}
+							
+			} else if (player.getDirection()==DirectionEnum.UP) {
+							
+				if (player.getActions().size==0) {
+					int x = (int)(player.getX()+player.getWidth()/2);
+					int y = (int)(player.getY()+player.getHeight()/2+0.5f);
+					if (!tilemap.isCollisioningTileAt(x, y)) {
+						player.addAction(Actions.moveTo(player.getX(), player.getY()+0.5f, 0.2f));
+					}				
+				}
+							
+			} else if (player.getDirection()==DirectionEnum.DOWN) {
+				
+				if (player.getActions().size==0) {
+					int x = (int)(player.getX()+player.getWidth()/2);
+					int y = (int)(player.getY()+player.getHeight()/2-0.5f);
+					if (!tilemap.isCollisioningTileAt(x, y)) {
+						player.addAction(Actions.moveTo(player.getX(), player.getY()-0.5f, 0.2f));
+					}				
+				}						
+			}		
+		}
+		
 		handleDebugKeys();
 	}
 	
@@ -266,7 +335,7 @@ public class GameScreen extends AbstractGameScreen  {
 			item.update(tilemap, camera.getCamera(), deltaTime);
 			boolean collidePlayer = item.overlaps(player);						
 			if (collidePlayer) {
-				levelFinished = true;				
+				Gdx.app.log("COLLISION", "Please handle item collision");
 			}
 			if (item.isDeletable()) {				
 				items.remove(i--);
@@ -319,7 +388,7 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;
 			debugFont.draw(spriteBatch, "state=" + player.getState().toString(), x, y);
 			y = y -20;
-			debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
+			debugFont.draw(spriteBatch, "direction=" + player.getDirection(), x, y);		
 			y = y -20;			
 			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);
 			y = y -20;			
@@ -350,9 +419,13 @@ public class GameScreen extends AbstractGameScreen  {
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 			
 			shapeRenderer.setProjectionMatrix(camera.getCamera().combined);
+			/*shapeRenderer.begin(ShapeType.Filled);
+			shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
+			shapeRenderer.rect(player.getX() + player.getOffset().x, player.getY(), player.getWidth(), player.getHeight());*/
+			
 			shapeRenderer.begin(ShapeType.Filled);
 			shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
-			shapeRenderer.rect(player.getX() + player.getOffset().x, player.getY(), player.getWidth(), player.getHeight());
+			shapeRenderer.rect(player.getX() + player.getWidth()/2, player.getY()+player.getWidth()/2, 0.2f, 0.2f);
 			
 			shapeRenderer.end();
 			Gdx.gl.glDisable(GL20.GL_BLEND);

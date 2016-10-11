@@ -1,8 +1,11 @@
 package com.game.core.sprite;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -15,7 +18,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.game.core.collision.CollisionEvent;
 import com.game.core.collision.tilemap.ITilemapCollisionHandler;
-import com.game.core.collision.tilemap.impl.BasicTilemapCollisionHandler;
+import com.game.core.collision.tilemap.impl.PlayerTilemapCollisionHandler;
 import com.game.core.tilemap.TmxCell;
 import com.game.core.tilemap.TmxMap;
 import com.game.core.util.RectangleUtil;
@@ -113,7 +116,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		
 		this.initializeAnimations();
 		
-		this.tilemapCollisionHandler = new BasicTilemapCollisionHandler();				
+		this.tilemapCollisionHandler = new PlayerTilemapCollisionHandler();				
 	}
 	
 	public AbstractSprite(float x, float y) {		
@@ -149,7 +152,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 			// The sprite is alive, we first update its animation
 			updateAnimation(deltaTime);
 			if (getActions().size>0) {
-				// If sprite is acting (ex: sprite is an enemy, and has just been killed, an animation is playing to simulate its death) 
+				// If sprite is acting (ex: sprite is an enemy, and has just been killed, an animation is playing to simulate its death)
 				act(deltaTime);
 			} else {
 				// else sprite is not acting
@@ -214,14 +217,17 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	public void move(float deltaTime) {
 		
-		storeOldPosition();
+		/*storeOldPosition();
 		
 		float xVelocity = deltaTime * acceleration.x;
 		xVelocity = direction == DirectionEnum.LEFT ? -xVelocity : xVelocity;
-		setX(getX() + xVelocity);
+		setX(getX() + xVelocity);		
+		setX(new BigDecimal(getX()).setScale(2, RoundingMode.HALF_EVEN).floatValue());
 		
-		applyGravity();
-		setY(getY() + acceleration.y);		
+		float yVelocity = deltaTime * acceleration.y;
+		yVelocity = direction == DirectionEnum.UP ? yVelocity : -yVelocity;
+		setY(getY() + yVelocity);
+		setY(new BigDecimal(getY()).setScale(2, RoundingMode.HALF_EVEN).floatValue());*/		
 	}
 	
 	public void render(Batch batch) {
@@ -231,12 +237,10 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	}
 
 	public void reinitMapCollisionEvent() {				
-		mapCollisionEvent.setCollidingTopLeft(false);
-		mapCollisionEvent.setCollidingTopRight(false);		
-		mapCollisionEvent.setCollidingBottomLeft(false);
-		mapCollisionEvent.setCollidingBottomRight(false);
-		mapCollisionEvent.setCollidingMiddleLeft(false);
-		mapCollisionEvent.setCollidingMiddleRight(false);		
+		mapCollisionEvent.setCollidingTop(false);
+		mapCollisionEvent.setCollidingBottom(false);
+		mapCollisionEvent.setCollidingLeft(false);
+		mapCollisionEvent.setCollidingRight(false);
 	}	
 
 	/** Getters / Setters */
@@ -479,5 +483,5 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	public void setTilemapCollisionHandler(ITilemapCollisionHandler tilemapCollisionHandler) {
 		this.tilemapCollisionHandler = tilemapCollisionHandler;
 	}
-
+	
 }

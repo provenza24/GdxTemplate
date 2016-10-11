@@ -15,7 +15,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.game.core.sprite.AbstractItem;
-import com.game.core.sprite.impl.item.Flag;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.util.constants.TilemapConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
@@ -39,8 +38,6 @@ public class TmxMap {
 	
 	private CameraEnum cameraEnum;
 
-	private Flag flag;
-	
 	private List<AbstractItem> items;
 	
 	public TmxMap(String levelName) {
@@ -81,10 +78,6 @@ public class TmxMap {
 			if (objectProperty.get("type").toString().equals("player")) {
 				player = new Player(mapObject);
 			}			
-			if (objectProperty.get("type").toString().equals("flag")) {
-				flag = new Flag(mapObject, new Vector2());
-				items.add(flag);
-			}
 		}
 	}
 
@@ -162,14 +155,6 @@ public class TmxMap {
 
 	public void setCameraEnum(CameraEnum cameraEnum) {
 		this.cameraEnum = cameraEnum;
-	}
-
-	public Flag getFlag() {
-		return flag;
-	}
-
-	public void setFlag(Flag flag) {
-		this.flag = flag;
 	}
 
 	public List<AbstractItem> getItems() {

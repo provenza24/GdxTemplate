@@ -48,8 +48,7 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 	/** Background can scroll vertically */
 	protected boolean scrollableVertically;
 		
-	static {
-		BACKGROUND_IMAGES.put(BackgroundTypeEnum.FOREST, ResourcesLoader.getBackgroundForest());
+	static {		
 	}
 		
 	public AbstractScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType) {
