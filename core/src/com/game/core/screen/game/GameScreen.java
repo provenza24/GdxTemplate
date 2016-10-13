@@ -225,12 +225,10 @@ public class GameScreen extends AbstractGameScreen  {
 		} else if (Gdx.input.isKeyPressed(KEY_DOWN)) {
 			pressedKey = KEY_DOWN;
 		}
-		
-		System.out.println(pressedKey);
-		
+			
 		if (pressedKey !=-1) {
 			
-			if (pressedKey == KEY_RIGHT && player.getDirection()!=DirectionEnum.RIGHT) {
+			if (pressedKey == KEY_RIGHT && player.getDirection()!=DirectionEnum.RIGHT && isAllowedToTurn()) {
 				if (player.getActions().size==0) {					
 					int x = (int)(player.getX()+1.5f);
 					int y = (int)(player.getY()+player.getHeight()/2);
@@ -238,12 +236,9 @@ public class GameScreen extends AbstractGameScreen  {
 						player.setDirection(DirectionEnum.RIGHT);	
 						player.addAction(Actions.moveTo(player.getX()+0.5f, player.getY(), 0.1f));
 						pressedKey = -1;
-					}				
+					} 	 			
 				}
-			} else {
-				pressedKey = -1;
-			}
-			if (pressedKey == KEY_LEFT && player.getDirection()!=DirectionEnum.LEFT) {
+			} else if (pressedKey == KEY_LEFT && player.getDirection()!=DirectionEnum.LEFT && isAllowedToTurn()) {
 				if (player.getActions().size==0) {
 					int x = (int)(player.getX());
 					int y = (int)(player.getY()+player.getHeight()/2);
@@ -251,41 +246,35 @@ public class GameScreen extends AbstractGameScreen  {
 						player.addAction(Actions.moveTo(player.getX()-0.5f, player.getY(), 0.1f));
 						player.setDirection(DirectionEnum.LEFT);
 						pressedKey = -1;
-					}				
-				}							
-			} else {
-				pressedKey = -1;
-			}
-			if (pressedKey == KEY_UP && player.getDirection()!=DirectionEnum.UP) {
+					}			
+				}						
+			} else if (pressedKey == KEY_UP && player.getDirection()!=DirectionEnum.UP && isAllowedToTurn()) {
 				if (player.getActions().size==0) {
 					int x = (int)(player.getX()+player.getWidth()/2);
 					int y = (int)(player.getY()+player.getHeight()/2+0.5f);
 					if (!tilemap.isCollisioningTileAt(x, y)) {
-						player.addAction(Actions.moveTo(player.getX(), player.getY()+0.5f, 0.2f));
+						player.addAction(Actions.moveTo(player.getX(), player.getY()+0.5f, 0.1f));
 						player.setDirection(DirectionEnum.UP);
 						pressedKey = -1;
-					}				
-				}				
-			} else {
-				pressedKey = -1;
-			}
-			if (pressedKey == KEY_DOWN && player.getDirection()!=DirectionEnum.DOWN) {
+					} 				
+				}
+			} else if (pressedKey == KEY_DOWN && player.getDirection()!=DirectionEnum.DOWN && isAllowedToTurn()) {
 
 				if (player.getActions().size==0) {
 					int x = (int)(player.getX()+player.getWidth()/2);
-					int y = (int)(player.getY()+player.getHeight()/2-0.5f);
+					int y = (int)(player.getY()+player.getHeight()/2-1f);
 					if (!tilemap.isCollisioningTileAt(x, y)) {
-						player.addAction(Actions.moveTo(player.getX(), player.getY()-0.5f, 0.2f));
+						player.addAction(Actions.moveTo(player.getX(), player.getY()-0.5f, 0.1f));
 						player.setDirection(DirectionEnum.DOWN);
 						pressedKey = -1;
-					}				
-				}	
-			} else {
-				pressedKey = -1;
-			}
+					} 				
+				} 
+			} 
 			
-		} else {
+		} 
+		
 			if (player.getDirection()==DirectionEnum.RIGHT) {
+				Gdx.app.log("DEPLACEMENT", "Auto droite");
 				if (player.getActions().size==0) {
 					int x = (int)(player.getX()+1.5f);
 					int y = (int)(player.getY()+player.getHeight()/2);
@@ -309,7 +298,7 @@ public class GameScreen extends AbstractGameScreen  {
 					int x = (int)(player.getX()+player.getWidth()/2);
 					int y = (int)(player.getY()+player.getHeight()/2+0.5f);
 					if (!tilemap.isCollisioningTileAt(x, y)) {
-						player.addAction(Actions.moveTo(player.getX(), player.getY()+0.5f, 0.2f));
+						player.addAction(Actions.moveTo(player.getX(), player.getY()+0.5f, 0.1f));
 					}				
 				}
 							
@@ -317,15 +306,24 @@ public class GameScreen extends AbstractGameScreen  {
 				
 				if (player.getActions().size==0) {
 					int x = (int)(player.getX()+player.getWidth()/2);
-					int y = (int)(player.getY()+player.getHeight()/2-0.5f);
+					int y = (int)(player.getY()+player.getHeight()/2-1f);
 					if (!tilemap.isCollisioningTileAt(x, y)) {
-						player.addAction(Actions.moveTo(player.getX(), player.getY()-0.5f, 0.2f));
+						player.addAction(Actions.moveTo(player.getX(), player.getY()-0.5f, 0.1f));
 					}				
 				}						
 			}		
-		}
+		
 		
 		handleDebugKeys();
+	}
+	
+	private boolean isAllowedToTurn() {
+		
+		float xDiff = player.getX()-(int)player.getX();
+		float yDiff = player.getY()-(int)player.getY();
+		
+		return xDiff == 0.5f && yDiff == 0.5f;
+		
 	}
 	
 	private void handleItems(float deltaTime) {
