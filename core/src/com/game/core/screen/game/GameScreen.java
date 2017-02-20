@@ -254,8 +254,8 @@ public class GameScreen extends AbstractGameScreen  {
 			}			
 			canJump = false;
 		} else {
-		}		
 			canJump = true;
+		}					
 		handleDebugKeys();
 	}
 	
