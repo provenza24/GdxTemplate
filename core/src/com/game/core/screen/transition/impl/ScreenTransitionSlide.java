@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.game.core.screen.transition.AbstractScreenTransition;
-import com.game.core.screen.transition.IScreenTransition;
 
 public class ScreenTransitionSlide extends AbstractScreenTransition {
 	

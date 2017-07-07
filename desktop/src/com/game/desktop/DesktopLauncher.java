@@ -15,8 +15,12 @@ public class DesktopLauncher {
 		config.height = ScreenConstants.HEIGHT;
 		
 		config.resizable = false;
-		config.title = "Libgdx 2D Demo";			
-					
+		config.title = "Libgdx 2D Demo";										
+		
+		//config.x = 2800;
+		//config.y = 900;
+		
 		new LwjglApplication(GameManager.getGameManager(), config);
+				
 	}
 }
