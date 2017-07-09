@@ -19,7 +19,11 @@ import com.game.core.util.enums.PieceType;
 
 public class Board {
 
-	private static final int BLOCK_WIDTH = ScreenConstants.MAP_UNIT_PIXELS;
+	private static final int BOARD_HEIGHT = ScreenConstants.BOARD_HEIGHT;
+
+	private static final int BOARD_WIDTH = ScreenConstants.BOARD_WIDTH;
+
+	private static final int BLOCK_WIDTH = ScreenConstants.SQUARE_WIDTH;
 
 	private static final int RANDOM_HIGH_VALUE = 7;
 	
@@ -40,9 +44,9 @@ public class Board {
 	private final BoardSquare board[][];
 
 	public Board() {
-		board = new BoardSquare[10][18];
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 18; j++) {
+		board = new BoardSquare[BOARD_WIDTH][BOARD_HEIGHT];
+		for (int i = 0; i < BOARD_WIDTH; i++) {
+			for (int j = 0; j < BOARD_HEIGHT; j++) {
 				board[i][j] = new BoardSquare(0, PieceType.EMPTY);
 			}
 		}		
@@ -104,7 +108,7 @@ public class Board {
 	}
 	
 	private boolean isDeletableLine(int line) {		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < BOARD_WIDTH; i++) {
 			if (board[i][line].getPieceType()==PieceType.EMPTY) {				
 				return false;
 			}
@@ -114,8 +118,8 @@ public class Board {
 	
 	public void deleteLine(int line) {
 		int currentLine = line + 1;
-		for (int i = currentLine; i < 18; i++) {
-			for (int j = 0; j < 10; j++) {
+		for (int i = currentLine; i < BOARD_HEIGHT; i++) {
+			for (int j = 0; j < BOARD_WIDTH; j++) {
 				board[j][i - 1].setPieceType(board[j][i].getPieceType());				
 				board[j][i].setPieceType(PieceType.EMPTY);
 			}

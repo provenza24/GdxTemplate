@@ -2,8 +2,12 @@ package com.game.core.util.constants;
 
 public class ScreenConstants {
 			
-	public static final int MAP_UNIT_PIXELS = 32;
+	public static final int SQUARE_WIDTH = 32;
 
+	public static final int BOARD_WIDTH = 10;
+	
+	public static final int BOARD_HEIGHT = 18;
+	
 	/*public static final int NB_HORIZONTAL_TILES = 17;
 
 	public static final int NB_VERTICAL_TILES = 18;
@@ -24,8 +28,8 @@ public class ScreenConstants {
 
 	public static final int HEIGHT = (int) (ORIGINAL_HEIGHT * SCREEN_COEF);*/	
 
-	public static final int WIDTH = MAP_UNIT_PIXELS * 10;
+	public static final int WIDTH = SQUARE_WIDTH * BOARD_WIDTH;
 
-	public static final int HEIGHT = MAP_UNIT_PIXELS * 18;
+	public static final int HEIGHT = SQUARE_WIDTH * BOARD_HEIGHT;
 	
 }

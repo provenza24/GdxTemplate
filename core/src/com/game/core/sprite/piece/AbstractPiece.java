@@ -13,7 +13,7 @@ import com.game.core.util.enums.PieceType;
 
 public abstract class AbstractPiece implements IPiece {
 	
-	private static final int BLOCK_WIDTH = ScreenConstants.MAP_UNIT_PIXELS;
+	private static final int BLOCK_WIDTH = ScreenConstants.SQUARE_WIDTH;
 
 	protected final static Map<DirectionType, Vector2> MOVES = new HashMap<DirectionType, Vector2>();
 	
