@@ -10,7 +10,6 @@ import com.game.core.GameManager;
 import com.game.core.sprite.board.Board;
 import com.game.core.sprite.piece.IPiece;
 import com.game.core.util.DirectionType;
-import com.game.core.util.Level;
 import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.ScreenEnum;
 import com.game.core.util.enums.ScreenStateEnum;
@@ -41,7 +40,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private float PIECE_FALL_DELAY = 0.2f;
 	
-	public GameScreen(Level level) {
+	public GameScreen() {
 										
 		// Initialize fonts
 		debugFont = new BitmapFont();		
