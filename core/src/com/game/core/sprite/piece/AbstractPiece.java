@@ -51,12 +51,12 @@ public abstract class AbstractPiece implements IPiece {
 	
 	public abstract PieceType getType();
 
-	public void rotate() {
+	public void rotate(boolean right) {
 		this.savePositions();
 		for (int i = 1; i < 4; i++) {
 			Vector2 p = new Vector2(cases[i].x - cases[0].x,
 					cases[i].y - cases[0].y);
-			Vector2 resul = new Vector2( p.y, -p.x);
+			Vector2 resul = new Vector2( p.y, right ? -p.x : p.x);
 			resul.x = resul.x + cases[0].x;
 			resul.y = resul.y + cases[0].y;
 			cases[i].x = resul.x;
@@ -72,14 +72,23 @@ public abstract class AbstractPiece implements IPiece {
 	}
 	
 	
-	public void render(Batch batch) {
+	public void render(Batch batch) {		
 		batch.begin();						
-		batch.draw(PIECE_IMAGES.get(this.getType()), this.cases[0].x * BLOCK_WIDTH, this.cases[0].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
-		batch.draw(PIECE_IMAGES.get(this.getType()), this.cases[1].x * BLOCK_WIDTH, this.cases[1].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
-		batch.draw(PIECE_IMAGES.get(this.getType()), this.cases[2].x * BLOCK_WIDTH, this.cases[2].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
-		batch.draw(PIECE_IMAGES.get(this.getType()), this.cases[3].x * BLOCK_WIDTH, this.cases[3].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);			
+		batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[0].x) * BLOCK_WIDTH, this.cases[0].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+		batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[1].x) * BLOCK_WIDTH, this.cases[1].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+		batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[2].x) * BLOCK_WIDTH, this.cases[2].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+		batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[3].x) * BLOCK_WIDTH, this.cases[3].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);			
 		batch.end();
-	}			
+	}
+	
+	public void renderNextPiece(Batch batch) {		
+		batch.begin();						
+		batch.draw(PIECE_IMAGES.get(this.getType()), 12 * BLOCK_WIDTH, (5 + 17-this.cases[0].y) * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+		batch.draw(PIECE_IMAGES.get(this.getType()), (12+this.cases[1].x-this.cases[0].x) * BLOCK_WIDTH, (5 + 17-this.cases[1].y) * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+		batch.draw(PIECE_IMAGES.get(this.getType()), (12+this.cases[2].x-this.cases[0].x) * BLOCK_WIDTH, (5 + 17-this.cases[2].y) * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+		batch.draw(PIECE_IMAGES.get(this.getType()), (12+this.cases[3].x-this.cases[0].x) * BLOCK_WIDTH, (5 + 17-this.cases[3].y) * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);			
+		batch.end();
+	}
 	
 	public void translate(DirectionType direction) {
 		this.savePositions();

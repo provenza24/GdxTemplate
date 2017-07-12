@@ -16,6 +16,10 @@ public abstract class AbstractGameScreen extends ScreenAdapter {
 	
 	protected static final int KEY_UP = KeysConstants.KEY_UP;
 	
+	protected static final int KEY_A = KeysConstants.KEY_A;
+	
+	protected static final int KEY_B = KeysConstants.KEY_B;
+	
 	protected static Color DEBUG_BOUNDS_COLOR;
 	
 	protected static final Color[] fontColors = new Color[]{Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE};

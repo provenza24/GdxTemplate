@@ -9,6 +9,8 @@ public interface IPiece {
 
 	public void render(Batch batch);
 	
+	public void renderNextPiece(Batch batch);
+	
 	public PieceType getType();				
 	
 	public void translate(DirectionType direction);	
@@ -17,7 +19,7 @@ public interface IPiece {
 	
 	public Vector2 getCase(int i);
 	
-	public void rotate();
+	public void rotate(boolean right);
 	
 	public void undoRotation();
 }

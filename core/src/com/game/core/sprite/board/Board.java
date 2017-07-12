@@ -58,7 +58,7 @@ public class Board {
 			for (int j = 0; j < board[i].length; j++) {
 				BoardSquare boardSquare = board[i][j];
 				if (boardSquare.getPieceType() != PieceType.EMPTY) {
-					batch.draw(PIECE_IMAGES.get(boardSquare.getPieceType()), i * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH);
+					batch.draw(PIECE_IMAGES.get(boardSquare.getPieceType()), (i + ScreenConstants.BOARD_LEFT_SPACE) * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH);
 				}
 			}
 		}
@@ -134,6 +134,7 @@ public class Board {
 		
 		IPiece piece = null;		
 		int random = (int)(Math.random() * (RANDOM_HIGH_VALUE-RANDOM_LOW_VALUE)) + RANDOM_LOW_VALUE;
+		random = 1;
 		switch (random) {
 		case 1:
 			piece = new BarBlock();

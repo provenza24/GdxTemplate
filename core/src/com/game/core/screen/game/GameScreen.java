@@ -5,6 +5,9 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.game.core.GameManager;
 import com.game.core.sprite.board.Board;
@@ -36,9 +39,16 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private IPiece currentPiece;
 	
+	private IPiece nextPiece;
+	
 	private float currentPieceFallDelay;
 	
-	private float PIECE_FALL_DELAY = 0.2f;
+	private float PIECE_FALL_DELAY = 1f;
+	
+	private boolean debugShowBounds = true;
+	
+	/** Used in debug mode to draw bounding boxes of sprites */
+	private ShapeRenderer shapeRenderer;
 	
 	public GameScreen() {
 										
@@ -52,7 +62,10 @@ public class GameScreen extends AbstractGameScreen  {
 							
 		//stage = new Stage();			
 		
-		currentPiece = board.createPiece();							
+		currentPiece = board.createPiece();
+		nextPiece = board.createPiece();		
+		
+		shapeRenderer = new ShapeRenderer();
 	}
 		
 	@Override
@@ -98,8 +111,9 @@ public class GameScreen extends AbstractGameScreen  {
 							board.deleteLine(toSuppress[i]);							
 						}
 					}					
-				}				
-				currentPiece = board.createPiece();
+				}
+				currentPiece = nextPiece;
+				nextPiece = board.createPiece();				
 			}
 		}
 		
@@ -110,6 +124,7 @@ public class GameScreen extends AbstractGameScreen  {
 				
 		board.render(spriteBatch);
 		currentPiece.render(spriteBatch);
+		nextPiece.renderNextPiece(spriteBatch);
 					
 		// Render debug mode
 		renderDebugMode();
@@ -119,7 +134,8 @@ public class GameScreen extends AbstractGameScreen  {
 			
 		boolean right = false;
 		boolean left = false;
-		boolean up = false;
+		boolean keyRotationRight = false;
+		boolean keyRotationLeft = false;
 		
 		if (Gdx.input.isKeyJustPressed(KEY_RIGHT)) {		
 			right = true;
@@ -127,11 +143,11 @@ public class GameScreen extends AbstractGameScreen  {
 		if (Gdx.input.isKeyJustPressed(KEY_LEFT)) {
 			left = true;
 		} else
-		if (Gdx.input.isKeyJustPressed(KEY_UP)) {
-			up = true;
+		if (Gdx.input.isKeyJustPressed(KEY_A)) {
+			keyRotationRight = true;
 		} else
-		if (Gdx.input.isKeyJustPressed(KEY_DOWN)) {
-			
+		if (Gdx.input.isKeyJustPressed(KEY_B)) {
+			keyRotationLeft = true;
 		}		
 		
 		if (right || left) {
@@ -142,10 +158,10 @@ public class GameScreen extends AbstractGameScreen  {
 					currentPiece.undoTranslation();
 				}
 			}
-		} else if (up) {
+		} else if (keyRotationRight || keyRotationLeft) {
 			if (currentKeyPressDelay>=KEY_PRESS_DELAY) {
 				currentKeyPressDelay = 0;
-				currentPiece.rotate();
+				currentPiece.rotate(keyRotationRight);
 				if (!board.isAcceptable(currentPiece)) {
 					currentPiece.undoRotation();
 				}
@@ -180,6 +196,30 @@ public class GameScreen extends AbstractGameScreen  {
 		if (debugShowFps) {
 			spriteBatch.begin();
 			debugFont.draw(spriteBatch, Integer.toString(Gdx.graphics.getFramesPerSecond()), ScreenConstants.WIDTH - 20, ScreenConstants.HEIGHT-10);
+			spriteBatch.end();
+		}
+		
+		if (debugShowBounds) {
+			// Green rectangle around Player
+			spriteBatch.begin();
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			
+			for (int i = 0; i < ScreenConstants.BOARD_WIDTH; i++) {
+				shapeRenderer.begin(ShapeType.Filled);
+				shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
+				shapeRenderer.rectLine(new Vector2(i*ScreenConstants.SQUARE_WIDTH,0), new Vector2(i*ScreenConstants.SQUARE_WIDTH,ScreenConstants.BOARD_HEIGHT*ScreenConstants.SQUARE_WIDTH),1);			
+				shapeRenderer.end();				
+			}
+			for (int i = 0; i < ScreenConstants.BOARD_HEIGHT; i++) {
+				shapeRenderer.begin(ShapeType.Filled);
+				shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
+				shapeRenderer.rectLine(new Vector2(0, i*ScreenConstants.SQUARE_WIDTH), new Vector2(ScreenConstants.BOARD_HEIGHT * ScreenConstants.SQUARE_WIDTH ,i*ScreenConstants.SQUARE_WIDTH),1);			
+				shapeRenderer.end();				
+			}
+			
+			
+			Gdx.gl.glDisable(GL20.GL_BLEND);
 			spriteBatch.end();
 		}
 		

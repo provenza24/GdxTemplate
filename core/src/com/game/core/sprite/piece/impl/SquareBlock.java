@@ -19,7 +19,7 @@ public class SquareBlock extends AbstractPiece {
 	}
 
 	@Override
-	public void rotate() {		
+	public void rotate(boolean right) {		
 	}
 	
 	

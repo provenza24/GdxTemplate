@@ -15,14 +15,14 @@ public final class BarBlock extends AbstractPieceRotatingTwice {
 	}
 
 	@Override
-	public void rotate() {
-		super.rotate();
-		if (rotationNum == 1) {
+	public void rotate(boolean right) {
+		super.rotate(right);		
+		if (rotationNum == 1) {			
 			for (int i = 0; i < 4; i++) {
 				cases[i].x +=1;
-			}	
-			swap(0, 2);			
-		}
+			}
+			swap(0, 2);
+		}		
 		updateToPreviousRotationNum();
 	}
 
