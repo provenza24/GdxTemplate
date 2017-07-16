@@ -43,7 +43,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private float currentPieceFallDelay;
 	
-	private float PIECE_FALL_DELAY = 1f;
+	private float PIECE_FALL_DELAY = 0.2f;
 	
 	private boolean debugShowBounds = true;
 	
@@ -177,13 +177,21 @@ public class GameScreen extends AbstractGameScreen  {
 		
 		if (Gdx.input.isKeyJustPressed(Keys.F2)) {
 			debugShowText = !debugShowText;
-		}						
+		}	
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F12)) {		
+		if (Gdx.input.isKeyJustPressed(Keys.F4)) {
+			debugShowBounds = !debugShowBounds;
+		}	
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F3)) {		
 			currentDebugColor++;
 			currentDebugColor = fontColors.length == currentDebugColor ? 0 : currentDebugColor;
 			debugFont.setColor(fontColors[currentDebugColor]);
 			DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F12)) {
+			PIECE_FALL_DELAY = PIECE_FALL_DELAY == 0.2f ? 10 : 0.2f;
 		}
 				
 	}
@@ -205,16 +213,16 @@ public class GameScreen extends AbstractGameScreen  {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 			
-			for (int i = 0; i < ScreenConstants.BOARD_WIDTH; i++) {
+			for (int i = 0; i < ScreenConstants.BOARD_WIDTH +1; i++) {
 				shapeRenderer.begin(ShapeType.Filled);
 				shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
-				shapeRenderer.rectLine(new Vector2(i*ScreenConstants.SQUARE_WIDTH,0), new Vector2(i*ScreenConstants.SQUARE_WIDTH,ScreenConstants.BOARD_HEIGHT*ScreenConstants.SQUARE_WIDTH),1);			
+				shapeRenderer.rectLine(new Vector2((i+ScreenConstants.BOARD_LEFT_SPACE)*ScreenConstants.SQUARE_WIDTH,0), new Vector2((i+ScreenConstants.BOARD_LEFT_SPACE)*ScreenConstants.SQUARE_WIDTH,ScreenConstants.BOARD_HEIGHT*ScreenConstants.SQUARE_WIDTH),1);			
 				shapeRenderer.end();				
 			}
 			for (int i = 0; i < ScreenConstants.BOARD_HEIGHT; i++) {
 				shapeRenderer.begin(ShapeType.Filled);
 				shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
-				shapeRenderer.rectLine(new Vector2(0, i*ScreenConstants.SQUARE_WIDTH), new Vector2(ScreenConstants.BOARD_HEIGHT * ScreenConstants.SQUARE_WIDTH ,i*ScreenConstants.SQUARE_WIDTH),1);			
+				shapeRenderer.rectLine(new Vector2(ScreenConstants.BOARD_LEFT_SPACE * ScreenConstants.SQUARE_WIDTH, i*ScreenConstants.SQUARE_WIDTH), new Vector2(ScreenConstants.BOARD_LEFT_SPACE * ScreenConstants.SQUARE_WIDTH + ScreenConstants.BOARD_WIDTH * ScreenConstants.SQUARE_WIDTH ,i*ScreenConstants.SQUARE_WIDTH),1);			
 				shapeRenderer.end();				
 			}
 			

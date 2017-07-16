@@ -134,7 +134,7 @@ public class Board {
 		
 		IPiece piece = null;		
 		int random = (int)(Math.random() * (RANDOM_HIGH_VALUE-RANDOM_LOW_VALUE)) + RANDOM_LOW_VALUE;
-		random = 1;
+		//random = 2;
 		switch (random) {
 		case 1:
 			piece = new BarBlock();
