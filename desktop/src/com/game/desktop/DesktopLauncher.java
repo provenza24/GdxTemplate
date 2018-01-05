@@ -9,7 +9,7 @@ public class DesktopLauncher {
 
 	public static void main(String[] arg) {
 					
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();		
 		
 		config.width = ScreenConstants.WIDTH;
 		config.height = ScreenConstants.HEIGHT;
@@ -17,8 +17,8 @@ public class DesktopLauncher {
 		config.resizable = false;
 		config.title = "Libgdx 2D Demo";										
 		
-		/*config.x = 2800;
-		config.y = 900;*/
+		/*config.x = 1400;
+		config.y = 850;*/
 		
 		new LwjglApplication(GameManager.getGameManager(), config);
 				

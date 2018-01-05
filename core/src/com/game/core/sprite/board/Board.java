@@ -65,6 +65,31 @@ public class Board {
 		batch.end();
 	}
 	
+	public void render(Batch batch, int toSuppress[], boolean draw) {		
+		batch.begin();		
+		for (int j = 0; j < BOARD_HEIGHT; j++) {
+			boolean lineDeleted = contains(toSuppress, j);			
+			if ((draw && lineDeleted) || !lineDeleted) {
+				for (int i = 0; i < BOARD_WIDTH; i++) {
+					BoardSquare boardSquare = board[i][j];
+					if (boardSquare.getPieceType() != PieceType.EMPTY) {
+						batch.draw(PIECE_IMAGES.get(boardSquare.getPieceType()), (i + ScreenConstants.BOARD_LEFT_SPACE) * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH);
+					}
+				}
+			}
+		}									
+		batch.end();
+	}
+	
+	private boolean contains(int toSuppress[], int index) {
+		for (int i=0; i<toSuppress.length-1;i++) {
+			if (toSuppress[i]==index) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public boolean isAcceptable(IPiece piece) {
 		try {			
 			for (int i = 0; i < 4; i++) {				 

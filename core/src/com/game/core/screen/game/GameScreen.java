@@ -8,18 +8,32 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.game.core.GameManager;
 import com.game.core.sprite.board.Board;
 import com.game.core.sprite.piece.IPiece;
 import com.game.core.util.DirectionType;
+import com.game.core.util.constants.KeysConstants;
 import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.ScreenEnum;
 import com.game.core.util.enums.ScreenStateEnum;
 
 public class GameScreen extends AbstractGameScreen  {
-		
-	private Stage stage;
+	
+	private static final float LINE_DELETED_ANIMATION_DELAY = 1f;
+	
+	private static final float LINE_DELETED_DRAW_ANIMATION_DELAY = 0.25f;
+	
+	private static final float KEY_DOWN_DELAY = 0.05f;
+	
+	private static final float PIECE_FALL_DELAY = 0.4f;
+	
+	private float lineDeletedDelay = 0;
+	
+	private float lineDeletedDrawDelay = 0;
+	
+	private boolean displayDeletedLines = true;				
+	
+	private float keyDownDelay = 0;
 	
 	private SpriteBatch spriteBatch;
 			
@@ -43,12 +57,14 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private float currentPieceFallDelay;
 	
-	private float PIECE_FALL_DELAY = 0.2f;
+	private boolean fallFaster = false;
 	
 	private boolean debugShowBounds = true;
 	
 	/** Used in debug mode to draw bounding boxes of sprites */
 	private ShapeRenderer shapeRenderer;
+	
+	private int toSuppress[];
 	
 	public GameScreen() {
 										
@@ -81,12 +97,37 @@ public class GameScreen extends AbstractGameScreen  {
 			break;
 		case TRANSITION:		
 			break;
+		case DELETING_LINES:
+			lineDeletedDelay += delta;
+			if (lineDeletedDelay>=LINE_DELETED_ANIMATION_DELAY) {
+				screenState = ScreenStateEnum.RUNNING;
+				lineDeletedDelay = 0;
+				for (int i = 0; i < 4; i++) {						
+					if (toSuppress[i] != -1) {
+						board.deleteLine(toSuppress[i]);							
+					}
+				}
+				currentPiece = nextPiece;
+				nextPiece = board.createPiece();							
+				if (!board.isAcceptable(currentPiece)) {
+					GameManager.getGameManager().setScreen(ScreenEnum.MAIN_MENU);
+				}
+			} else {
+				lineDeletedDrawDelay +=delta;
+				if (lineDeletedDrawDelay>=LINE_DELETED_DRAW_ANIMATION_DELAY) {
+					lineDeletedDrawDelay = 0;
+					displayDeletedLines = !displayDeletedLines;
+				}
+				drawSceneLineDeleted(toSuppress, displayDeletedLines, delta);
+			}
+			break;
 		}
-					
+							
 	}
 
 	private void renderGame(float delta) {
 		
+		keyDownDelay +=delta;
 		currentKeyPressDelay += delta;
 		currentPieceFallDelay += delta;
 		
@@ -95,36 +136,51 @@ public class GameScreen extends AbstractGameScreen  {
 		handleDebugKeys();
 			
 		// The piece is falling
-		if (currentPieceFallDelay>=PIECE_FALL_DELAY) {
+		if (currentPieceFallDelay>=PIECE_FALL_DELAY || fallFaster) {
 			// If fall delay passed, make it fall
 			currentPieceFallDelay = 0;
 			currentPiece.translate(DirectionType.DOWN);
 			if (!board.isAcceptable(currentPiece)) {
 				// If piece can't fall, pose piece on board and create new one
 				currentPiece.undoTranslation();
-				board.posePiece(currentPiece);				
-				
-				int toSuppress[] = board.getLinesToSuppress(currentPiece);				
-				if (toSuppress[4] > 0) {					
-					for (int i = 0; i < 4; i++) {						
-						if (toSuppress[i] != -1) {
-							board.deleteLine(toSuppress[i]);							
-						}
-					}					
+				board.posePiece(currentPiece);								
+				toSuppress = board.getLinesToSuppress(currentPiece);						
+				if (toSuppress[4] > 0) {
+					screenState = ScreenStateEnum.DELETING_LINES;						
 				}
-				currentPiece = nextPiece;
-				nextPiece = board.createPiece();				
+				if (screenState!=ScreenStateEnum.DELETING_LINES) {										
+					currentPiece = nextPiece;
+					nextPiece = board.createPiece();							
+					if (!board.isAcceptable(currentPiece)) {
+						GameManager.getGameManager().setScreen(ScreenEnum.MAIN_MENU);
+					}
+				}
 			}
-		}
-		
-		
+		}		
+		drawScene(delta);
+	}	
+	
+	private void drawScene(float delta) {
 		// Draw the scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 				
 		board.render(spriteBatch);
 		currentPiece.render(spriteBatch);
-		nextPiece.renderNextPiece(spriteBatch);
+		nextPiece.renderNextPiece(spriteBatch);		
+					
+		// Render debug mode
+		renderDebugMode();
+	}
+	
+	private void drawSceneLineDeleted(int[] toSuppress, boolean drawDeletedLines, float delta) {
+		// Draw the scene
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+				
+		board.render(spriteBatch,  toSuppress, drawDeletedLines);
+		//currentPiece.render(spriteBatch);
+		nextPiece.renderNextPiece(spriteBatch);		
 					
 		// Render debug mode
 		renderDebugMode();
@@ -136,19 +192,27 @@ public class GameScreen extends AbstractGameScreen  {
 		boolean left = false;
 		boolean keyRotationRight = false;
 		boolean keyRotationLeft = false;
+		fallFaster = false;
 		
 		if (Gdx.input.isKeyJustPressed(KEY_RIGHT)) {		
 			right = true;
 		} else 
 		if (Gdx.input.isKeyJustPressed(KEY_LEFT)) {
 			left = true;
-		} else
+		} 
 		if (Gdx.input.isKeyJustPressed(KEY_A)) {
 			keyRotationRight = true;
-		} else
+		} 
 		if (Gdx.input.isKeyJustPressed(KEY_B)) {
 			keyRotationLeft = true;
 		}		
+		
+		if (Gdx.input.isKeyPressed(KeysConstants.KEY_DOWN)) {
+			if (keyDownDelay>KEY_DOWN_DELAY) {
+				keyDownDelay = 0;
+				fallFaster = true;
+			} 
+		}
 		
 		if (right || left) {
 			if (currentKeyPressDelay>=KEY_PRESS_DELAY) {
@@ -158,7 +222,8 @@ public class GameScreen extends AbstractGameScreen  {
 					currentPiece.undoTranslation();
 				}
 			}
-		} else if (keyRotationRight || keyRotationLeft) {
+		} 
+		if (keyRotationRight || keyRotationLeft) {
 			if (currentKeyPressDelay>=KEY_PRESS_DELAY) {
 				currentKeyPressDelay = 0;
 				currentPiece.rotate(keyRotationRight);
@@ -190,9 +255,9 @@ public class GameScreen extends AbstractGameScreen  {
 			DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F12)) {
+		/*if (Gdx.input.isKeyJustPressed(Keys.F12)) {
 			PIECE_FALL_DELAY = PIECE_FALL_DELAY == 0.2f ? 10 : 0.2f;
-		}
+		}*/
 				
 	}
 		
@@ -244,8 +309,7 @@ public class GameScreen extends AbstractGameScreen  {
 	}
 
 	@Override
-	public void dispose() {		
-		stage.dispose();				
+	public void dispose() {							
 		debugFont.dispose();
 		spriteBatch.dispose();		
 	}
