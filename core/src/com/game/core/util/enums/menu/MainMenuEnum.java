@@ -2,7 +2,7 @@ package com.game.core.util.enums.menu;
 
 public enum MainMenuEnum {
 
-	ONE_PLAYER_GAME ("TEST");
+	ONE_PLAYER_GAME ("PLAY");
 	//SOUND_OPTIONS ("SOUND OPTIONS");
 	//CREDITS ("CREDITS");
 
