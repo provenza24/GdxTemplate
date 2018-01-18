@@ -157,10 +157,11 @@ public class GameScreen extends AbstractGameScreen  {
 					for (int i=0; i<4; i++) {
 						if (toSuppress[i]!=-1) {							
 							for (int j=0;j<10;j++) {								
-								sfxSprites.add(new TopLeftWallPiece(j*ScreenConstants.SQUARE_WIDTH, toSuppress[i]*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2));																	
-								sfxSprites.add(new TopRightWallPiece(j*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, toSuppress[i]*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2));										
-								sfxSprites.add(new BottomRightWallPiece(j*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, toSuppress[i]*ScreenConstants.SQUARE_WIDTH));																	
-								sfxSprites.add(new BottomLeftWallPiece(j*ScreenConstants.SQUARE_WIDTH, toSuppress[i]*ScreenConstants.SQUARE_WIDTH));
+								BoardSquare boardSquare = board.getBoard()[j][toSuppress[i]];								
+								sfxSprites.add(new TopLeftWallPiece(boardSquare, j*ScreenConstants.SQUARE_WIDTH, toSuppress[i]*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2));																	
+								sfxSprites.add(new TopRightWallPiece(boardSquare, j*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, toSuppress[i]*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2));										
+								sfxSprites.add(new BottomRightWallPiece(boardSquare,j*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, toSuppress[i]*ScreenConstants.SQUARE_WIDTH));																	
+								sfxSprites.add(new BottomLeftWallPiece(boardSquare, j*ScreenConstants.SQUARE_WIDTH, toSuppress[i]*ScreenConstants.SQUARE_WIDTH));
 							}							
 						}
 					}
@@ -302,28 +303,6 @@ public class GameScreen extends AbstractGameScreen  {
 			debugFont.setColor(fontColors[currentDebugColor]);
 			DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
 		}
-		
-
-		if (Gdx.input.isKeyJustPressed(Keys.F5)) {
-			
-			AbstractWallPiece topLeftPiece = new TopLeftWallPiece(5*16, 9*16+0.5f); 
-			sfxSprites.add(topLeftPiece);			
-			
-			AbstractWallPiece topRightPiece = new TopRightWallPiece(5*16+0.5f, 9*16+0.5f); 
-			sfxSprites.add(topRightPiece);			
-			
-			AbstractWallPiece bottomRightPiece = new BottomRightWallPiece(5*16+0.5f, 9*16); 
-			sfxSprites.add(bottomRightPiece);			
-			
-			AbstractWallPiece bottomLeftPiece = new BottomLeftWallPiece(5*16, 9*16); 
-			sfxSprites.add(bottomLeftPiece);			
-			
-			
-			/*sfxSprites.add(new TopLeftWallPiece(5*16, 9*16));
-			sfxSprites.add(new BottomLeftWallPiece(5*16, 9*16));			
-			sfxSprites.add(new TopRightWallPiece(5*16, 9*16));
-			sfxSprites.add(new BottomRightWallPiece(5*16, 9*16));*/
-		}	
 		
 		/*if (Gdx.input.isKeyJustPressed(Keys.F12)) {
 			PIECE_FALL_DELAY = PIECE_FALL_DELAY == 0.2f ? 10 : 0.2f;

@@ -2,7 +2,7 @@ package com.game.core.sprite.sfx;
 
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class AbstractSfxSprite extends AbstractSprite implements IAppearable {
+public abstract class AbstractSfxSprite extends AbstractSprite {
 			
 	public AbstractSfxSprite(float x, float y, Vector2 size) {
 		super(x, y, size);		
@@ -13,7 +13,5 @@ public abstract class AbstractSfxSprite extends AbstractSprite implements IAppea
 	
 	public AbstractSfxSprite(float x, float y) {
 		this(x, y, new Vector2(1,1));
-	}
-	
-	public abstract void addAppearAction();
+	}	
 }
