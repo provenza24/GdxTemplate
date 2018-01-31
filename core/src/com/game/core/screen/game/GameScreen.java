@@ -158,10 +158,10 @@ public class GameScreen extends AbstractGameScreen  {
 						if (toSuppress[i]!=-1) {							
 							for (int j=0;j<10;j++) {								
 								BoardSquare boardSquare = board.getBoard()[j][toSuppress[i]];								
-								sfxSprites.add(new TopLeftWallPiece(boardSquare, j*ScreenConstants.SQUARE_WIDTH, toSuppress[i]*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2));																	
-								sfxSprites.add(new TopRightWallPiece(boardSquare, j*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, toSuppress[i]*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2));										
-								sfxSprites.add(new BottomRightWallPiece(boardSquare,j*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, toSuppress[i]*ScreenConstants.SQUARE_WIDTH));																	
-								sfxSprites.add(new BottomLeftWallPiece(boardSquare, j*ScreenConstants.SQUARE_WIDTH, toSuppress[i]*ScreenConstants.SQUARE_WIDTH));
+								sfxSprites.add(new TopLeftWallPiece(boardSquare, (j+1)*ScreenConstants.SQUARE_WIDTH, toSuppress[i]*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2));																	
+								sfxSprites.add(new TopRightWallPiece(boardSquare, (j+1)*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, toSuppress[i]*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2));										
+								sfxSprites.add(new BottomRightWallPiece(boardSquare,(j+1)*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, toSuppress[i]*ScreenConstants.SQUARE_WIDTH));																	
+								sfxSprites.add(new BottomLeftWallPiece(boardSquare, (j+1)*ScreenConstants.SQUARE_WIDTH, toSuppress[i]*ScreenConstants.SQUARE_WIDTH));
 							}							
 						}
 					}
