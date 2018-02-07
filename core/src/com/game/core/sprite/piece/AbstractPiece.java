@@ -113,7 +113,7 @@ public abstract class AbstractPiece implements IPiece {
 		}				
 	}
 	
-	public Vector2 getCase(int i) {
+	public Vector2 getSquare(int i) {
 		return this.cases[i];
 	}
 	
@@ -132,5 +132,14 @@ public abstract class AbstractPiece implements IPiece {
 		this.undoTranslation();				
 	}
 
+	@Override
+	public boolean contains(Vector2 vector) {
+		for (int i = 0; i < 4; i++) {
+			if (this.cases[i].x==vector.x && this.cases[i].y==vector.y) {
+				return true;				
+			}
+		}
+		return false;
+	}
 	
 }

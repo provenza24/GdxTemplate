@@ -6,6 +6,8 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.game.core.sprite.piece.IPiece;
 import com.game.core.sprite.piece.impl.BarBlock;
 import com.game.core.sprite.piece.impl.JBlock;
@@ -14,6 +16,7 @@ import com.game.core.sprite.piece.impl.SBlock;
 import com.game.core.sprite.piece.impl.SquareBlock;
 import com.game.core.sprite.piece.impl.TBlock;
 import com.game.core.sprite.piece.impl.ZBlock;
+import com.game.core.util.ResourcesLoader;
 import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.PieceType;
 
@@ -54,6 +57,7 @@ public class Board {
 
 	public void render(Batch batch) {
 		batch.begin();
+		batch.draw(ResourcesLoader.BOARD, ScreenConstants.BOARD_LEFT_SPACE * ScreenConstants.SQUARE_WIDTH, 0);
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				BoardSquare boardSquare = board[i][j];
@@ -93,7 +97,7 @@ public class Board {
 	public boolean isAcceptable(IPiece piece) {
 		try {			
 			for (int i = 0; i < 4; i++) {				 
-				if (board[(int)piece.getCase(i).x][(int)piece.getCase(i).y].getPieceType() != PieceType.EMPTY)
+				if (board[(int)piece.getSquare(i).x][(int)piece.getSquare(i).y].getPieceType() != PieceType.EMPTY)
 					return false;
 			}
 			return true;
@@ -104,7 +108,7 @@ public class Board {
 	
 	public void posePiece(IPiece piece) {		
 		for (int i = 0; i < 4; i++) {
-			this.board[(int)piece.getCase(i).x][(int)piece.getCase(i).y].setPieceType(piece.getType());			
+			this.board[(int)piece.getSquare(i).x][(int)piece.getSquare(i).y].setPieceType(piece.getType());			
 		}		
 	}
 	
@@ -112,7 +116,7 @@ public class Board {
 
 		int[] res = initTabSuppress();
 		int j = 0;
-		int y = (int) piece.getCase(0).y;
+		int y = (int) piece.getSquare(0).y;
 		for (int i = y + 3; i > y - 3; i--) {
 			if (i >= 0 && i <= 17 && isDeletableLine(i)) {
 				res[j] = i;
@@ -158,8 +162,7 @@ public class Board {
 	public IPiece createPiece() {
 		
 		IPiece piece = null;		
-		int random = (int)(Math.random() * (RANDOM_HIGH_VALUE-RANDOM_LOW_VALUE)) + RANDOM_LOW_VALUE;
-		//random = 2;
+		int random = (int)(Math.random() * (RANDOM_HIGH_VALUE-RANDOM_LOW_VALUE)) + RANDOM_LOW_VALUE;		
 		switch (random) {
 		case 1:
 			piece = new BarBlock();
@@ -184,6 +187,34 @@ public class Board {
 			break;		
 		}
 		return piece;
+	}
+
+	public void renderProjection(SpriteBatch batch, IPiece currentPiece) {
+		
+		batch.begin();
+		batch.setColor(1, 1, 1, 0.2f);
+		
+		int yMoveMax = 0;
+		
+		for (int i=0; i<4;i++) {			
+			Vector2 currentSquare = currentPiece.getSquare(i);
+			int x = (int) currentSquare.x;
+			int y = (int) currentSquare.y;			
+			while (y>0 && (currentPiece.contains(new Vector2(x, y-1)) || board[x][y-1].getPieceType()==PieceType.EMPTY)) {				
+				y--;
+			}
+			int yMove = (int)currentSquare.y-y;
+			if (yMoveMax==0 || yMoveMax>yMove) {
+				yMoveMax = yMove;
+			}
+		}
+		
+		for (int i=0; i<4;i++) {				
+			batch.draw(PIECE_IMAGES.get(currentPiece.getType()), (ScreenConstants.BOARD_LEFT_SPACE+currentPiece.getSquare(i).x) * BLOCK_WIDTH, (currentPiece.getSquare(i).y - yMoveMax) * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+		}
+		batch.setColor(1, 1, 1, 1);
+		batch.end();
+		
 	}
 
 }

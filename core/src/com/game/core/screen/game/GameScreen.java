@@ -17,7 +17,6 @@ import com.game.core.sprite.board.BoardSquare;
 import com.game.core.sprite.piece.IPiece;
 import com.game.core.sprite.sfx.AbstractSfxSprite;
 import com.game.core.sprite.sfx.AbstractSprite;
-import com.game.core.sprite.sfx.wall.AbstractWallPiece;
 import com.game.core.sprite.sfx.wall.BottomLeftWallPiece;
 import com.game.core.sprite.sfx.wall.BottomRightWallPiece;
 import com.game.core.sprite.sfx.wall.TopLeftWallPiece;
@@ -25,26 +24,15 @@ import com.game.core.sprite.sfx.wall.TopRightWallPiece;
 import com.game.core.util.DirectionType;
 import com.game.core.util.constants.KeysConstants;
 import com.game.core.util.constants.ScreenConstants;
-import com.game.core.util.enums.PieceType;
 import com.game.core.util.enums.ScreenEnum;
 import com.game.core.util.enums.ScreenStateEnum;
 
 public class GameScreen extends AbstractGameScreen  {
 	
-	private static final float LINE_DELETED_ANIMATION_DELAY = 3f;
-	
-	private static final float LINE_DELETED_DRAW_ANIMATION_DELAY = 0.25f;
-	
 	private static final float KEY_DOWN_DELAY = 0.05f;
 	
 	private static final float PIECE_FALL_DELAY = 0.4f;
-	
-	private float lineDeletedDelay = 0;
-	
-	private float lineDeletedDrawDelay = 0;
-	
-	private boolean displayDeletedLines = true;				
-	
+		
 	private float keyDownDelay = 0;
 	
 	private SpriteBatch spriteBatch;
@@ -54,6 +42,10 @@ public class GameScreen extends AbstractGameScreen  {
 	private boolean debugShowText = true;
 
 	private boolean debugShowFps = true;
+	
+	private boolean showNextPiece = true;
+	
+	private boolean showPieceProjection = true;
 	
 	private boolean levelFinished = false;		
 
@@ -97,11 +89,11 @@ public class GameScreen extends AbstractGameScreen  {
 		
 		shapeRenderer = new ShapeRenderer();
 		
-		for (int i=0;i<9;i++) {
+		/*for (int i=0;i<9;i++) {
 			board.getBoard()[i][0] = new BoardSquare(0, PieceType.BAR);
 			board.getBoard()[i][1] = new BoardSquare(0, PieceType.J_BLOCK);
 			board.getBoard()[i][2] = new BoardSquare(0, PieceType.L_BLOCK);
-		}		
+		}*/		
 	}
 		
 	@Override
@@ -110,30 +102,38 @@ public class GameScreen extends AbstractGameScreen  {
 		// Common time counter used to update synchronized sprites animations
 		AbstractSprite.updateCommonStateTime(delta);
 		
+		// Regarding screen state:
 		switch(screenState){
 		case RUNNING:			
+			// Game state running, two cases:
 			if (levelFinished) {
+				// The level is finished, go back to the Menu
 				GameManager.getGameManager().setScreen(ScreenEnum.LEVEL_MENU);
 			} else {
-				renderGame(delta);
+				// Otherwise render the game
+				renderLogic(delta);
+				// Draw the scene on screen
+				drawScene(delta);
 			}
 			break;
 		case TRANSITION:		
 			break;
 		case DELETING_LINES:
-			lineDeletedDelay += delta;
-			//if (lineDeletedDelay>=LINE_DELETED_ANIMATION_DELAY) {
+			// 1 or several lines are being deleting (animation is playing on screen)
 			if (sfxSprites.size()==0) {
-				endDeletingLinesCinematic();
+				// If all sprites are out of screen (blocs are exploding), end the cinematic
+				screenState = ScreenStateEnum.RUNNING;				
+				createNewPiece();
 			} else {
-				renderDeletingLinesCinematic(toSuppress, displayDeletedLines, delta);
+				// Else render the cinematic (move explosion sprites on screen)
+				renderExplosionCinematic(delta);
 			}
 			break;
 		}
 							
 	}	
 
-	private void renderGame(float delta) {
+	private void renderLogic(float delta) {
 		
 		keyDownDelay +=delta;
 		currentKeyPressDelay += delta;
@@ -151,10 +151,12 @@ public class GameScreen extends AbstractGameScreen  {
 			if (!board.isAcceptable(currentPiece)) {
 				// If piece can't fall, pose piece on board and create new one
 				currentPiece.undoTranslation();
-				board.posePiece(currentPiece);								
+				board.posePiece(currentPiece);	
+				// Check if lines have to be suppressed
 				toSuppress = board.getLinesToSuppress(currentPiece);						
 				if (toSuppress[4] > 0) {
 					for (int i=0; i<4; i++) {
+						// For each line having to be suppressed, add blocs sprites with an exploding animation
 						if (toSuppress[i]!=-1) {							
 							for (int j=0;j<10;j++) {								
 								BoardSquare boardSquare = board.getBoard()[j][toSuppress[i]];								
@@ -165,24 +167,21 @@ public class GameScreen extends AbstractGameScreen  {
 							}							
 						}
 					}
-					lineDeletedDelay = 0;
 					for (int i = 0; i < 4; i++) {						
 						if (toSuppress[i] != -1) {
+							// Suppress all line having to be suppressed from board
 							board.deleteLine(toSuppress[i]);							
 						}
 					}
+					// Screen state is changing to DELETING_LINES to play the corresponding animation
 					screenState = ScreenStateEnum.DELETING_LINES;					
 				}
-				if (screenState!=ScreenStateEnum.DELETING_LINES) {										
-					currentPiece = nextPiece;
-					nextPiece = board.createPiece();							
-					if (!board.isAcceptable(currentPiece)) {
-						GameManager.getGameManager().setScreen(ScreenEnum.MAIN_MENU);
-					}
+				if (screenState!=ScreenStateEnum.DELETING_LINES) {
+					// Create and add a new random piece to game board
+					createNewPiece();
 				}
 			}
-		}		
-		drawScene(delta);
+		}			
 	}	
 	
 	private void drawScene(float delta) {
@@ -192,21 +191,26 @@ public class GameScreen extends AbstractGameScreen  {
 				
 		board.render(spriteBatch);
 		currentPiece.render(spriteBatch);
-		nextPiece.renderNextPiece(spriteBatch);				
+		if (showPieceProjection) {
+			board.renderProjection(spriteBatch, currentPiece);
+		}
+		if (showNextPiece) {
+			nextPiece.renderNextPiece(spriteBatch);
+		}
 					
 		// Render debug mode
 		renderDebugMode();
 	}
 	
-	private void renderDeletingLinesCinematic(int[] toSuppress, boolean drawDeletedLines, float delta) {
+	private void renderExplosionCinematic(float delta) {
 		// Draw the scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 				
-		board.render(spriteBatch);
-		//board.render(spriteBatch,  toSuppress, drawDeletedLines);
-		//currentPiece.render(spriteBatch);
-		nextPiece.renderNextPiece(spriteBatch);		
+		board.render(spriteBatch);		
+		if (showNextPiece) {
+			nextPiece.renderNextPiece(spriteBatch);
+		}
 		
 		handleSfxSprites(delta);
 									
@@ -224,10 +228,9 @@ public class GameScreen extends AbstractGameScreen  {
 				sfxSprite.render(spriteBatch);
 			}
 		}
-	}
-	
-	private void endDeletingLinesCinematic() {
-		screenState = ScreenStateEnum.RUNNING;				
+	}		
+
+	private void createNewPiece() {
 		currentPiece = nextPiece;
 		nextPiece = board.createPiece();							
 		if (!board.isAcceptable(currentPiece)) {
@@ -286,18 +289,26 @@ public class GameScreen extends AbstractGameScreen  {
 	private void handleDebugKeys() {
 		
 		if (Gdx.input.isKeyJustPressed(Keys.F1)) {
-			debugShowFps = !debugShowFps;
+			showNextPiece = !showNextPiece;
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.F2)) {
+			showPieceProjection = !showPieceProjection;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F12)) {
+			debugShowFps = !debugShowFps;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F11)) {
 			debugShowText = !debugShowText;
 		}	
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F4)) {
+		if (Gdx.input.isKeyJustPressed(Keys.F9)) {
 			debugShowBounds = !debugShowBounds;
 		}	
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F3)) {		
+		if (Gdx.input.isKeyJustPressed(Keys.F10)) {		
 			currentDebugColor++;
 			currentDebugColor = fontColors.length == currentDebugColor ? 0 : currentDebugColor;
 			debugFont.setColor(fontColors[currentDebugColor]);
@@ -314,7 +325,7 @@ public class GameScreen extends AbstractGameScreen  {
 						
 		if (debugShowText) {	
 			int x = 10;
-			int y = 9*ScreenConstants.SQUARE_WIDTH;						
+			int y = 17*ScreenConstants.SQUARE_WIDTH;						
 			spriteBatch.begin();
 			int alive = 0;
 			for (AbstractSfxSprite sfxSprite : sfxSprites) {

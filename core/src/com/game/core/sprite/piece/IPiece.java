@@ -17,9 +17,11 @@ public interface IPiece {
 	
 	public void undoTranslation();
 	
-	public Vector2 getCase(int i);
+	public Vector2 getSquare(int i);
 	
 	public void rotate(boolean right);
 	
 	public void undoRotation();
+
+	public boolean contains(Vector2 vector);
 }

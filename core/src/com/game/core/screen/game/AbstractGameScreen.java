@@ -22,11 +22,11 @@ public abstract class AbstractGameScreen extends ScreenAdapter {
 	
 	protected static Color DEBUG_BOUNDS_COLOR;
 	
-	protected static final Color[] fontColors = new Color[]{Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE};
+	protected static final Color[] fontColors = new Color[]{Color.WHITE, Color.RED, Color.GREEN, Color.BLUE};
 	
-	protected static final Color[] debugBounds = new Color[]{new Color(1, 1, 1, 0.5f), new Color(0, 0, 0, 0.5f), new Color(1, 0, 0, 0.5f), new Color(0, 1, 0, 0.5f), new Color(0, 0, 1, 0.5f)};
+	protected static final Color[] debugBounds = new Color[]{new Color(1, 1, 1, 0.5f), new Color(1, 0, 0, 0.5f), new Color(0, 1, 0, 0.5f), new Color(0, 0, 1, 0.5f)};
 	
-	protected static int currentDebugColor = 4;	
+	protected static int currentDebugColor = 3;	
 	
 	protected ScreenStateEnum screenState = ScreenStateEnum.RUNNING;
 
