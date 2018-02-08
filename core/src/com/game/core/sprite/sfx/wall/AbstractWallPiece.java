@@ -3,7 +3,7 @@ package com.game.core.sprite.sfx.wall;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -58,7 +58,7 @@ public abstract class AbstractWallPiece extends AbstractSfxSprite {
 	}
 
 	@Override
-	public void render(Batch batch) {		
+	public void render(SpriteBatch batch) {		
 		batch.begin();
 		batch.draw(currentFrame, getX(), getY(), this.getOriginX(), this.getOriginY(), renderingSize.x, renderingSize.y, 1,1, this.getRotation());
 		batch.end();		

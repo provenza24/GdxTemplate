@@ -3,6 +3,7 @@ package com.game.core.sprite.sfx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -54,6 +55,8 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		
 	protected boolean isAnimationLooping;
 	
+	protected boolean blendingSprite;
+	
 	public AbstractSprite(float x, float y, Vector2 size) {
 		
 		this.setPosition(x, y);		
@@ -67,6 +70,8 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		this.isAnimationLooping = true;		
 		this.xAlive = getX() - 16 ;
 		
+		this.blendingSprite = false;
+		
 		this.initializeAnimations();				
 	}
 	
@@ -77,6 +82,9 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	public Rectangle getBounds() {
         return this.bounds;
     }
+	
+	public void onDelete() {		
+	}
 	
 	public abstract void initializeAnimations();
 
@@ -132,7 +140,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		setY(getY() + acceleration.y);		
 	}
 	
-	public void render(Batch batch) {
+	public void render(SpriteBatch batch) {
 		batch.begin();
 		//@TODO replace this by computing value at initialization		
 		batch.draw(currentFrame, getX(), getY(), renderingSize.x, renderingSize.y);
@@ -270,6 +278,14 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		this.move = move;
 	}
 	
+	public boolean isBlendingSprite() {
+		return blendingSprite;
+	}
+
+	public void setBlendingSprite(boolean blendingSprite) {
+		this.blendingSprite = blendingSprite;
+	}
+
 	public static void updateCommonStateTime(float delta) {		
 		commonStateTime = commonStateTime>10 ? 0 : commonStateTime + delta;
 		

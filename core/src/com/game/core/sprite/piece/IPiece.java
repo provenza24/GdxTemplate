@@ -7,6 +7,8 @@ import com.game.core.util.enums.PieceType;
 
 public interface IPiece {
 
+	public void update(float delta);
+		
 	public void render(Batch batch);
 	
 	public void renderNextPiece(Batch batch);
@@ -24,4 +26,6 @@ public interface IPiece {
 	public void undoRotation();
 
 	public boolean contains(Vector2 vector);
+	
+	public boolean isGhostPiece();
 }

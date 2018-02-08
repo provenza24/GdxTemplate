@@ -1,12 +1,13 @@
 package com.game.core.sprite.board;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.sprite.piece.IPiece;
 import com.game.core.sprite.piece.impl.BarBlock;
@@ -16,7 +17,6 @@ import com.game.core.sprite.piece.impl.SBlock;
 import com.game.core.sprite.piece.impl.SquareBlock;
 import com.game.core.sprite.piece.impl.TBlock;
 import com.game.core.sprite.piece.impl.ZBlock;
-import com.game.core.util.ResourcesLoader;
 import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.PieceType;
 
@@ -57,7 +57,7 @@ public class Board {
 
 	public void render(Batch batch) {
 		batch.begin();
-		batch.draw(ResourcesLoader.BOARD, ScreenConstants.BOARD_LEFT_SPACE * ScreenConstants.SQUARE_WIDTH, 0);
+		//batch.draw(ResourcesLoader.BOARD, ScreenConstants.BOARD_LEFT_SPACE * ScreenConstants.SQUARE_WIDTH, 0);
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				BoardSquare boardSquare = board[i][j];
@@ -189,7 +189,7 @@ public class Board {
 		return piece;
 	}
 
-	public void renderProjection(SpriteBatch batch, IPiece currentPiece) {
+	public void renderProjection(Batch batch, IPiece currentPiece) {
 		
 		batch.begin();
 		batch.setColor(1, 1, 1, 0.2f);
@@ -216,5 +216,17 @@ public class Board {
 		batch.end();
 		
 	}
+	
+	public Vector2 getSquareToBroke() {		
+		List<Vector2> availableSquares = new ArrayList<Vector2>();
+		for (int i=0; i<10;i++) {
+			for (int j=0; j<18;j++) {
+				if (board[i][j].getPieceType()!=PieceType.EMPTY) {
+					availableSquares.add(new Vector2(i,j));
+				}
+			}
+		}
+		return availableSquares.size()>0 ? availableSquares.get((int)(Math.random() * (availableSquares.size()-1))) : null;		
+	}	
 
 }

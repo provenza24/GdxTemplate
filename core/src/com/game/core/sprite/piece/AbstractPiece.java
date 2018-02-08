@@ -13,6 +13,10 @@ import com.game.core.util.enums.PieceType;
 
 public abstract class AbstractPiece implements IPiece {
 	
+	private static final int HIDE_GHOST_PIECE_DELAY = 1;
+
+	private static final int DRAW_GHOST_PIECE_DELAY = 1;
+
 	private static final int BLOCK_WIDTH = ScreenConstants.SQUARE_WIDTH;
 
 	protected final static Map<DirectionType, Vector2> MOVES = new HashMap<DirectionType, Vector2>();
@@ -26,7 +30,7 @@ public abstract class AbstractPiece implements IPiece {
 		PIECE_IMAGES.put(PieceType.S_BLOCK, new Texture(Gdx.files.internal("sprites/pieces/S.jpg")));
 		PIECE_IMAGES.put(PieceType.SQUARE, new Texture(Gdx.files.internal("sprites/pieces/carre.jpg")));
 		PIECE_IMAGES.put(PieceType.T_BLOCK, new Texture(Gdx.files.internal("sprites/pieces/T.jpg")));
-		PIECE_IMAGES.put(PieceType.Z_BLOCK, new Texture(Gdx.files.internal("sprites/pieces/Z.jpg")));
+		PIECE_IMAGES.put(PieceType.Z_BLOCK, new Texture(Gdx.files.internal("sprites/pieces/Z.jpg")));					
 	}
 	
 	static {
@@ -39,6 +43,12 @@ public abstract class AbstractPiece implements IPiece {
 	
 	protected Vector2[] oldCases;
 	
+	protected boolean ghostPiece;
+	
+	protected boolean drawGhostPiece;
+	
+	protected float ghostInvisibleDelayCount;
+	
 	public AbstractPiece() {
 		super();		
 		this.cases = new Vector2[4];
@@ -47,6 +57,9 @@ public abstract class AbstractPiece implements IPiece {
 			this.cases[i]=new Vector2();
 			this.oldCases[i]=new Vector2();
 		}		
+		this.ghostPiece = (int)(Math.random() * 5)<=1;		
+		this.ghostInvisibleDelayCount = 0;
+		this.drawGhostPiece = true;
 	}
 	
 	public abstract PieceType getType();
@@ -74,15 +87,26 @@ public abstract class AbstractPiece implements IPiece {
 	
 	public void render(Batch batch) {		
 		batch.begin();						
-		batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[0].x) * BLOCK_WIDTH, this.cases[0].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
-		batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[1].x) * BLOCK_WIDTH, this.cases[1].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
-		batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[2].x) * BLOCK_WIDTH, this.cases[2].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
-		batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[3].x) * BLOCK_WIDTH, this.cases[3].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);			
+		boolean draw = true;
+		if (isGhostPiece()) {
+			if (drawGhostPiece) {
+				draw = true;
+			} else {				
+				draw = (int)(Math.random() * 1)<=4;
+			}
+		}
+		if (draw) {
+			batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[0].x) * BLOCK_WIDTH, this.cases[0].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+			batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[1].x) * BLOCK_WIDTH, this.cases[1].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+			batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[2].x) * BLOCK_WIDTH, this.cases[2].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
+			batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[3].x) * BLOCK_WIDTH, this.cases[3].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);			
+			//GFX.drawSphereLightning(batch, new Vector2((ScreenConstants.BOARD_LEFT_SPACE+this.cases[0].x) * BLOCK_WIDTH, this.cases[0].y * BLOCK_WIDTH), 3, 3, 1, 1);
+		}					
 		batch.end();
 	}
-	
+		
 	public void renderNextPiece(Batch batch) {		
-		batch.begin();						
+		batch.begin();								
 		batch.draw(PIECE_IMAGES.get(this.getType()), (18-this.cases[0].x) * BLOCK_WIDTH, (5 + 17-this.cases[0].y) * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
 		batch.draw(PIECE_IMAGES.get(this.getType()), (18-this.cases[1].x) * BLOCK_WIDTH, (5 + 17-this.cases[1].y) * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
 		batch.draw(PIECE_IMAGES.get(this.getType()), (18-this.cases[2].x) * BLOCK_WIDTH, (5 + 17-this.cases[2].y) * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
@@ -121,6 +145,14 @@ public abstract class AbstractPiece implements IPiece {
 		return this.cases;
 	}
 
+	public boolean isGhostPiece() {
+		return ghostPiece;
+	}
+
+	public void setGhostPiece(boolean ghostPiece) {
+		this.ghostPiece = ghostPiece;
+	}
+
 	public void swap(int case1, int case2) {
 		Vector2 vect1 = new Vector2(this.cases[case1].x, this.cases[case1].y);
 		Vector2 vect2 = new Vector2(this.cases[case2].x, this.cases[case2].y);
@@ -140,6 +172,17 @@ public abstract class AbstractPiece implements IPiece {
 			}
 		}
 		return false;
+	}
+	
+	public void update(float delta) {		
+		if (isGhostPiece()) {
+			this.ghostInvisibleDelayCount+=delta;
+			if (drawGhostPiece && this.ghostInvisibleDelayCount>=DRAW_GHOST_PIECE_DELAY
+					|| !drawGhostPiece && this.ghostInvisibleDelayCount>=HIDE_GHOST_PIECE_DELAY) {
+				drawGhostPiece = !drawGhostPiece;
+				this.ghostInvisibleDelayCount = 0;
+			}			
+		}
 	}
 	
 }

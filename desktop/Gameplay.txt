@@ -1,0 +1,29 @@
+Idées de Gameplay:
+
+- Pièce fantôme
+
+Transparente, clignote succintement par moment lors de sa chute
+
+- Pièce folle
+
+Affichage à determiner, se déplace à droite et gauche de façon aléatoire
+Critère de déplacement aléatoire à déterminer
+
+- Pièce poubelle
+
+Affichage à déterminer, laisse sur son passage des cases non vides 
+ 
+- Pièce powerfull
+
+Affichage à déterminer, efface les cases non vides sur son passage
+Définir si elle est active tout le temps, ou pendant un laps de temps
+
+
+- Définir si les pièces apparaissent de façon alétatoire, ou après collecte d'un / plusieurs bonus ?
+  Si bonus, la pièce est-elle la suivante, peut-on l'activer quand on veut via une touche ?
+  Peut-on avoir plusieurs bonus en même temps ? 
+
+  
+- Ne plus voir temporairement la pièce suivante (Slimer qui se met devant ou autre ?)
+
+- Déphaser la projection de la pièce en cours de chute

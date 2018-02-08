@@ -8,7 +8,7 @@ public abstract class AbstractPieceRotatingTwice extends AbstractPiece {
 	
 	public AbstractPieceRotatingTwice() {
 		super();
-		this.rotationNum = 0;
+		this.rotationNum = 0;				
 	}
 	
 	@Override
