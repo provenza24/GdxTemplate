@@ -1,8 +1,10 @@
 package com.game.core.util.constants;
 
 public class ScreenConstants {
-			
-	public static final int SQUARE_WIDTH = 32;
+	
+	public static final int PREFERRED_SQUARE_WIDTH = 24;
+	
+	public static final int SQUARE_WIDTH = 24;
 
 	public static final int BOARD_WIDTH = 10;
 	

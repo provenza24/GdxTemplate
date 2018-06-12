@@ -1,4 +1,4 @@
-package com.game.core.sprite.board;
+package com.game.core.board;
 
 import com.game.core.util.enums.PieceType;
 

@@ -1,4 +1,4 @@
-package com.game.core.sprite.board;
+package com.game.core.board;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,14 +9,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
-import com.game.core.sprite.piece.IPiece;
-import com.game.core.sprite.piece.impl.BarBlock;
-import com.game.core.sprite.piece.impl.JBlock;
-import com.game.core.sprite.piece.impl.LBlock;
-import com.game.core.sprite.piece.impl.SBlock;
-import com.game.core.sprite.piece.impl.SquareBlock;
-import com.game.core.sprite.piece.impl.TBlock;
-import com.game.core.sprite.piece.impl.ZBlock;
+import com.game.core.piece.IPiece;
+import com.game.core.piece.impl.BarBlock;
+import com.game.core.piece.impl.JBlock;
+import com.game.core.piece.impl.LBlock;
+import com.game.core.piece.impl.SBlock;
+import com.game.core.piece.impl.SquareBlock;
+import com.game.core.piece.impl.TBlock;
+import com.game.core.piece.impl.ZBlock;
 import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.PieceType;
 
@@ -67,31 +67,6 @@ public class Board {
 			}
 		}
 		batch.end();
-	}
-	
-	public void render(Batch batch, int toSuppress[], boolean draw) {		
-		batch.begin();		
-		for (int j = 0; j < BOARD_HEIGHT; j++) {
-			boolean lineDeleted = contains(toSuppress, j);			
-			if ((draw && lineDeleted) || !lineDeleted) {
-				for (int i = 0; i < BOARD_WIDTH; i++) {
-					BoardSquare boardSquare = board[i][j];
-					if (boardSquare.getPieceType() != PieceType.EMPTY) {
-						batch.draw(PIECE_IMAGES.get(boardSquare.getPieceType()), (i + ScreenConstants.BOARD_LEFT_SPACE) * BLOCK_WIDTH, j * BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH);
-					}
-				}
-			}
-		}									
-		batch.end();
-	}
-	
-	private boolean contains(int toSuppress[], int index) {
-		for (int i=0; i<toSuppress.length-1;i++) {
-			if (toSuppress[i]==index) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	public boolean isAcceptable(IPiece piece) {

@@ -1,26 +1,28 @@
 package com.game.core.screen.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.GameManager;
-import com.game.core.sprite.board.Board;
-import com.game.core.sprite.board.BoardSquare;
-import com.game.core.sprite.piece.IPiece;
-import com.game.core.sprite.sfx.AbstractSfxSprite;
+import com.game.core.board.Board;
+import com.game.core.board.BoardSquare;
+import com.game.core.board.Scoring;
+import com.game.core.piece.IPiece;
 import com.game.core.sprite.sfx.AbstractSprite;
-import com.game.core.sprite.sfx.GFX;
-import com.game.core.sprite.sfx.ProtonLaser;
+import com.game.core.sprite.sfx.laser.GFX;
+import com.game.core.sprite.sfx.laser.ProtonLaser;
+import com.game.core.sprite.sfx.venkman.Venkman;
 import com.game.core.sprite.sfx.wall.BottomLeftWallPiece;
 import com.game.core.sprite.sfx.wall.BottomRightWallPiece;
 import com.game.core.sprite.sfx.wall.TopLeftWallPiece;
@@ -28,6 +30,7 @@ import com.game.core.sprite.sfx.wall.TopRightWallPiece;
 import com.game.core.util.DirectionType;
 import com.game.core.util.constants.KeysConstants;
 import com.game.core.util.constants.ScreenConstants;
+import com.game.core.util.enums.GameMode;
 import com.game.core.util.enums.ScreenEnum;
 import com.game.core.util.enums.ScreenStateEnum;
 
@@ -35,7 +38,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private static final float KEY_DOWN_DELAY = 0.05f;
 	
-	private static final float PIECE_FALL_DELAY = 0.4f;
+	private static float PIECE_FALL_DELAY = 0.5f;
 		
 	private float keyDownDelay = 0;
 	
@@ -71,15 +74,34 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private boolean debugShowBounds = true;
 	
-	private List<AbstractSfxSprite> sfxSprites = new ArrayList<AbstractSfxSprite>();
+	private List<AbstractSprite> sfxSprites = new ArrayList<AbstractSprite>();
 	
 	/** Used in debug mode to draw bounding boxes of sprites */
 	private ShapeRenderer shapeRenderer;
 	
+	private Venkman venkman;
+	
 	private int toSuppress[];
 	
+	private Scoring scoring;
+	
+	private static final Map<Integer, Float> FALL_DELAYS = new HashMap<Integer, Float>();
+	
+	static {
+		FALL_DELAYS.put(0, 0.88f);
+		FALL_DELAYS.put(1, 0.82f);
+		FALL_DELAYS.put(2, 0.75f);
+		FALL_DELAYS.put(3, 0.68f);
+		FALL_DELAYS.put(4, 0.62f);
+		FALL_DELAYS.put(5, 0.55f);
+		FALL_DELAYS.put(6, 0.47f);
+		FALL_DELAYS.put(7, 0.37f);
+		FALL_DELAYS.put(8, 0.28f);
+		FALL_DELAYS.put(9, 0.18f);				
+	}
+	
 	public GameScreen() {
-										
+						
 		// Initialize fonts
 		debugFont = new BitmapFont();		
 		debugFont.setColor(fontColors[currentDebugColor]);	
@@ -95,17 +117,19 @@ public class GameScreen extends AbstractGameScreen  {
 		currentPiece = board.createPiece();
 		nextPiece = board.createPiece();		
 		
-		shapeRenderer = new ShapeRenderer();
-		
-		/*for (int i=0;i<9;i++) {
-			board.getBoard()[i][0] = new BoardSquare(0, PieceType.BAR);
-			board.getBoard()[i][1] = new BoardSquare(0, PieceType.J_BLOCK);
-			board.getBoard()[i][2] = new BoardSquare(0, PieceType.L_BLOCK);
-		}*/		
+		shapeRenderer = new ShapeRenderer();			
 		
 		GFX.setTexture(new Texture(Gdx.files.internal("chain.jpg")));
-	}
+		GFX.setToDefaultColour();
 		
+		venkman = new Venkman(16*ScreenConstants.SQUARE_WIDTH, 2*ScreenConstants.SQUARE_WIDTH); 
+		sfxSprites.add(venkman);		
+		
+		scoring = new Scoring(0, 0, 0, GameMode.A);
+		
+		PIECE_FALL_DELAY = FALL_DELAYS.get(scoring.getLevel());		
+	}
+
 	@Override
 	public void render(float delta) {		
 		
@@ -130,7 +154,7 @@ public class GameScreen extends AbstractGameScreen  {
 			break;
 		case DELETING_LINES:
 			// 1 or several lines are being deleting (animation is playing on screen)
-			if (sfxSprites.size()==0) {
+			if (sfxSprites.size()==1) {
 				// If all sprites are out of screen (blocs are exploding), end the cinematic
 				screenState = ScreenStateEnum.RUNNING;				
 				createNewPiece();
@@ -167,6 +191,7 @@ public class GameScreen extends AbstractGameScreen  {
 				// Check if lines have to be suppressed
 				toSuppress = board.getLinesToSuppress(currentPiece);						
 				if (toSuppress[4] > 0) {
+				
 					for (int i=0; i<4; i++) {
 						// For each line having to be suppressed, add blocs sprites with an exploding animation
 						if (toSuppress[i]!=-1) {							
@@ -185,6 +210,11 @@ public class GameScreen extends AbstractGameScreen  {
 							board.deleteLine(toSuppress[i]);							
 						}
 					}
+					scoring.incLines(toSuppress[4]);
+					if (scoring.getLevel()<10 && scoring.getNbLines()>0 && (scoring.getNbLines()/10)==scoring.getLevel()+1) {
+						scoring.incLevel();
+						PIECE_FALL_DELAY = FALL_DELAYS.get(scoring.getLevel());
+					}
 					// Screen state is changing to DELETING_LINES to play the corresponding animation
 					screenState = ScreenStateEnum.DELETING_LINES;					
 				}
@@ -199,8 +229,8 @@ public class GameScreen extends AbstractGameScreen  {
 	private void drawScene(float delta) {
 		// Draw the scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-				
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);				
+					
 		board.render(spriteBatch);
 		currentPiece.render(spriteBatch);		
 		if (!currentPiece.isGhostPiece() && showPieceProjection) {
@@ -211,10 +241,6 @@ public class GameScreen extends AbstractGameScreen  {
 		}
 		handleSfxSprites(delta);
 				
-		//spriteBatch.begin();
-		//GFX.drawChainLightningRandomBetweenPoints(spriteBatch, new Vector2(20, 20), new Vector2(20, 500), new Vector2(20, 500), 3, 3);
-		//spriteBatch.end();
-		
 		// Render debug mode
 		renderDebugMode();
 	}
@@ -241,7 +267,7 @@ public class GameScreen extends AbstractGameScreen  {
 			if (sfxSprite.isDeletable()) {
 				sfxSprite.onDelete();
 				sfxSprites.remove(i--);
-			} else if (sfxSprite.isVisible()) {
+			} else if (sfxSprite.isVisible()) {				
 				sfxSprite.render(sfxSprite.isBlendingSprite() ? blendingBatch : spriteBatch);
 			}
 		}
@@ -337,7 +363,7 @@ public class GameScreen extends AbstractGameScreen  {
 			if (squareToBroke!=null) {
 				int x = (int)squareToBroke.x;
 				int y = (int)squareToBroke.y;
-				sfxSprites.add(new ProtonLaser(new Vector2(ScreenConstants.SQUARE_WIDTH*14, ScreenConstants.SQUARE_WIDTH*9),
+				sfxSprites.add(new ProtonLaser(new Vector2(ScreenConstants.SQUARE_WIDTH*16, 2*ScreenConstants.SQUARE_WIDTH + ScreenConstants.SQUARE_WIDTH),
 						new Vector2((x+0.5f+ScreenConstants.BOARD_LEFT_SPACE)*ScreenConstants.SQUARE_WIDTH, (y+0.5f)*ScreenConstants.SQUARE_WIDTH),
 						new Vector2((x+0.5f+ScreenConstants.BOARD_LEFT_SPACE)*ScreenConstants.SQUARE_WIDTH, (y+0.5f)*ScreenConstants.SQUARE_WIDTH),
 						squareToBroke, board, sfxSprites));
@@ -348,12 +374,9 @@ public class GameScreen extends AbstractGameScreen  {
 				sfxSprites.add(new BottomRightWallPiece(boardSquare,(x+1)*ScreenConstants.SQUARE_WIDTH+ScreenConstants.SQUARE_WIDTH/2, y*ScreenConstants.SQUARE_WIDTH));																	
 				sfxSprites.add(new BottomLeftWallPiece(boardSquare, (x+1)*ScreenConstants.SQUARE_WIDTH, y*ScreenConstants.SQUARE_WIDTH));
 				board.getBoard()[x][y].setPieceType(PieceType.EMPTY);*/
-			}
+			}									
+			
 		}
-		
-		/*if (Gdx.input.isKeyJustPressed(Keys.F12)) {
-			PIECE_FALL_DELAY = PIECE_FALL_DELAY == 0.2f ? 10 : 0.2f;
-		}*/
 				
 	}
 		
@@ -364,12 +387,16 @@ public class GameScreen extends AbstractGameScreen  {
 			int y = 17*ScreenConstants.SQUARE_WIDTH;						
 			spriteBatch.begin();
 			int alive = 0;
-			for (AbstractSfxSprite sfxSprite : sfxSprites) {
+			for (AbstractSprite sfxSprite : sfxSprites) {
 				alive += sfxSprite.isAlive() ? 1 : 0;
 			}
-			debugFont.draw(spriteBatch, "Sfx: " + sfxSprites.size() + " - " + alive + " alive", x, y);
-			spriteBatch.end();
+			//debugFont.draw(spriteBatch, "Sfx: " + sfxSprites.size() + " - " + alive + " alive", x, y);
+			debugFont.draw(spriteBatch, "Level: " + scoring.getLevel(), x, y);
 			y = y -20;
+			
+			debugFont.draw(spriteBatch, "NbLines: " + scoring.getNbLines(), x, y);
+			
+			spriteBatch.end();
 		}
 		
 		if (debugShowFps) {

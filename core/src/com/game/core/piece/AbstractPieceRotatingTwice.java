@@ -1,4 +1,4 @@
-package com.game.core.sprite.piece;
+package com.game.core.piece;
 
 public abstract class AbstractPieceRotatingTwice extends AbstractPiece {
 	

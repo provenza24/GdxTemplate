@@ -1,4 +1,4 @@
-package com.game.core.sprite.piece;
+package com.game.core.piece;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +57,7 @@ public abstract class AbstractPiece implements IPiece {
 			this.cases[i]=new Vector2();
 			this.oldCases[i]=new Vector2();
 		}		
-		this.ghostPiece = (int)(Math.random() * 5)<=1;		
+		this.ghostPiece = false; //(int)(Math.random() * 5)<=1;		
 		this.ghostInvisibleDelayCount = 0;
 		this.drawGhostPiece = true;
 	}
@@ -89,10 +89,12 @@ public abstract class AbstractPiece implements IPiece {
 		batch.begin();						
 		boolean draw = true;
 		if (isGhostPiece()) {
-			if (drawGhostPiece) {
+			batch.setColor(1, 1, 1, 0.2f);
+			if (drawGhostPiece) {				
 				draw = true;
 			} else {				
-				draw = (int)(Math.random() * 1)<=4;
+				//draw = (int)(Math.random() * 1)<=4;
+				draw = false;
 			}
 		}
 		if (draw) {
@@ -100,8 +102,8 @@ public abstract class AbstractPiece implements IPiece {
 			batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[1].x) * BLOCK_WIDTH, this.cases[1].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
 			batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[2].x) * BLOCK_WIDTH, this.cases[2].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);
 			batch.draw(PIECE_IMAGES.get(this.getType()), (ScreenConstants.BOARD_LEFT_SPACE+this.cases[3].x) * BLOCK_WIDTH, this.cases[3].y * BLOCK_WIDTH, BLOCK_WIDTH ,BLOCK_WIDTH);			
-			//GFX.drawSphereLightning(batch, new Vector2((ScreenConstants.BOARD_LEFT_SPACE+this.cases[0].x) * BLOCK_WIDTH, this.cases[0].y * BLOCK_WIDTH), 3, 3, 1, 1);
-		}					
+		}
+		batch.setColor(1, 1, 1, 1);
 		batch.end();
 	}
 		

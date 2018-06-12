@@ -1,7 +1,7 @@
 package com.game.core.sprite.sfx.wall;
 
 import com.badlogic.gdx.math.Vector2;
-import com.game.core.sprite.board.BoardSquare;
+import com.game.core.board.BoardSquare;
 
 public class BottomRightWallPiece extends AbstractWallPiece {
 

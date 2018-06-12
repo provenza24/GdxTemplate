@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.game.core.sprite.board.BoardSquare;
+import com.game.core.board.BoardSquare;
 import com.game.core.sprite.sfx.AbstractSfxSprite;
 import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.PieceType;

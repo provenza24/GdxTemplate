@@ -1,6 +1,4 @@
-package com.game.core.sprite.piece.impl;
-
-import com.game.core.sprite.piece.AbstractPieceRotatingTwice;
+package com.game.core.piece;
 
 public abstract class AbstractSZBlock extends AbstractPieceRotatingTwice {
 

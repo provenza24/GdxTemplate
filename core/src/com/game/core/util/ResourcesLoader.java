@@ -9,4 +9,6 @@ public class ResourcesLoader {
 	public static final BitmapFont MAIN_MENU_FONT = new BitmapFont(Gdx.files.internal("fonts/menu/pressStart2P.fnt"));
 	
 	public static final Texture BOARD = new Texture(Gdx.files.internal("board.jpg"));		
+	
+	public static final Texture VENKMAN = new Texture(Gdx.files.internal("sprites/venkman_left.png"));
 }

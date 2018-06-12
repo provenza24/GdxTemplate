@@ -1,4 +1,4 @@
-package com.game.core.sprite.sfx;
+package com.game.core.sprite.sfx.laser;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;

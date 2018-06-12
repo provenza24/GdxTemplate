@@ -1,4 +1,4 @@
-package com.game.core.sprite.piece;
+package com.game.core.piece;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
