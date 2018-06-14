@@ -21,43 +21,37 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 	}
 	
 	public void collideWithTilemap(TmxMap tileMap, Player sprite) {
-						
-		sprite.setCollidingCells(new ArrayList<TmxCell>());
 		
-		boolean onFloorCorrection = false;
-		sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
+		boolean pente = false;						
 		
-		boolean pente = false;
-				
 		if (sprite.getDirection()==DirectionEnum.RIGHT) {
-			Vector2 middleBottom = new Vector2(sprite.getX(), sprite.getY());
-			Cell cell = tileMap.getTileAt((int)middleBottom.x, (int)middleBottom.y);
-			if (cell!=null && cell.getTile().getId()==58) {			
-				float diff = middleBottom.x - (int) middleBottom.x;
-				sprite.setY((int)sprite.getY() - diff + 1f);
+			Vector2 point = new Vector2(sprite.getX(), sprite.getY());
+			Cell cell = tileMap.getTileAt((int)(point.x), (int)point.y);
+			Cell cell2 = tileMap.getTileAt((int)(point.x+1), (int)point.y-1);
+			boolean cellCollision = cell!=null && cell.getTile().getId()==58;
+			boolean cell2Collision = cell2!=null && cell2.getTile().getId()==58;
+			if (cellCollision || cell2Collision) {			
+				sprite.setClimbing(true);
+				float diff = point.x - (int) point.x;
+				sprite.setY((int)point.y - diff + 0.8f);
 				sprite.setOnFloor(true);	
 				sprite.getOldPosition().y = sprite.getY();
-				sprite.getAcceleration().y = 0;
-				onFloorCorrection = true;
+				sprite.getAcceleration().y = 0;				
 				pente = true;
-			}			
-		} else if (sprite.getDirection()==DirectionEnum.LEFT) {
-			Vector2 middleBottom = new Vector2(sprite.getX(), sprite.getY());
-			Cell cell = tileMap.getTileAt((int)middleBottom.x, (int)middleBottom.y+1);
-			if (cell!=null && cell.getTile().getId()==58) {			
-				float diff = (int) middleBottom.x +1 - middleBottom.x;
-				sprite.setY((int)sprite.getY() - diff + 1f);
-				sprite.setOnFloor(true);	
-				sprite.getOldPosition().y = sprite.getY();
-				sprite.getAcceleration().y = 0;
-				onFloorCorrection = true;
-				pente = true;
-			}		
+				sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
+			} else {
+				sprite.setClimbing(false);
+			}
+		} else {
+			sprite.setClimbing(false);
 		}
-		
-		
-					
+									
 		if (!pente) {
+			sprite.setCollidingCells(new ArrayList<TmxCell>());
+			
+			boolean onFloorCorrection = false;
+			sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
+			
 			checkBottomMapCollision(tileMap, sprite);		
 			
 			if (sprite.getOldAcceleration().y == 0 && sprite.getMapCollisionEvent().isCollidingBottom()) {

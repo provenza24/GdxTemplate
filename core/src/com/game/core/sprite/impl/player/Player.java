@@ -39,6 +39,16 @@ public class Player extends AbstractTileObjectSprite {
 	private Animation jumpLeftAnimation;
 	
 	private Animation jumpRightAnimation;
+	
+	private boolean climbing;
+
+	public boolean isClimbing() {
+		return climbing;
+	}
+
+	public void setClimbing(boolean climbing) {
+		this.climbing = climbing;
+	}
 
 	public Player(MapObject mapObject) {
 		super(mapObject, new Vector2(X_OFFSET,Y_OFFSET));				

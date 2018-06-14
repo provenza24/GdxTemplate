@@ -323,7 +323,9 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;			
 			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);
 			y = y -20;			
-			debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);
+			debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
+			y = y -20;			
+			debugFont.draw(spriteBatch, "ascending= " + player.isClimbing(), x, y);
 			
 			x = 400;
 			y = ScreenConstants.HEIGHT-10;
