@@ -14,6 +14,10 @@ import com.game.core.util.enums.SpriteMoveEnum;
 
 public class Player extends AbstractTileObjectSprite {
 
+	private static final float X_OFFSET = 0.2f;
+	
+	private static final float Y_OFFSET = 0.2f;	
+
 	private static final float ACCELERATION_COEF = 0.2f;
 	
 	private static final float ACCELERATION_MAX = 5f; // 7.5f;
@@ -37,7 +41,7 @@ public class Player extends AbstractTileObjectSprite {
 	private Animation jumpRightAnimation;
 
 	public Player(MapObject mapObject) {
-		super(mapObject, new Vector2(0.2f,0.2f));				
+		super(mapObject, new Vector2(X_OFFSET,Y_OFFSET));				
 		direction = DirectionEnum.RIGHT;
 		state = SpriteMoveEnum.IDLE;
 		onFloor = true;

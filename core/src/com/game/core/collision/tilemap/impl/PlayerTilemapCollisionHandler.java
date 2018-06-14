@@ -2,6 +2,7 @@ package com.game.core.collision.tilemap.impl;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
 import com.game.core.collision.tilemap.AbstractTilemapCollisionHandler;
@@ -25,225 +26,259 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		
 		boolean onFloorCorrection = false;
 		sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
-				
-		checkBottomMapCollision(tileMap, sprite);		
 		
-		if (sprite.getOldAcceleration().y == 0 && sprite.getMapCollisionEvent().isCollidingBottom()) {
-			// Player is on a plateform and is still on it
-			if (sprite.getState()==SpriteMoveEnum.FALLING) {
-				sprite.setState(SpriteMoveEnum.IDLE);
-			}
-			sprite.setOnFloor(true);			
-			sprite.setY((int) sprite.getY() + 1 + COLLISION_X_CORRECTIF);
-			sprite.getOldPosition().y = sprite.getY();
-			sprite.getAcceleration().y = 0;
-			onFloorCorrection = true;
+		boolean pente = false;
+				
+		if (sprite.getDirection()==DirectionEnum.RIGHT) {
+			Vector2 middleBottom = new Vector2(sprite.getX(), sprite.getY());
+			Cell cell = tileMap.getTileAt((int)middleBottom.x, (int)middleBottom.y);
+			if (cell!=null && cell.getTile().getId()==58) {			
+				float diff = middleBottom.x - (int) middleBottom.x;
+				sprite.setY((int)sprite.getY() - diff + 1f);
+				sprite.setOnFloor(true);	
+				sprite.getOldPosition().y = sprite.getY();
+				sprite.getAcceleration().y = 0;
+				onFloorCorrection = true;
+				pente = true;
+			}			
+		} else if (sprite.getDirection()==DirectionEnum.LEFT) {
+			Vector2 middleBottom = new Vector2(sprite.getX(), sprite.getY());
+			Cell cell = tileMap.getTileAt((int)middleBottom.x, (int)middleBottom.y+1);
+			if (cell!=null && cell.getTile().getId()==58) {			
+				float diff = (int) middleBottom.x +1 - middleBottom.x;
+				sprite.setY((int)sprite.getY() - diff + 1f);
+				sprite.setOnFloor(true);	
+				sprite.getOldPosition().y = sprite.getY();
+				sprite.getAcceleration().y = 0;
+				onFloorCorrection = true;
+				pente = true;
+			}		
 		}
 		
-		sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));		
-		Vector2 newPosition = new Vector2(sprite.getX(), sprite.getY());
 		
-		checkMapCollision(tileMap, sprite);				
-										
-		if (sprite.getMapCollisionEvent().getCollisionPoints().size()>0) {
-							
-			int i=0;
+					
+		if (!pente) {
+			checkBottomMapCollision(tileMap, sprite);		
 			
-			while (sprite.getMapCollisionEvent().getCollisionPoints().size()>0) {
+			if (sprite.getOldAcceleration().y == 0 && sprite.getMapCollisionEvent().isCollidingBottom()) {
+				// Player is on a plateform and is still on it
+				if (sprite.getState()==SpriteMoveEnum.FALLING) {
+					sprite.setState(SpriteMoveEnum.IDLE);
+				}
+				sprite.setOnFloor(true);			
+				sprite.setY((int) sprite.getY() + 1 + COLLISION_X_CORRECTIF);
+				sprite.getOldPosition().y = sprite.getY();
+				sprite.getAcceleration().y = 0;
+				onFloorCorrection = true;						
+			}
 			
-				for (CollisionPoint collisionPoint : sprite.getMapCollisionEvent().getCollisionPoints()) {
-					
-					if (sprite.getMove().y==0 && sprite.getMove().x!=0) {
-						newPosition.x = sprite.getMove().x>0 ? (int) (sprite.getX() + sprite.getOffset().x) +  sprite.getOffset().x - COLLISION_X_CORRECTIF : (int) (sprite.getX() + sprite.getWidth() +  sprite.getOffset().x) -  sprite.getOffset().x + COLLISION_X_CORRECTIF;						
-						sprite.getAcceleration().x = 0;	
-						if (sprite.getState()!=SpriteMoveEnum.FALLING 
-								&& sprite.getState()!=SpriteMoveEnum.JUMPING) {
-							sprite.setState(SpriteMoveEnum.IDLE);
-						}
-					}
-					
-					if (sprite.getMove().y<0 && sprite.getMove().x==0) {						
-						newPosition.y = (int) sprite.getY() + 1f;
-						sprite.getAcceleration().y = 0;
-						sprite.setState(SpriteMoveEnum.IDLE);
-						sprite.setOnFloor(true);					
-					}
-					
-					if (sprite.getMove().y>0 && sprite.getMove().x==0) {					
-						sprite.addCollidingCell(collisionPoint.getCell());						
-						newPosition.y = (int) sprite.getY();
-						sprite.getAcceleration().y = 10e-5F;						
-						sprite.setState(SpriteMoveEnum.FALLING);						
-					}
-					
-					if (sprite.getMove().x>0 && sprite.getMove().y>0) {
+			
+			sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));		
+			Vector2 newPosition = new Vector2(sprite.getX(), sprite.getY());
+			
+			checkMapCollision(tileMap, sprite);				
 											
-						if (sprite.getMapCollisionEvent().isBlockedRight()) {
-							newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
-							sprite.getAcceleration().x = 0;									
-						} else {
-							float xDelta = collisionPoint.getPoint().x - collisionPoint.getCell().getX();
-							float yDelta = collisionPoint.getPoint().y - collisionPoint.getCell().getY();
-																		
-							if (xDelta>yDelta) {
-								sprite.addCollidingCell(collisionPoint.getCell());
-								newPosition.y = (int) sprite.getY();
-								sprite.getAcceleration().y = 10e-5F;								
-								if (sprite.getState()!=SpriteMoveEnum.FALLING && sprite.getState()!=SpriteMoveEnum.JUMPING) {
-									sprite.setState(SpriteMoveEnum.IDLE);
-									sprite.setOnFloor(true);		
-								} else if (sprite.getState()==SpriteMoveEnum.JUMPING) {
-									sprite.setState(SpriteMoveEnum.FALLING);
-								}						
-							} else {								
-								newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
-								sprite.getAcceleration().x = 0;					
-							}
-						}						
-						
-					}
-					
-					if (sprite.getMove().x>0 && sprite.getMove().y<0) {
-					
-						if (sprite.getMapCollisionEvent().isBlockedRight()) {
-							newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
-							sprite.getAcceleration().x = 0;									
-						} else {	
-							float xDelta = collisionPoint.getPoint().x - collisionPoint.getCell().getX();
-							float yDelta = (collisionPoint.getCell().getY() + 1) - collisionPoint.getPoint().y;														
-							if (sprite.getMapCollisionEvent().getCollisionPoints().size()>1 || xDelta>yDelta) {								
-								newPosition.y = (int) sprite.getY() + 1f;						
-								sprite.getAcceleration().y = 0;
-								sprite.setOnFloor(true);		
-								sprite.setState(SpriteMoveEnum.IDLE);
-							} else {								
-								newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
-								sprite.getAcceleration().x = 0;										
-							}
-						}
-												
-					}
-					
-					if (sprite.getMove().x<0 && sprite.getMove().y<0) {							
-												
-						if (sprite.getMapCollisionEvent().isBlockedLeft()) {						
-							newPosition.x = (int) (sprite.getX() + sprite.getWidth() + sprite.getOffset().x) - sprite.getOffset().x + COLLISION_X_CORRECTIF;					
-							sprite.getAcceleration().x = 0;				
-							
-						} else {
-							float xDelta = (collisionPoint.getCell().getX()+1) - collisionPoint.getPoint().x;
-							float yDelta = (collisionPoint.getCell().getY()+1) - collisionPoint.getPoint().y;
-							if (sprite.getMapCollisionEvent().getCollisionPoints().size()>1 || xDelta>yDelta) {
-								newPosition.y = (int) sprite.getY() + 1f;
-								sprite.getAcceleration().y = 0;
-								sprite.setOnFloor(true);
-								sprite.setState(SpriteMoveEnum.IDLE);
-							} else {
-								newPosition.x = (int) (sprite.getX() + sprite.getWidth() + sprite.getOffset().x) - sprite.getOffset().x + COLLISION_X_CORRECTIF;					
-								sprite.getAcceleration().x = 0;					
-							}
-						}												
-					}
-					
-					if (sprite.getMove().x<0 && sprite.getMove().y>0) {
-												
-						if (sprite.getMapCollisionEvent().isBlockedLeft()) {
-							newPosition.x = (int) (sprite.getX() + sprite.getWidth() + sprite.getOffset().x) - sprite.getOffset().x + COLLISION_X_CORRECTIF;						
-							sprite.getAcceleration().x = 0;			
-						} else {
-							float xDelta = (collisionPoint.getCell().getX()+1) - collisionPoint.getPoint().x;
-							float yDelta = collisionPoint.getPoint().y - (collisionPoint.getCell().getY());
-							if (xDelta>yDelta) {
-																
-								sprite.addCollidingCell(collisionPoint.getCell());
-								newPosition.y = (int) sprite.getY();
-								sprite.getAcceleration().y = 10e-5F;
+			if (sprite.getMapCollisionEvent().getCollisionPoints().size()>0) {
 								
-								if (sprite.getState()!=SpriteMoveEnum.FALLING && sprite.getState()!=SpriteMoveEnum.JUMPING) {
-									sprite.setState(SpriteMoveEnum.IDLE);
-									sprite.setOnFloor(true);
-								} else if (sprite.getState()==SpriteMoveEnum.JUMPING) {
-									sprite.setState(SpriteMoveEnum.FALLING);
-								}
-																
-							} else {								
-								newPosition.x = (int) (sprite.getX() + sprite.getWidth() + sprite.getOffset().x) - sprite.getOffset().x + COLLISION_X_CORRECTIF;						
-								sprite.getAcceleration().x = 0;					
+				int i=0;
+				
+				while (sprite.getMapCollisionEvent().getCollisionPoints().size()>0) {
+				
+					for (CollisionPoint collisionPoint : sprite.getMapCollisionEvent().getCollisionPoints()) {
+						
+						if (sprite.getMove().y==0 && sprite.getMove().x!=0) {
+							newPosition.x = sprite.getMove().x>0 ? (int) (sprite.getX() + sprite.getOffset().x) +  sprite.getOffset().x - COLLISION_X_CORRECTIF : 
+								(int) (sprite.getX() + 1) -  sprite.getOffset().x + COLLISION_X_CORRECTIF;						
+							sprite.getAcceleration().x = 0;	
+							if (sprite.getState()!=SpriteMoveEnum.FALLING 
+									&& sprite.getState()!=SpriteMoveEnum.JUMPING) {
+								sprite.setState(SpriteMoveEnum.IDLE);
 							}
 						}
 						
+						if (sprite.getMove().y<0 && sprite.getMove().x==0) {						
+							newPosition.y = (int) sprite.getY() + 1f;
+							sprite.getAcceleration().y = 0;
+							sprite.setState(SpriteMoveEnum.IDLE);
+							sprite.setOnFloor(true);					
+						}
+						
+						if (sprite.getMove().y>0 && sprite.getMove().x==0) {					
+							sprite.addCollidingCell(collisionPoint.getCell());						
+							newPosition.y = (int) sprite.getY();
+							sprite.getAcceleration().y = 10e-5F;						
+							sprite.setState(SpriteMoveEnum.FALLING);						
+						}
+						
+						if (sprite.getMove().x>0 && sprite.getMove().y>0) {
+												
+							if (sprite.getMapCollisionEvent().isBlockedRight()) {
+								newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
+								sprite.getAcceleration().x = 0;									
+							} else {
+								float xDelta = collisionPoint.getPoint().x - collisionPoint.getCell().getX();
+								float yDelta = collisionPoint.getPoint().y - collisionPoint.getCell().getY();
+																			
+								if (xDelta>yDelta) {
+									sprite.addCollidingCell(collisionPoint.getCell());
+									newPosition.y = (int) sprite.getY();
+									sprite.getAcceleration().y = 10e-5F;								
+									if (sprite.getState()!=SpriteMoveEnum.FALLING && sprite.getState()!=SpriteMoveEnum.JUMPING) {
+										sprite.setState(SpriteMoveEnum.IDLE);
+										sprite.setOnFloor(true);		
+									} else if (sprite.getState()==SpriteMoveEnum.JUMPING) {
+										sprite.setState(SpriteMoveEnum.FALLING);
+									}						
+								} else {								
+									newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
+									sprite.getAcceleration().x = 0;					
+								}
+							}						
+							
+						}
+						
+						if (sprite.getMove().x>0 && sprite.getMove().y<0) {
+						
+							if (sprite.getMapCollisionEvent().isBlockedRight()) {
+								newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
+								sprite.getAcceleration().x = 0;									
+							} else {	
+								float xDelta = collisionPoint.getPoint().x - collisionPoint.getCell().getX();
+								float yDelta = (collisionPoint.getCell().getY() + 1) - collisionPoint.getPoint().y;														
+								if (sprite.getMapCollisionEvent().getCollisionPoints().size()>1 || xDelta>yDelta) {								
+									newPosition.y = (int) sprite.getY() + 1f;						
+									sprite.getAcceleration().y = 0;
+									sprite.setOnFloor(true);		
+									sprite.setState(SpriteMoveEnum.IDLE);
+								} else {								
+									newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
+									sprite.getAcceleration().x = 0;										
+								}
+							}
+													
+						}
+						
+						if (sprite.getMove().x<0 && sprite.getMove().y<0) {							
+													
+							if (sprite.getMapCollisionEvent().isBlockedLeft()) {						
+								newPosition.x = (int) (sprite.getX() + 1) - sprite.getOffset().x + COLLISION_X_CORRECTIF;					
+								sprite.getAcceleration().x = 0;				
+								
+							} else {
+								float xDelta = (collisionPoint.getCell().getX()+1) - collisionPoint.getPoint().x;
+								float yDelta = (collisionPoint.getCell().getY()+1) - collisionPoint.getPoint().y;
+								if (sprite.getMapCollisionEvent().getCollisionPoints().size()>1 || xDelta>yDelta) {
+									newPosition.y = (int) sprite.getY() + 1f;
+									sprite.getAcceleration().y = 0;
+									sprite.setOnFloor(true);
+									sprite.setState(SpriteMoveEnum.IDLE);
+								} else {
+									newPosition.x = (int) (sprite.getX() + 1) - sprite.getOffset().x + COLLISION_X_CORRECTIF;					
+									sprite.getAcceleration().x = 0;					
+								}
+							}												
+						}
+						
+						if (sprite.getMove().x<0 && sprite.getMove().y>0) {
+													
+							if (sprite.getMapCollisionEvent().isBlockedLeft()) {
+								newPosition.x = (int) (sprite.getX() + 1) - sprite.getOffset().x + COLLISION_X_CORRECTIF;						
+								sprite.getAcceleration().x = 0;			
+							} else {
+								float xDelta = (collisionPoint.getCell().getX()+1) - collisionPoint.getPoint().x;
+								float yDelta = collisionPoint.getPoint().y - (collisionPoint.getCell().getY());
+								if (xDelta>yDelta) {
+																	
+									sprite.addCollidingCell(collisionPoint.getCell());
+									newPosition.y = (int) sprite.getY();
+									sprite.getAcceleration().y = 10e-5F;
+									
+									if (sprite.getState()!=SpriteMoveEnum.FALLING && sprite.getState()!=SpriteMoveEnum.JUMPING) {
+										sprite.setState(SpriteMoveEnum.IDLE);
+										sprite.setOnFloor(true);
+									} else if (sprite.getState()==SpriteMoveEnum.JUMPING) {
+										sprite.setState(SpriteMoveEnum.FALLING);
+									}
+																	
+								} else {								
+									newPosition.x = (int) (sprite.getX() + 1) - sprite.getOffset().x + COLLISION_X_CORRECTIF;						
+									sprite.getAcceleration().x = 0;					
+								}
+							}
+							
+						}
+															
 					}
-														
-				}
-				sprite.setX(newPosition.x);
-				sprite.setY(newPosition.y);
-				checkMapCollision(tileMap, sprite);
-				i++;
-				if (i>10) {
-					System.out.println(sprite.getMove().x+"-"+sprite.getMove().y);
-					System.out.println("Erreur de collision ?"+i);
-				}
+					sprite.setX(newPosition.x);
+					sprite.setY(newPosition.y);
+					checkMapCollision(tileMap, sprite);
+					i++;
+					if (i>10) {
+						System.out.println(sprite.getMove().x+"-"+sprite.getMove().y);
+						System.out.println("Erreur de collision ?"+i);
+						System.exit(0);
+					}
+					
+				}	
+				// The collision has been handled, now fix player acceleration
+				if (sprite.getMove().x<0 || (sprite.getMove().x==0 && sprite.getDirection()==DirectionEnum.LEFT)) {
+					Vector2 leftBottomCorner = new Vector2(sprite.getX() + sprite.getOffset().x - 2*COLLISION_X_CORRECTIF, sprite.getY());
+					Vector2 leftTopCorner = new Vector2(sprite.getX() + sprite.getOffset().x - 2*COLLISION_X_CORRECTIF, sprite.getY() + sprite.getHeight());				
+					int x = (int) leftBottomCorner.x;
+					int y = (int) leftBottomCorner.y;
+					boolean isCollision = tileMap.isCollisioningTileAt(x, y);
+					if (!isCollision) {
+						x = (int) leftTopCorner.x;
+						y = (int) leftTopCorner.y;
+						isCollision = tileMap.isCollisioningTileAt(x, y);
+						if (!isCollision) {
+							Vector2 leftMiddle = new Vector2(sprite.getX() + sprite.getOffset().x - 2*COLLISION_X_CORRECTIF, sprite.getY() + sprite.getHeight() / 2);
+							x = (int) leftMiddle.x;
+							y = (int) leftMiddle.y;
+							isCollision = tileMap.isCollisioningTileAt(x, y);
+						}
+					}				
+					sprite.getAcceleration().x = isCollision ? 0 : sprite.getOldAcceleration().x;
+				} else {
+					Vector2 rightBottomCorner = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x + 2*COLLISION_X_CORRECTIF, sprite.getY());
+					Vector2 rightTopCorner = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x + 2*COLLISION_X_CORRECTIF, sprite.getY() + sprite.getHeight());			
+					int x = (int) rightBottomCorner.x;
+					int y = (int) rightBottomCorner.y;
+					boolean isCollision = tileMap.isCollisioningTileAt(x, y);
+					if (!isCollision) {
+						x = (int) rightTopCorner.x;
+						y = (int) rightTopCorner.y;
+						isCollision = tileMap.isCollisioningTileAt(x, y);
+						if (!isCollision) {
+							Vector2 rightMiddle = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x + 2*COLLISION_X_CORRECTIF, sprite.getY() + sprite.getHeight() / 2);
+							x = (int) rightMiddle.x;
+							y = (int) rightMiddle.y;
+							isCollision = tileMap.isCollisioningTileAt(x, y);
+						}
+					}				
+					sprite.getAcceleration().x = isCollision ? 0 : sprite.getOldAcceleration().x;
+				}			
+			}  else {
 				
-			}	
-			// The collision has been handled, now fix player acceleration
-			if (sprite.getMove().x<0 || (sprite.getMove().x==0 && sprite.getDirection()==DirectionEnum.LEFT)) {
-				Vector2 leftBottomCorner = new Vector2(sprite.getX() + sprite.getOffset().x - 2*COLLISION_X_CORRECTIF, sprite.getY());
-				Vector2 leftTopCorner = new Vector2(sprite.getX() + sprite.getOffset().x - 2*COLLISION_X_CORRECTIF, sprite.getY() + sprite.getHeight());				
-				int x = (int) leftBottomCorner.x;
-				int y = (int) leftBottomCorner.y;
-				boolean isCollision = tileMap.isCollisioningTileAt(x, y);
-				if (!isCollision) {
-					x = (int) leftTopCorner.x;
-					y = (int) leftTopCorner.y;
-					isCollision = tileMap.isCollisioningTileAt(x, y);
-					if (!isCollision) {
-						Vector2 leftMiddle = new Vector2(sprite.getX() + sprite.getOffset().x - 2*COLLISION_X_CORRECTIF, sprite.getY() + sprite.getHeight() / 2);
-						x = (int) leftMiddle.x;
-						y = (int) leftMiddle.y;
-						isCollision = tileMap.isCollisioningTileAt(x, y);
+				if (sprite.getMove().y < 0 && !onFloorCorrection) {						
+					sprite.setState(SpriteMoveEnum.FALLING);
+					sprite.setOnFloor(false);
+				} else {
+					checkUpperMapCollision(tileMap, sprite);
+					if (sprite.getState()==SpriteMoveEnum.JUMPING && sprite.getMapCollisionEvent().isCollidingUpperBlock()) {					
+						TmxCell collidingCell = sprite.getMapCollisionEvent().getCollisionPoints().get(0).getCell();
+						if (sprite.getY()-collidingCell.getY()<0.2f) {
+							sprite.addCollidingCell(sprite.getMapCollisionEvent().getCollisionPoints().get(0).getCell());
+							newPosition.y = (int) sprite.getY();
+							sprite.setY(newPosition.y);
+							sprite.getAcceleration().y = 10e-5F;
+							sprite.setState(SpriteMoveEnum.FALLING);
+						}														
 					}
-				}				
-				sprite.getAcceleration().x = isCollision ? 0 : sprite.getOldAcceleration().x;
-			} else {
-				Vector2 rightBottomCorner = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x + 2*COLLISION_X_CORRECTIF, sprite.getY());
-				Vector2 rightTopCorner = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x + 2*COLLISION_X_CORRECTIF, sprite.getY() + sprite.getHeight());			
-				int x = (int) rightBottomCorner.x;
-				int y = (int) rightBottomCorner.y;
-				boolean isCollision = tileMap.isCollisioningTileAt(x, y);
-				if (!isCollision) {
-					x = (int) rightTopCorner.x;
-					y = (int) rightTopCorner.y;
-					isCollision = tileMap.isCollisioningTileAt(x, y);
-					if (!isCollision) {
-						Vector2 rightMiddle = new Vector2(sprite.getX() + sprite.getWidth() + sprite.getOffset().x + 2*COLLISION_X_CORRECTIF, sprite.getY() + sprite.getHeight() / 2);
-						x = (int) rightMiddle.x;
-						y = (int) rightMiddle.y;
-						isCollision = tileMap.isCollisioningTileAt(x, y);
-					}
-				}				
-				sprite.getAcceleration().x = isCollision ? 0 : sprite.getOldAcceleration().x;
-			}										
-		}  else {
-			
-			if (sprite.getMove().y < 0 && !onFloorCorrection) {						
-				sprite.setState(SpriteMoveEnum.FALLING);
-				sprite.setOnFloor(false);
-			} else {
-				checkUpperMapCollision(tileMap, sprite);
-				if (sprite.getState()==SpriteMoveEnum.JUMPING && sprite.getMapCollisionEvent().isCollidingUpperBlock()) {					
-					TmxCell collidingCell = sprite.getMapCollisionEvent().getCollisionPoints().get(0).getCell();
-					if (sprite.getY()-collidingCell.getY()<0.2f) {
-						sprite.addCollidingCell(sprite.getMapCollisionEvent().getCollisionPoints().get(0).getCell());
-						newPosition.y = (int) sprite.getY();
-						sprite.setY(newPosition.y);
-						sprite.getAcceleration().y = 10e-5F;
-						sprite.setState(SpriteMoveEnum.FALLING);
-					}														
 				}
 			}
-		}		
-				
-
+		}
+		
 	}
 	
 	@Override

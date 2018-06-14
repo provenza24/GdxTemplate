@@ -31,8 +31,8 @@ public class GameManager extends AbstractGameManager {
 		SCREENS.put(ScreenEnum.LEVEL_MENU, new LevelMenuScreen());
 		
 		currentLevelIndex=0;				
-		levels.add(new Level.Builder("tilemap.tmx").levelNumber(1).levelName("FOREST").build());
-		levels.add(new Level.Builder("tilemap2.tmx").levelNumber(1).levelName("FOREST").build());
+		levels.add(new Level.Builder("test.tmx").levelNumber(1).levelName("FOREST").build());
+		//levels.add(new Level.Builder("tilemap2.tmx").levelNumber(1).levelName("FOREST").build());
 		setScreen(SCREENS.get(ScreenEnum.MAIN_MENU));
 	}
 	

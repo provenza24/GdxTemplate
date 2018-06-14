@@ -126,7 +126,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		this.offset.y = offset.y;
 						
 		float spriteWidth = (Float) mapObject.getProperties().get("width")/ScreenConstants.MAP_UNIT_PIXELS;
-		float spriteHeight = (Float) mapObject.getProperties().get("height")/ScreenConstants.MAP_UNIT_PIXELS;
+		float spriteHeight = (Float) mapObject.getProperties().get("height")/ScreenConstants.MAP_UNIT_PIXELS;		
 		
 		setSize(spriteWidth - offset.x * 2, spriteHeight - offset.y);
 		setRenderingSize(spriteWidth, spriteHeight);		

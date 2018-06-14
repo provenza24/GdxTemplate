@@ -11,6 +11,8 @@ public class CollisionEvent {
 
 	boolean collidingBottomRight;
 	
+	boolean collidingBottomMiddle;
+	
 	boolean collidingTopLeft;
 	
 	boolean collidingTopRight;
@@ -75,7 +77,7 @@ public class CollisionEvent {
 	}
 
 	public boolean isCollidingBottom() {
-		return collidingBottomLeft || collidingBottomRight;
+		return collidingBottomLeft || collidingBottomRight || collidingBottomMiddle;
 	}
 
 	
@@ -138,5 +140,13 @@ public class CollisionEvent {
 	public boolean isBlockedBottomOnly() {
 		return (collidingBottomLeft || collidingBottomRight) 
 				&& !collidingTopLeft && !collidingTopRight;
+	}
+
+	public boolean isCollidingBottomMiddle() {
+		return collidingBottomMiddle;
+	}
+
+	public void setCollidingBottomMiddle(boolean collidingBottomMiddle) {
+		this.collidingBottomMiddle = collidingBottomMiddle;
 	}
 }

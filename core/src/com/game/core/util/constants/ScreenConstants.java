@@ -2,13 +2,13 @@ package com.game.core.util.constants;
 
 public class ScreenConstants {
 
-	public static int PREFERED_WIDHT = 800;
+	public static int PREFERED_WIDHT = 320;
 		
-	public static final float MAP_UNIT_PIXELS = 32;
+	public static final float MAP_UNIT_PIXELS = 16;
 
-	public static final int NB_HORIZONTAL_TILES = 16;
+	public static final int NB_HORIZONTAL_TILES = 20;
 
-	public static final int NB_VERTICAL_TILES = 12;
+	public static final int NB_VERTICAL_TILES = 14;
 
 	public static final float VERTICAL_HALF_POSITION = (float)(NB_VERTICAL_TILES / 2);
 

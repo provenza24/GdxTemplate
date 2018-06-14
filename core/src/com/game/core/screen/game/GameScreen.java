@@ -112,9 +112,9 @@ public class GameScreen extends AbstractGameScreen  {
 		// Player
 		player = tilemap.getPlayer();
 		
-		// create an orthographic camera, shows us 16x12 units of the world
-		camera = AbstractGameCamera.createCamera(tilemap.getCameraEnum(),player, tilemap.getDimensions());
-				
+		// create an orthographic camera, shows us 16x12 units of the world		
+		camera = AbstractGameCamera.createCamera(tilemap.getCameraEnum(),player, tilemap.getDimensions());		
+		
 		//cameraSpriteBatch.setProjectionMatrix(camera.getCamera().combined);
 		
 		// Initialize backgrounds, which are defined in each TMX map with Tiled
@@ -250,7 +250,7 @@ public class GameScreen extends AbstractGameScreen  {
 			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING && canJump) {
 				player.setOnFloor(false);
 				player.setState(SpriteMoveEnum.JUMPING);
-				player.getAcceleration().y = 0.20f;				
+				player.getAcceleration().y = 0.25f;				
 			}			
 			canJump = false;
 		} else {
