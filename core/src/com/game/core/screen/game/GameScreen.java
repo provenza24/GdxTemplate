@@ -49,7 +49,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private static final Color[] debugBounds = new Color[]{new Color(1, 1, 1, 0.5f), new Color(0, 0, 0, 0.5f), new Color(1, 0, 0, 0.5f), new Color(0, 1, 0, 0.5f), new Color(0, 0, 1, 0.5f)};
 	
-	private static int currentDebugColor = 4;	
+	private static int currentDebugColor = 3;	
 	
 	/** The stage with actors */
 	private Stage stage;
@@ -121,7 +121,8 @@ public class GameScreen extends AbstractGameScreen  {
 		backgrounds = new Array<IScrollingBackground>();
 		int i=0;
 		for (BackgroundTypeEnum backgroundTypeEnum : tilemap.getBackgroundTypesEnum()) {
-			IScrollingBackground scrollingBackground = AbstractScrollingBackground.createScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 16 : 24);
+			//IScrollingBackground scrollingBackground = AbstractScrollingBackground.createScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 16 : 24);
+			IScrollingBackground scrollingBackground = AbstractScrollingBackground.createScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 4 : 24);
 			backgrounds.add(scrollingBackground);			
 			i++;
 		}
@@ -327,8 +328,8 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;			
 			debugFont.draw(spriteBatch, "ascending= " + player.isClimbing(), x, y);
 			
-			x = 400;
-			y = ScreenConstants.HEIGHT-10;
+			x = 170;
+			y = ScreenConstants.HEIGHT-50;
 			debugFont.draw(spriteBatch, "camera.type=" + tilemap.getCameraEnum(), x, y);			
 			y = y -20;
 			debugFont.draw(spriteBatch, "camera.position=" + String.format("%.3f", camera.getCamera().position.x) + " | " + String.format("%.3f", camera.getCamera().position.y), x, y);			

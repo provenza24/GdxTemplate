@@ -11,6 +11,7 @@ import com.game.core.background.impl.MarioLikeScrollingBackground;
 import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.util.ResourcesLoader;
+import com.game.core.util.constants.ScreenConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
 import com.game.core.util.enums.CameraEnum;
 
@@ -48,8 +49,11 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 	/** Background can scroll vertically */
 	protected boolean scrollableVertically;
 		
+	protected static final float CAMERA_OFFSET_START_SCROLL = ScreenConstants.NB_HORIZONTAL_TILES / 2 - 0.5f; 
+		
 	static {
 		BACKGROUND_IMAGES.put(BackgroundTypeEnum.FOREST, ResourcesLoader.getBackgroundForest());
+		BACKGROUND_IMAGES.put(BackgroundTypeEnum.SUBURBS, ResourcesLoader.BACKGROUND_SUBURBS);
 	}
 		
 	public AbstractScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType) {
@@ -61,6 +65,7 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 		this.scrollableHorizontally = camera.isScrollableHorizontally();
 		this.scrollableVertically = camera.isScrollableVertically();
 		this.camera = camera;
+		this.setY(ScreenConstants.HEIGHT - BACKGROUND_IMAGES.get(backgroundType).getHeight());
 	}
 	
 	public static AbstractScrollingBackground createScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float velocity) {

@@ -29,6 +29,8 @@ public class ResourcesLoader {
 		return BACKGROUND_FOREST;
 	}			
 	
+	public static final Texture BACKGROUND_SUBURBS = new Texture(Gdx.files.internal("backgrounds/suburbs.png"));
+	
 	public static final BitmapFont MAIN_MENU_FONT = new BitmapFont(Gdx.files.internal("fonts/menu/pressStart2P.fnt"));
 		
 }

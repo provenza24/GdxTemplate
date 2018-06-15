@@ -167,7 +167,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 			// Update visible / deletable booleans
 			updateDeletableAndVisibleStatus(camera);					
 		} else {			
-			alive = camera.position.x-8>xAlive;							
+			alive = camera.position.x-10>xAlive;							
 		}				
 	}
 	
@@ -177,12 +177,12 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 			deletable = true;				
 		} else {
 			// Check if sprite is visible
-			visible = getX() < camera.position.x+8;				
+			visible = getX() < camera.position.x+10;				
 		}		
 	}
 	
 	protected boolean isDeletable(OrthographicCamera camera) {
-		return getX()<camera.position.x-9 || getY() < -1;
+		return getX()<camera.position.x-11 || getY() < -1;
 	}
 
 	public void collideWithTilemap(TmxMap tilemap) {

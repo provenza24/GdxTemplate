@@ -21,7 +21,7 @@ public class FreeScrollingBackground extends AbstractScrollingBackground {
 	@Override
 	public void update() {
 							
-		if (scrollableHorizontally && camera.getCameraOffset() == 7.5) {
+		if (scrollableHorizontally && camera.getCameraOffset() == CAMERA_OFFSET_START_SCROLL) {
 			float xPlayerMove = (followedSprite.getX() - followedSprite.getOldPosition().x);
 			// Scroll only if player is going to the right of the screen
 			setX(getX() + xPlayerMove * velocity);			

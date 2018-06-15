@@ -14,7 +14,7 @@ import com.game.core.util.enums.SpriteMoveEnum;
 
 public class Player extends AbstractTileObjectSprite {
 
-	private static final float X_OFFSET = 0.2f;
+	private static final float X_OFFSET = 0.4f;
 	
 	private static final float Y_OFFSET = 0.2f;	
 

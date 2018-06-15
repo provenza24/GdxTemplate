@@ -19,7 +19,7 @@ public class FreeGameCamera extends AbstractGameCamera {
 			
 			float move = followedSprite.getX() - followedSprite.getOldPosition().x;				
 			
-			if (followedSprite.getX() < 0) {
+			if (followedSprite.getX() + followedSprite.getOffset().x < 0) {				
 				followedSprite.setX(followedSprite.getOldPosition().x);
 				followedSprite.getAcceleration().x = 0;				
 			} else if (followedSprite.getX() < ScreenConstants.HORIZONTAL_HALF_POSITION) {
