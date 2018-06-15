@@ -23,28 +23,6 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 	public void collideWithTilemap(TmxMap tileMap, Player sprite) {
 		
 		boolean pente = false;						
-		
-		if (sprite.getDirection()==DirectionEnum.RIGHT) {
-			Vector2 point = new Vector2(sprite.getX(), sprite.getY());
-			Cell cell = tileMap.getTileAt((int)(point.x), (int)point.y);
-			Cell cell2 = tileMap.getTileAt((int)(point.x+1), (int)point.y-1);
-			boolean cellCollision = cell!=null && cell.getTile().getId()==58;
-			boolean cell2Collision = cell2!=null && cell2.getTile().getId()==58;
-			if (cellCollision || cell2Collision) {			
-				sprite.setClimbing(true);
-				float diff = point.x - (int) point.x;
-				sprite.setY((int)point.y - diff + 0.8f);
-				sprite.setOnFloor(true);	
-				sprite.getOldPosition().y = sprite.getY();
-				sprite.getAcceleration().y = 0;				
-				pente = true;
-				sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
-			} else {
-				sprite.setClimbing(false);
-			}
-		} else {
-			sprite.setClimbing(false);
-		}
 									
 		if (!pente) {
 			sprite.setCollidingCells(new ArrayList<TmxCell>());
