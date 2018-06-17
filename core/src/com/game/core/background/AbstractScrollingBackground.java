@@ -53,7 +53,7 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 		
 	static {
 		BACKGROUND_IMAGES.put(BackgroundTypeEnum.FOREST, ResourcesLoader.getBackgroundForest());
-		BACKGROUND_IMAGES.put(BackgroundTypeEnum.SUBURBS, ResourcesLoader.BACKGROUND_SUBURBS);
+		BACKGROUND_IMAGES.put(BackgroundTypeEnum.SUBURBS, ResourcesLoader.getBackgroundSuburbs());
 	}
 		
 	public AbstractScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType) {

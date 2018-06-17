@@ -122,7 +122,7 @@ public class GameScreen extends AbstractGameScreen  {
 		int i=0;
 		for (BackgroundTypeEnum backgroundTypeEnum : tilemap.getBackgroundTypesEnum()) {
 			//IScrollingBackground scrollingBackground = AbstractScrollingBackground.createScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 16 : 24);
-			IScrollingBackground scrollingBackground = AbstractScrollingBackground.createScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 4 : 24);
+			IScrollingBackground scrollingBackground = AbstractScrollingBackground.createScrollingBackground(camera, player, spriteBatch, backgroundTypeEnum, i==0 ? 8 : 24);
 			backgrounds.add(scrollingBackground);			
 			i++;
 		}
