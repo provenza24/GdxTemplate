@@ -2,6 +2,7 @@ package com.game.core.collision.tilemap.impl;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
@@ -20,14 +21,39 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 	public PlayerTilemapCollisionHandler() {		
 	}
 	
-	public void collideWithTilemap(TmxMap tileMap, Player sprite) {
+	public void collideWithTilemap(TmxMap tileMap, Player sprite) {							
+				
+		boolean onFloorCorrection = false;
 		
-		boolean pente = false;						
-									
-		if (!pente) {
-			sprite.setCollidingCells(new ArrayList<TmxCell>());
-			
-			boolean onFloorCorrection = false;
+		sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
+	
+		if (sprite.getState()!=SpriteMoveEnum.JUMPING) {
+
+			Vector2 position = new Vector2(sprite.getX() + sprite.getWidth()/2 + sprite.getOffset().x, sprite.getOldPosition().y);
+			Cell cell = tileMap.getTileAt((int)position.x, (int)position.y);
+			if (cell!=null && cell.getTile().getId()>=391 && cell.getTile().getId()<=394) {
+				if (sprite.getState()==SpriteMoveEnum.FALLING) {
+					sprite.setState(SpriteMoveEnum.IDLE);
+				}
+				float diff = position.x - (int)position.x;
+				sprite.setOnFloor(true);
+				sprite.setY((int)sprite.getOldPosition().y 
+						+ (cell.getTile().getId()==392 ? 0.25f :cell.getTile().getId()==393 ? 0.5f : cell.getTile().getId()==394 ? 0.75f : 0) 
+						+ diff / 4);
+				sprite.getAcceleration().y = 0;
+				sprite.setClimbing(true);		
+			} else {
+				if (sprite.isClimbing()) {
+					Gdx.app.log("CLIMBING", "On ne grimpe plus");
+					sprite.setY(sprite.getDirection()==DirectionEnum.RIGHT ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getOldPosition().y + COLLISION_X_CORRECTIF);
+				}				
+				sprite.setClimbing(false);
+			}
+		}		
+											
+		if (!sprite.isClimbing()) {
+					
+			sprite.setCollidingCells(new ArrayList<TmxCell>());						
 			sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
 			
 			checkBottomMapCollision(tileMap, sprite);		

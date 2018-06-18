@@ -251,7 +251,8 @@ public class GameScreen extends AbstractGameScreen  {
 			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING && canJump) {
 				player.setOnFloor(false);
 				player.setState(SpriteMoveEnum.JUMPING);
-				player.getAcceleration().y = 0.25f;				
+				player.getAcceleration().y = 0.25f;		
+				player.setClimbing(false);
 			}			
 			canJump = false;
 		} else {
@@ -323,18 +324,18 @@ public class GameScreen extends AbstractGameScreen  {
 			debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
 			y = y -20;			
 			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);
+			//y = y -20;			
+			//debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
 			y = y -20;			
-			debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
-			y = y -20;			
-			debugFont.draw(spriteBatch, "ascending= " + player.isClimbing(), x, y);
+			debugFont.draw(spriteBatch, "climbing= " + player.isClimbing(), x, y);
 			
-			x = 170;
+			/*x = 170;
 			y = ScreenConstants.HEIGHT-50;
 			debugFont.draw(spriteBatch, "camera.type=" + tilemap.getCameraEnum(), x, y);			
 			y = y -20;
 			debugFont.draw(spriteBatch, "camera.position=" + String.format("%.3f", camera.getCamera().position.x) + " | " + String.format("%.3f", camera.getCamera().position.y), x, y);			
 			y = y -20;			
-			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);			
+			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);*/			
 			
 			spriteBatch.end();
 		}
