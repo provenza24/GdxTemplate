@@ -2,6 +2,7 @@ package com.game.core.tilemap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
@@ -41,7 +42,7 @@ public class TmxMap {
 
 	private Flag flag;
 	
-	private List<AbstractItem> items;
+	private List<AbstractItem> items;		
 	
 	public TmxMap(String levelName) {
 		map = new TmxMapLoader().load(levelName);
@@ -54,8 +55,8 @@ public class TmxMap {
 		cameraEnum = CameraEnum.valueOf(((String) properties.get(TilemapConstants.CAMERA)).toUpperCase());		
 	}
 
-	private void initBackgrounds() {
-
+	private void initBackgrounds() {			
+		
 		backgroundTypesEnum = new Array<BackgroundTypeEnum>();
 		try {
 			String backgrounds[] = ((String) properties.get(TilemapConstants.BACKGROUNDS)).toUpperCase().split(",");		
@@ -91,7 +92,9 @@ public class TmxMap {
 	public boolean isCollisioningTileAt(int x, int y) {
 		Cell cell = tileLayer.getCell(x, y);
 		if (cell != null) {
-			return cell.getTile().getId() >= 200 && cell.getTile().getId()!=391 && cell.getTile().getId()!=392 && cell.getTile().getId()!=393 && cell.getTile().getId()!=394;
+			return cell.getTile().getId() >= 200
+					&& cell.getTile().getId()<391
+					&& cell.getTile().getId()>398;					
 		}
 		return false;
 	}

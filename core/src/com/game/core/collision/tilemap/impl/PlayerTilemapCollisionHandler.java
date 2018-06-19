@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
+import com.game.core.collision.math.FunctionEvaluator;
 import com.game.core.collision.tilemap.AbstractTilemapCollisionHandler;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.sprite.impl.player.Player;
@@ -17,6 +18,8 @@ import com.game.core.util.enums.SpriteMoveEnum;
 public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandler<Player> {
 
 	private static final float COLLISION_X_CORRECTIF = 10e-5F;
+	
+	private static Cell previousCell;
 	
 	public PlayerTilemapCollisionHandler() {		
 	}
@@ -31,24 +34,28 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 
 			Vector2 position = new Vector2(sprite.getX() + sprite.getWidth()/2 + sprite.getOffset().x, sprite.getOldPosition().y);
 			Cell cell = tileMap.getTileAt((int)position.x, (int)position.y);
-			if (cell!=null && cell.getTile().getId()>=391 && cell.getTile().getId()<=394) {
+			if (cell!=null && cell.getTile().getId()>=391 && cell.getTile().getId()<=398) {	
+				previousCell = cell;
 				if (sprite.getState()==SpriteMoveEnum.FALLING) {
 					sprite.setState(SpriteMoveEnum.IDLE);
 				}
 				float diff = position.x - (int)position.x;
-				sprite.setOnFloor(true);
-				sprite.setY((int)sprite.getOldPosition().y 
-						+ (cell.getTile().getId()==392 ? 0.25f :cell.getTile().getId()==393 ? 0.5f : cell.getTile().getId()==394 ? 0.75f : 0) 
-						+ diff / 4);
+				sprite.setOnFloor(true);				
+				sprite.setY((int)sprite.getOldPosition().y + FunctionEvaluator.compute(cell.getTile().getId(), diff));				
 				sprite.getAcceleration().y = 0;
 				sprite.setClimbing(true);		
 			} else {
 				if (sprite.isClimbing()) {
-					Gdx.app.log("CLIMBING", "On ne grimpe plus");
-					sprite.setY(sprite.getDirection()==DirectionEnum.RIGHT ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getOldPosition().y + COLLISION_X_CORRECTIF);
+					boolean ascending = previousCell.getTile().getId() <=394;
+					Gdx.app.log("CLIMBING", "On ne grimpe plus -> repositionner le sprite");
+					if (sprite.getDirection()==DirectionEnum.RIGHT) {
+						sprite.setY(ascending ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getY() + COLLISION_X_CORRECTIF);
+					} else {
+						sprite.setY(ascending ? (int)sprite.getOldPosition().y + COLLISION_X_CORRECTIF : (int)sprite.getY() + 1  + COLLISION_X_CORRECTIF);
+					}					
 				}				
 				sprite.setClimbing(false);
-			}
+			}		
 		}		
 											
 		if (!sprite.isClimbing()) {
