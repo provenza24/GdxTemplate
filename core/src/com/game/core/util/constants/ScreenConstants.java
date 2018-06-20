@@ -2,7 +2,7 @@ package com.game.core.util.constants;
 
 public class ScreenConstants {
 
-	public static int PREFERED_WIDHT = 320;
+	public static int PREFERED_WIDHT = 640;
 		
 	public static final float MAP_UNIT_PIXELS = 16;
 

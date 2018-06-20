@@ -79,9 +79,9 @@ public class GameScreen extends AbstractGameScreen  {
 	private BitmapFont debugFont;
 	
 	/** Debug parameters */
-	private boolean debugShowText = true;
+	private boolean debugShowText = false;
 
-	private boolean debugShowBounds = true;
+	private boolean debugShowBounds = false;
 
 	private boolean debugShowFps = true;
 	

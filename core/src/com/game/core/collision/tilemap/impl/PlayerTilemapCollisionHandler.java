@@ -45,7 +45,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 				sprite.setClimbing(true);		
 			} else {
 				if (sprite.isClimbing()) {
-					boolean ascending = previousCell.getTile().getId() <=194;
+					boolean ascending = previousCell.getTile().getId() <=198; // à partir de 199 -> pente en descente
 					if (sprite.getDirection()==DirectionEnum.RIGHT) {
 						sprite.setY(ascending ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getY() + COLLISION_X_CORRECTIF);
 					} else {

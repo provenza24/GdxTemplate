@@ -31,10 +31,10 @@ public class FunctionEvaluator {
 		FUNCTIONS.put(193, f3);
 		FUNCTIONS.put(194, f4);		
 		
-		FUNCTIONS.put(195, f5);
-		FUNCTIONS.put(196, f6);
-		FUNCTIONS.put(197, f7);
-		FUNCTIONS.put(198, f8);
+		FUNCTIONS.put(195, f1);
+		FUNCTIONS.put(196, f2);
+		FUNCTIONS.put(197, f3);
+		FUNCTIONS.put(198, f4);
 	}	
 	
 	public static Float compute(int tileId, Float x) {
