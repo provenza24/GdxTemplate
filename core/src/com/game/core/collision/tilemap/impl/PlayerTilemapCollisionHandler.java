@@ -33,7 +33,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 
 			Vector2 position = new Vector2(sprite.getX() + sprite.getWidth()/2 + sprite.getOffset().x, sprite.getOldPosition().y);
 			Cell cell = tileMap.getTileAt((int)position.x, (int)position.y);
-			if (cell!=null && cell.getTile().getId()>=191 && cell.getTile().getId()<=198) {	
+			if (cell!=null && cell.getTile().getId()>=191 && cell.getTile().getId()<=206) {	
 				previousCell = cell;
 				if (sprite.getState()==SpriteMoveEnum.FALLING) {
 					sprite.setState(SpriteMoveEnum.IDLE);
@@ -42,7 +42,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 				sprite.setOnFloor(true);				
 				sprite.setY((int)sprite.getOldPosition().y + FunctionEvaluator.compute(cell.getTile().getId(), diff));				
 				sprite.getAcceleration().y = 0;
-				sprite.setClimbing(true);		
+				sprite.setClimbing(true);
 			} else {
 				if (sprite.isClimbing()) {
 					boolean ascending = previousCell.getTile().getId() <=198; // à partir de 199 -> pente en descente

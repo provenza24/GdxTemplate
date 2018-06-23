@@ -171,8 +171,10 @@ public class GameScreen extends AbstractGameScreen  {
 		}							
 		// Render tilemap
 		tilemapRenderer.setView(camera.getCamera());
-		tilemapRenderer.render();		
-		
+		//tilemapRenderer.render();
+		tilemapRenderer.getBatch().begin();
+		tilemapRenderer.renderTileLayer(tilemap.getBackgroundLayer());
+		tilemapRenderer.getBatch().end();
 		// Move items, check collisions, render
 		handleItems(delta);
 		
@@ -182,6 +184,9 @@ public class GameScreen extends AbstractGameScreen  {
 		// Draw stage for moving actors		
 		stage.draw();
 		
+		tilemapRenderer.getBatch().begin();
+		tilemapRenderer.renderTileLayer(tilemap.getForegroundLayer());
+		tilemapRenderer.getBatch().end();
 		// Render debug mode
 		renderDebugMode();
 	}

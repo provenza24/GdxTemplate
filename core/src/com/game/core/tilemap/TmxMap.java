@@ -25,7 +25,9 @@ public class TmxMap {
 
 	private TiledMap map;
 
-	private TiledMapTileLayer tileLayer;
+	private TiledMapTileLayer backgroundLayer;
+
+	private TiledMapTileLayer foregroundLayer;
 
 	private MapLayer objectsLayer;
 	
@@ -45,9 +47,10 @@ public class TmxMap {
 	
 	public TmxMap(String levelName) {
 		map = new TmxMapLoader().load(levelName);
-		tileLayer = (TiledMapTileLayer) map.getLayers().get(0);
-		objectsLayer = map.getLayers().get(1);
-		properties = tileLayer.getProperties();
+		backgroundLayer = (TiledMapTileLayer) map.getLayers().get("background");
+		foregroundLayer = (TiledMapTileLayer) map.getLayers().get("foreground");
+		objectsLayer = map.getLayers().get("objectsLayer");
+		properties = backgroundLayer.getProperties();
 		initBackgrounds();
 		initMapObjects();
 		dimensions = new Vector2((Integer)map.getProperties().get("width"), (Integer)map.getProperties().get("height"));
@@ -89,25 +92,25 @@ public class TmxMap {
 	}
 
 	public boolean isCollisioningTileAt(int x, int y) {
-		Cell cell = tileLayer.getCell(x, y);
+		Cell cell = backgroundLayer.getCell(x, y);
 		if (cell != null) {
-			return cell.getTile().getId() >= 200;								
+			return cell.getTile().getId() >= 221;								
 		}
 		return false;
 	}
 
 	public Cell getTileAt(int x, int y) {
-		Cell cell = tileLayer.getCell(x, y);
+		Cell cell = backgroundLayer.getCell(x, y);
 		return cell;
 	}
 
 	public void changeCellValue(int x, int y, int value) {
-		Cell cell = tileLayer.getCell(x, y);
+		Cell cell = backgroundLayer.getCell(x, y);
 		cell.setTile(map.getTileSets().getTile(value));
 	}
 
 	public void removeCell(int x, int y) {
-		tileLayer.setCell(x, y, null);
+		backgroundLayer.setCell(x, y, null);
 	}
 
 	public void dispose() {
@@ -124,12 +127,12 @@ public class TmxMap {
 		this.map = map;
 	}
 
-	public TiledMapTileLayer getTileLayer() {
-		return tileLayer;
+	public TiledMapTileLayer getBackgroundLayer() {
+		return backgroundLayer;
 	}
 
-	public void setTileLayer(TiledMapTileLayer tileLayer) {
-		this.tileLayer = tileLayer;
+	public void setBackgroundLayer(TiledMapTileLayer tileLayer) {
+		this.backgroundLayer = tileLayer;
 	}
 
 	public Array<BackgroundTypeEnum> getBackgroundTypesEnum() {
@@ -178,6 +181,14 @@ public class TmxMap {
 
 	public void setItems(List<AbstractItem> items) {
 		this.items = items;
+	}
+
+	public TiledMapTileLayer getForegroundLayer() {
+		return foregroundLayer;
+	}
+
+	public void setForegroundLayer(TiledMapTileLayer foregroundLayer) {
+		this.foregroundLayer = foregroundLayer;
 	}
 
 }
