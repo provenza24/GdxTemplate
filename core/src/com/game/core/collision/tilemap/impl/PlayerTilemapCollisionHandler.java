@@ -2,6 +2,7 @@ package com.game.core.collision.tilemap.impl;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
@@ -28,32 +29,53 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		boolean onFloorCorrection = false;
 		
 		sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
-	
+		
 		if (sprite.getState()!=SpriteMoveEnum.JUMPING) {
-
-			Vector2 position = new Vector2(sprite.getX() + sprite.getWidth()/2 + sprite.getOffset().x, sprite.getOldPosition().y);
+			
+			Vector2 position = new Vector2(sprite.getX() + sprite.getWidth()/2 + sprite.getOffset().x, sprite.getY());
 			Cell cell = tileMap.getTileAt((int)position.x, (int)position.y);
-			if (cell!=null && cell.getTile().getId()>=191 && cell.getTile().getId()<=206) {	
+			if (cell!=null && cell.getTile().getId()>=207 && cell.getTile().getId()<=210 ) {
 				previousCell = cell;
 				if (sprite.getState()==SpriteMoveEnum.FALLING) {
 					sprite.setState(SpriteMoveEnum.IDLE);
 				}
-				float diff = position.x - (int)position.x;
 				sprite.setOnFloor(true);				
-				sprite.setY((int)sprite.getOldPosition().y + FunctionEvaluator.compute(cell.getTile().getId(), diff));				
+				sprite.setY((int)sprite.getY() + 1 + COLLISION_X_CORRECTIF);				
 				sprite.getAcceleration().y = 0;
 				sprite.setClimbing(true);
 			} else {
-				if (sprite.isClimbing()) {
-					boolean ascending = previousCell.getTile().getId() <=198; // à partir de 199 -> pente en descente
-					if (sprite.getDirection()==DirectionEnum.RIGHT) {
-						sprite.setY(ascending ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getY() + COLLISION_X_CORRECTIF);
-					} else {
-						sprite.setY(ascending ? (int)sprite.getOldPosition().y + COLLISION_X_CORRECTIF : (int)sprite.getY() + 1  + COLLISION_X_CORRECTIF);
-					}					
-				}				
-				sprite.setClimbing(false);
-			}		
+				position = new Vector2(sprite.getX() + sprite.getWidth()/2 + sprite.getOffset().x, sprite.getOldPosition().y);
+				cell = tileMap.getTileAt((int)position.x, (int)position.y);
+				if (cell!=null && cell.getTile().getId()>=191 && cell.getTile().getId()<=206) {	
+					previousCell = cell;
+					if (sprite.getState()==SpriteMoveEnum.FALLING) {
+						sprite.setState(SpriteMoveEnum.IDLE);
+					}
+					float diff = position.x - (int)position.x;
+					sprite.setOnFloor(true);				
+					sprite.setY((int)sprite.getOldPosition().y + FunctionEvaluator.compute(cell.getTile().getId(), diff));				
+					sprite.getAcceleration().y = 0;
+					sprite.setClimbing(true);
+				} else {
+					if (sprite.isClimbing()) {
+						Gdx.app.log("SPECIAL_TILE",Integer.toString(previousCell.getTile().getId()));
+						if (previousCell.getTile().getId()>=207 && previousCell.getTile().getId()<=210) {
+							Gdx.app.log("SPECIAL_TILE", "On quitte une plateforme spéciale");
+						} else {
+							boolean ascending = previousCell.getTile().getId() <=198; // à partir de 199 -> pente en descente
+							if (sprite.getDirection()==DirectionEnum.RIGHT) {
+								sprite.setY(ascending ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getY() + COLLISION_X_CORRECTIF);
+							} else {
+								sprite.setY(ascending ? (int)sprite.getOldPosition().y + COLLISION_X_CORRECTIF : (int)sprite.getY() + 1  + COLLISION_X_CORRECTIF);
+							}
+						}
+					}	
+					sprite.setClimbing(false);
+
+				}
+				
+			}
+				
 		}		
 											
 		if (!sprite.isClimbing()) {

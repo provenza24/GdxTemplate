@@ -23,6 +23,9 @@ public class FunctionEvaluator {
 	
 	public static final MathFunction f8 = x -> 0.25f - x / 4f;	
 	
+	
+	public static final MathFunction f9 = x -> 1.00001f;	
+	
 	private static final Map<Integer, MathFunction> FUNCTIONS = new HashMap<Integer, MathFunction>();
 	
 	static {
@@ -45,6 +48,11 @@ public class FunctionEvaluator {
 		FUNCTIONS.put(204, f6);
 		FUNCTIONS.put(205, f7);
 		FUNCTIONS.put(206, f8);
+		
+		FUNCTIONS.put(207, f9);
+		FUNCTIONS.put(208, f9);
+		FUNCTIONS.put(209, f9);
+		FUNCTIONS.put(210, f9);
 	}	
 	
 	public static Float compute(int tileId, Float x) {
