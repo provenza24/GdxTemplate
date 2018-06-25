@@ -94,6 +94,8 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	protected boolean onFloor;
 	
+	protected float halfWidth;
+	
 	public AbstractSprite(float x, float y, Vector2 size, Vector2 offset) {
 		
 		this.setPosition(x, y);		
@@ -129,6 +131,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		float spriteHeight = (Float) mapObject.getProperties().get("height")/ScreenConstants.MAP_UNIT_PIXELS;		
 		
 		setSize(spriteWidth - offset.x * 2, spriteHeight - offset.y);
+		this.halfWidth = getWidth()/2;
 		setRenderingSize(spriteWidth, spriteHeight);		
 		setY(getY()+getHeight());
 		bounds=new Rectangle(getX() + offset.x, getY(), getWidth(), getHeight());
@@ -478,6 +481,14 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 
 	public void setTilemapCollisionHandler(ITilemapCollisionHandler tilemapCollisionHandler) {
 		this.tilemapCollisionHandler = tilemapCollisionHandler;
+	}
+
+	public float getHalfWidth() {
+		return halfWidth;
+	}
+
+	public void setHalfWidth(float halfWidth) {
+		this.halfWidth = halfWidth;
 	}
 
 }

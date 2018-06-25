@@ -85,6 +85,8 @@ public class GameScreen extends AbstractGameScreen  {
 
 	private boolean debugShowFps = true;
 	
+	private boolean showForeground = true;
+	
 	private Player player;
 	
 	private boolean canJump;
@@ -184,9 +186,13 @@ public class GameScreen extends AbstractGameScreen  {
 		// Draw stage for moving actors		
 		stage.draw();
 		
-		tilemapRenderer.getBatch().begin();
-		tilemapRenderer.renderTileLayer(tilemap.getForegroundLayer());
-		tilemapRenderer.getBatch().end();
+		// Draw foreground
+		if (showForeground) {
+			tilemapRenderer.getBatch().begin();
+			tilemapRenderer.renderTileLayer(tilemap.getForegroundLayer());
+			tilemapRenderer.getBatch().end();
+		}
+		
 		// Render debug mode
 		renderDebugMode();
 	}
@@ -257,7 +263,8 @@ public class GameScreen extends AbstractGameScreen  {
 				player.setOnFloor(false);
 				player.setState(SpriteMoveEnum.JUMPING);
 				player.getAcceleration().y = 0.25f;		
-				player.setClimbing(false);
+				player.setOnCurvedTile(false);
+				player.setOnCloudTile(false);
 			}			
 			canJump = false;
 		} else {
@@ -286,30 +293,29 @@ public class GameScreen extends AbstractGameScreen  {
 	private void handleDebugKeys() {
 		
 		if (Gdx.input.isKeyJustPressed(Keys.F1)) {
+			showForeground = !showForeground;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F12)) {
 			debugShowFps = !debugShowFps;
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F2)) {
+		if (Gdx.input.isKeyJustPressed(Keys.F11)) {
 			debugShowText = !debugShowText;
 		}						
 
-		if (Gdx.input.isKeyJustPressed(Keys.F3)) {
+		if (Gdx.input.isKeyJustPressed(Keys.F10)) {
 			debugShowBounds = !debugShowBounds;
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F12)) {		
+		if (Gdx.input.isKeyJustPressed(Keys.F9)) {		
 			currentDebugColor++;
 			currentDebugColor = fontColors.length == currentDebugColor ? 0 : currentDebugColor;
 			debugFont.setColor(fontColors[currentDebugColor]);
 			DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F11)) {
-			player.setX(92);
-			player.setY(6);
-			camera.getCamera().position.x = 92;
-			camera.setCameraOffset(0);
-		}
+		
 	}
 		
 	private void renderDebugMode() {
@@ -332,7 +338,9 @@ public class GameScreen extends AbstractGameScreen  {
 			//y = y -20;			
 			//debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
 			y = y -20;			
-			debugFont.draw(spriteBatch, "climbing= " + player.isClimbing(), x, y);
+			debugFont.draw(spriteBatch, "curvedTile= " + player.isOnCurvedTile(), x, y);
+			y = y -20;			
+			debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);
 			
 			/*x = 170;
 			y = ScreenConstants.HEIGHT-50;

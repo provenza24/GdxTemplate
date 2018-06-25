@@ -1,7 +1,10 @@
 package com.game.core.tilemap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
@@ -9,17 +12,21 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.game.core.collision.math.MathFunction;
 import com.game.core.sprite.AbstractItem;
 import com.game.core.sprite.impl.item.Flag;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.util.constants.TilemapConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
 import com.game.core.util.enums.CameraEnum;
+import com.game.core.util.enums.math.MathFunctionEnum;
 
 public class TmxMap {
 
@@ -45,18 +52,45 @@ public class TmxMap {
 	
 	private List<AbstractItem> items;		
 	
+	private List<Integer> cloudTiles;
+	
+	private Map<Integer, MathFunction> curvedTilesFunctions;
+	
 	public TmxMap(String levelName) {
 		map = new TmxMapLoader().load(levelName);
 		backgroundLayer = (TiledMapTileLayer) map.getLayers().get("background");
-		foregroundLayer = (TiledMapTileLayer) map.getLayers().get("foreground");
+		foregroundLayer = (TiledMapTileLayer) map.getLayers().get("foreground");		
 		objectsLayer = map.getLayers().get("objectsLayer");
 		properties = backgroundLayer.getProperties();
 		initBackgrounds();
 		initMapObjects();
+		initTilesProperties();
 		dimensions = new Vector2((Integer)map.getProperties().get("width"), (Integer)map.getProperties().get("height"));
-		cameraEnum = CameraEnum.valueOf(((String) properties.get(TilemapConstants.CAMERA)).toUpperCase());		
+		cameraEnum = CameraEnum.valueOf(((String) properties.get(TilemapConstants.CAMERA)).toUpperCase());						
 	}
 
+	private void initTilesProperties() {
+		
+		curvedTilesFunctions = new HashMap<Integer, MathFunction>();
+		cloudTiles= new ArrayList<>();
+		
+		TiledMapTileSet tileset = map.getTileSets().getTileSet(1);	
+		for (TiledMapTile tiledMapTile : tileset) {			
+			MapProperties props = tiledMapTile.getProperties();
+			Iterator<String> keysIterator = props.getKeys();
+			Iterator<Object> valuesIterator = props.getValues();
+			while(keysIterator.hasNext()) {	
+				String key = keysIterator.next();
+				if (key.equalsIgnoreCase("CURVED")) {					
+					String value = valuesIterator.next().toString().toUpperCase();
+					curvedTilesFunctions.put(tiledMapTile.getId(), MathFunctionEnum.valueOf(value).getMathFunction());					
+				} else if (key.equalsIgnoreCase("CLOUD")) {
+					cloudTiles.add(tiledMapTile.getId());					
+				}
+			}
+		}
+	}
+	
 	private void initBackgrounds() {			
 		
 		backgroundTypesEnum = new Array<BackgroundTypeEnum>();
@@ -189,6 +223,26 @@ public class TmxMap {
 
 	public void setForegroundLayer(TiledMapTileLayer foregroundLayer) {
 		this.foregroundLayer = foregroundLayer;
+	}
+
+	public List<Integer> getCloudTiles() {
+		return cloudTiles;
+	}
+
+	public void setCloudTiles(List<Integer> cloudTiles) {
+		this.cloudTiles = cloudTiles;
+	}
+	
+	public boolean isCloudTile(Integer idx) {
+		return this.cloudTiles.contains(idx);
+	}
+
+	public Map<Integer, MathFunction> getCurvedTilesFunctions() {
+		return curvedTilesFunctions;
+	}
+
+	public void setCurvedTilesFunctions(Map<Integer, MathFunction> curvedTilesFunctions) {
+		this.curvedTilesFunctions = curvedTilesFunctions;
 	}
 
 }

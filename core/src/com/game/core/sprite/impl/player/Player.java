@@ -40,15 +40,9 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private Animation jumpRightAnimation;
 	
-	private boolean climbing;
-
-	public boolean isClimbing() {
-		return climbing;
-	}
-
-	public void setClimbing(boolean climbing) {
-		this.climbing = climbing;
-	}
+	private boolean onCurvedTile;
+	
+	private boolean onCloudTile;
 
 	public Player(MapObject mapObject) {
 		super(mapObject, new Vector2(X_OFFSET,Y_OFFSET));				
@@ -144,5 +138,21 @@ public class Player extends AbstractTileObjectSprite {
 
 	public void setMove(Vector2 move) {
 		this.move = move;
+	}
+
+	public boolean isOnCloudTile() {
+		return onCloudTile;
+	}
+
+	public void setOnCloudTile(boolean onCloudTile) {
+		this.onCloudTile = onCloudTile;
+	}
+
+	public boolean isOnCurvedTile() {
+		return onCurvedTile;
+	}
+
+	public void setOnCurvedTile(boolean onCurvedTile) {
+		this.onCurvedTile = onCurvedTile;
 	}
 }
