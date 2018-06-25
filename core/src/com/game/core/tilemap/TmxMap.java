@@ -58,15 +58,15 @@ public class TmxMap {
 	
 	public TmxMap(String levelName) {
 		map = new TmxMapLoader().load(levelName);
-		backgroundLayer = (TiledMapTileLayer) map.getLayers().get("background");
-		foregroundLayer = (TiledMapTileLayer) map.getLayers().get("foreground");		
-		objectsLayer = map.getLayers().get("objectsLayer");
+		backgroundLayer = (TiledMapTileLayer) map.getLayers().get(TilemapConstants.LAYER_NAME_BACKGROUND);
+		foregroundLayer = (TiledMapTileLayer) map.getLayers().get(TilemapConstants.LAYER_NAME_FOREGROUND);		
+		objectsLayer = map.getLayers().get(TilemapConstants.LAYER_NAME_OBJECTS);
 		properties = backgroundLayer.getProperties();
 		initBackgrounds();
 		initMapObjects();
 		initTilesProperties();
-		dimensions = new Vector2((Integer)map.getProperties().get("width"), (Integer)map.getProperties().get("height"));
-		cameraEnum = CameraEnum.valueOf(((String) properties.get(TilemapConstants.CAMERA)).toUpperCase());						
+		dimensions = new Vector2((Integer)map.getProperties().get(TilemapConstants.MAP_PROPERTY_WIDTH), (Integer)map.getProperties().get(TilemapConstants.MAP_PROPERTY_HEIGHT));
+		cameraEnum = CameraEnum.valueOf(((String) properties.get(TilemapConstants.MAP_PROPERTY_CAMERA)).toUpperCase());						
 	}
 
 	private void initTilesProperties() {
@@ -81,10 +81,10 @@ public class TmxMap {
 			Iterator<Object> valuesIterator = props.getValues();
 			while(keysIterator.hasNext()) {	
 				String key = keysIterator.next();
-				if (key.equalsIgnoreCase("CURVED")) {					
+				if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CURVED)) {					
 					String value = valuesIterator.next().toString().toUpperCase();
 					curvedTilesFunctions.put(tiledMapTile.getId(), MathFunctionEnum.valueOf(value).getMathFunction());					
-				} else if (key.equalsIgnoreCase("CLOUD")) {
+				} else if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CLOUD)) {
 					cloudTiles.add(tiledMapTile.getId());					
 				}
 			}
@@ -95,7 +95,7 @@ public class TmxMap {
 		
 		backgroundTypesEnum = new Array<BackgroundTypeEnum>();
 		try {
-			String backgrounds[] = ((String) properties.get(TilemapConstants.BACKGROUNDS)).toUpperCase().split(",");		
+			String backgrounds[] = ((String) properties.get(TilemapConstants.MAP_PROPERTY_BACKGROUNDS)).toUpperCase().split(",");		
 			for (String background : backgrounds) {
 				if (background!=null && background.compareTo("")!=0)
 					backgroundTypesEnum.add(BackgroundTypeEnum.valueOf(background.toUpperCase()));
@@ -115,10 +115,10 @@ public class TmxMap {
 
 			MapProperties objectProperty = mapObject.getProperties();
 		
-			if (objectProperty.get("type").toString().equals("player")) {
+			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_PLAYER)) {
 				player = new Player(mapObject);
 			}			
-			if (objectProperty.get("type").toString().equals("flag")) {
+			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_FLAG)) {
 				flag = new Flag(mapObject, new Vector2());
 				items.add(flag);
 			}

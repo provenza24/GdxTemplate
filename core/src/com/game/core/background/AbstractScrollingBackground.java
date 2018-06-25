@@ -65,7 +65,7 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 		this.scrollableHorizontally = camera.isScrollableHorizontally();
 		this.scrollableVertically = camera.isScrollableVertically();
 		this.camera = camera;
-		this.setY(ScreenConstants.HEIGHT - BACKGROUND_IMAGES.get(backgroundType).getHeight());
+		//this.setY(ScreenConstants.HEIGHT - BACKGROUND_IMAGES.get(backgroundType).getHeight());
 	}
 	
 	public static AbstractScrollingBackground createScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float velocity) {
