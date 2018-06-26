@@ -82,7 +82,9 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					}					
 				}	
 				// All collisions are solved, fix player acceleration
-				fixPlayerAcceleration(tileMap, sprite);			
+				if (previousCell!=null) {
+					fixPlayerAcceleration(tileMap, sprite);
+				}			
 			}  else {
 				// No collision points detected,check if player is colliding floor or a block uppon his head (while jumping)
 				checkFloorAndTopCollisions(tileMap, sprite, onFloorCorrection, newPosition);
@@ -119,7 +121,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		MathFunction mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
 				
 		if (mathFunction==null) {
-			yPosition = sprite.getOldPosition().y + 0.6f;
+			yPosition = sprite.getOldPosition().y + 0.5f;
 			cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
 			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;			
 			isThroughFloor = mathFunction!=null;

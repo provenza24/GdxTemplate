@@ -34,9 +34,9 @@ public class FreeScrollingBackground extends AbstractScrollingBackground {
 			}
 		}
 				
-		if (scrollableVertically) {
+		/*if (scrollableVertically) {
 			setY(followedSprite.getY()> camera.getMapDimensions().y - 6 ? - (camera.getMapDimensions().y-12) * ScreenConstants.MAP_UNIT_PIXELS 
 				:  followedSprite.getY() > 6 ? (6 - followedSprite.getY()) * ScreenConstants.MAP_UNIT_PIXELS : 0);
-		}
+		}*/
 	}
 }
