@@ -96,6 +96,8 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	protected float halfWidth;
 	
+	protected float halfHeight;
+	
 	public AbstractSprite(float x, float y, Vector2 size, Vector2 offset) {
 		
 		this.setPosition(x, y);		
@@ -132,6 +134,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		
 		setSize(spriteWidth - offset.x * 2, spriteHeight - offset.y);
 		this.halfWidth = getWidth()/2;
+		this.halfHeight = getHeight()/2;
 		setRenderingSize(spriteWidth, spriteHeight);		
 		setY(getY()+getHeight());
 		bounds=new Rectangle(getX() + offset.x, getY(), getWidth(), getHeight());
@@ -199,7 +202,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	protected void applyGravity() {
 		if (isGravitating()) {
-			this.acceleration.y = this.acceleration.y - GRAVITY_COEF;
+			this.acceleration.y = this.acceleration.y > -0.5f ? this.acceleration.y - GRAVITY_COEF : -0.5f;
 		}		
 	}
 
@@ -489,6 +492,14 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 
 	public void setHalfWidth(float halfWidth) {
 		this.halfWidth = halfWidth;
+	}
+
+	public float getHalfHeight() {
+		return halfHeight;
+	}
+
+	public void setHalfHeight(float halfHeight) {
+		this.halfHeight = halfHeight;
 	}
 
 }

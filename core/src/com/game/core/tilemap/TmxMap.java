@@ -83,7 +83,8 @@ public class TmxMap {
 				String key = keysIterator.next();
 				if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CURVED)) {					
 					String value = valuesIterator.next().toString().toUpperCase();
-					curvedTilesFunctions.put(tiledMapTile.getId(), MathFunctionEnum.valueOf(value).getMathFunction());					
+					curvedTilesFunctions.put(tiledMapTile.getId(), MathFunctionEnum.valueOf(value).getMathFunction());
+					Gdx.app.log("CURVED", "Adding tile:"+tiledMapTile.getId());
 				} else if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CLOUD)) {
 					cloudTiles.add(tiledMapTile.getId());					
 				}

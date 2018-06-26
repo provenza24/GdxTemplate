@@ -2,6 +2,7 @@ package com.game.core.collision.tilemap.impl;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
@@ -108,19 +109,39 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 	}
 	
 	private boolean handleCurvedTile(TmxMap tileMap, Player sprite) {		
-		Vector2 position = new Vector2(sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x, sprite.getOldPosition().y);
-		Cell cell = tileMap.getTileAt((int)position.x, (int)position.y);
-		MathFunction mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
-		if (mathFunction!=null) {	
-			previousCell = cell;
-			if (sprite.getState()==SpriteMoveEnum.FALLING) {
-				sprite.setState(SpriteMoveEnum.IDLE);
+		
+		boolean isThroughFloor=false;		
+				
+		float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
+		float yPosition = sprite.getOldPosition().y;
+		
+		Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
+		MathFunction mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+				
+		if (mathFunction==null) {
+			yPosition = sprite.getOldPosition().y + 0.6f;
+			cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
+			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;			
+			isThroughFloor = mathFunction!=null;
+			if (isThroughFloor) {
+				Gdx.app.log("CURVED", "Pass throught");
+			}				
+		}
+		if (mathFunction!=null) {
+			float xDiff = xPosition - (int)xPosition;			
+			float yFunc = mathFunction.compute(xDiff);					
+			if (yPosition<=((int)yPosition + yFunc + 0.1f)) {
+				previousCell = cell;
+				if (sprite.getState()==SpriteMoveEnum.FALLING) {
+					sprite.setState(SpriteMoveEnum.IDLE);
+				}
+				sprite.setOnFloor(true);			
+				sprite.setY((int)yPosition + yFunc);				
+				sprite.getAcceleration().y = 0;
+				sprite.setOnCurvedTile(true);
+			} else {				
+				mathFunction = null;				
 			}
-			float diff = position.x - (int)position.x;
-			sprite.setOnFloor(true);				
-			sprite.setY((int)sprite.getOldPosition().y + mathFunction.compute(diff));				
-			sprite.getAcceleration().y = 0;
-			sprite.setOnCurvedTile(true);
 		}
 		return mathFunction!=null;
 	}
@@ -133,7 +154,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			} else {
 				sprite.setY(ascending ? (int)sprite.getOldPosition().y + COLLISION_X_CORRECTIF : (int)sprite.getY() + 1  + COLLISION_X_CORRECTIF);
 			}
-			
+			previousCell = null;
 		}	
 		sprite.setOnCurvedTile(false);
 		sprite.setOnCloudTile(false);

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -86,6 +87,8 @@ public class GameScreen extends AbstractGameScreen  {
 	private boolean debugShowFps = true;
 	
 	private boolean showForeground = true;
+	
+	private boolean showGrid = false;
 	
 	private Player player;
 	
@@ -375,7 +378,31 @@ public class GameScreen extends AbstractGameScreen  {
 			Gdx.gl.glDisable(GL20.GL_BLEND);
 			batch.end();
 		}
+		
+		if (showGrid) {			
+			spriteBatch.begin();
+			for (int i=1; i<100;i++) {
+				DrawDebugLine(new Vector2(i, 0), new Vector2(i, ScreenConstants.NB_HORIZONTAL_TILES), 1, Color.GREEN, camera.getCamera().combined);
+			}			
+			for (int i=1; i<ScreenConstants.NB_HORIZONTAL_TILES;i++) {
+				DrawDebugLine(new Vector2(0, i), new Vector2(100, i), 1, Color.GREEN, camera.getCamera().combined);
+			}
+			spriteBatch.end();
+		}
 	}
+	
+	private static ShapeRenderer debugRenderer = new ShapeRenderer();
+	
+	public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
+    {
+        Gdx.gl.glLineWidth(lineWidth);
+        debugRenderer.setProjectionMatrix(projectionMatrix);
+        debugRenderer.begin(ShapeRenderer.ShapeType.Line);
+        debugRenderer.setColor(color);
+        debugRenderer.line(start, end);
+        debugRenderer.end();
+        Gdx.gl.glLineWidth(1);
+    }
 	
 	@Override
 	public void show() {
