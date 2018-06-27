@@ -8,7 +8,7 @@ import com.game.core.util.constants.ScreenConstants;
 
 public class ResourcesLoader {
 	
-	public static final Texture PLAYER = new Texture(Gdx.files.internal("sprites/player/player.png"));
+	public static final Texture PLAYER = new Texture(Gdx.files.internal("sprites/player/chuck_main.png"));
 	
 	public static final Texture FLAG = new Texture(Gdx.files.internal("sprites/items/flag.png"));
 	

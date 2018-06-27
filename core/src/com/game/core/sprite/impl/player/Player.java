@@ -1,6 +1,7 @@
 package com.game.core.sprite.impl.player;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
@@ -59,13 +60,13 @@ public class Player extends AbstractTileObjectSprite {
 	@Override
 	public void initializeAnimations() {
 		spriteSheet = ResourcesLoader.PLAYER;
-		TextureRegion[][] textureRegions = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/5, spriteSheet.getHeight()/2);
-		idleAnimationRight = AnimationBuilder.getInstance().build(textureRegions, new int[]{0}, 5, 1f);
-		idleAnimationLeft = AnimationBuilder.getInstance().build(textureRegions, new int[]{5}, 5, 1f);
-		runningRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{1,1,2,3,4,4,3,2}, 5, 0.075f);
-		runningLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{6,6,7,8,9,9,8,7}, 5, 0.075f);
-		jumpRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{1}, 5, 0.075f);
-		jumpLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{6}, 5, 0.075f);
+		TextureRegion[][] textureRegions = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/20, spriteSheet.getHeight()/15);
+		idleAnimationRight = AnimationBuilder.getInstance().build(textureRegions, new int[]{1}, 20, 1f);
+		idleAnimationLeft = AnimationBuilder.getInstance().build(textureRegions, new int[]{2}, 20, 1f);
+		runningRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{3,4,5,6,7,8}, 20, 0.075f);
+		runningLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{9,10,11,12,13,14}, 20, 0.075f);
+		jumpRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{15,16,17,18}, 20, 0.075f);
+		jumpLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{20,21,22,23}, 20, 0.075f);
 		currentAnimation = idleAnimationRight;
 	}
 
@@ -95,10 +96,13 @@ public class Player extends AbstractTileObjectSprite {
 	
 	public void updateAnimation(float delta) {
 
+		boolean isLoopingAnimation = true;
+		
 		stateTime = stateTime > 10 ? 0 : stateTime + delta;
 
 		if (!onFloor) {
 			currentAnimation = direction == DirectionEnum.RIGHT ? jumpRightAnimation : jumpLeftAnimation;
+			isLoopingAnimation = false;
 		} else {
 			float xMove = getX() - getOldPosition().x;
 			if (xMove == 0) {	
@@ -115,7 +119,7 @@ public class Player extends AbstractTileObjectSprite {
 						state == SpriteMoveEnum.RUNNING_LEFT || state == SpriteMoveEnum.SLIDING_LEFT ? runningLeftAnimation :
 							idleAnimationRight;
 		}
-		currentFrame = currentAnimation.getKeyFrame(stateTime, true);		
+		currentFrame = currentAnimation.getKeyFrame(stateTime, isLoopingAnimation);		
 	}
 	
 	public void changeState(SpriteMoveEnum pstate) {
