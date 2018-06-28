@@ -5,6 +5,7 @@
  <layer id="10" name="background" width="100" height="28">
   <properties>
    <property name="backgrounds" value="suburbs"/>
+   <property name="background.vertical.scrolling" value="false"/>
    <property name="camera" value="free"/>
   </properties>
   <data encoding="csv">

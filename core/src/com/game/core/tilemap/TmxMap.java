@@ -56,6 +56,8 @@ public class TmxMap {
 	
 	private Map<Integer, MathFunction> curvedTilesFunctions;
 	
+	private boolean backgroundScrollingVertically;
+	
 	public TmxMap(String levelName) {
 		map = new TmxMapLoader().load(levelName);
 		backgroundLayer = (TiledMapTileLayer) map.getLayers().get(TilemapConstants.LAYER_NAME_BACKGROUND);
@@ -100,10 +102,12 @@ public class TmxMap {
 			for (String background : backgrounds) {
 				if (background!=null && background.compareTo("")!=0)
 					backgroundTypesEnum.add(BackgroundTypeEnum.valueOf(background.toUpperCase()));
-			}
+			}			
 		} catch(Exception e) {
 			Gdx.app.log("TMX MAP LOADING", "Initialising backgrounds failure.");
 		}
+		String verticalScroll = (String) properties.get("background.vertical.scrolling");
+		backgroundScrollingVertically = Boolean.valueOf(verticalScroll);		
 	}
 
 	private void initMapObjects() {
@@ -245,5 +249,14 @@ public class TmxMap {
 	public void setCurvedTilesFunctions(Map<Integer, MathFunction> curvedTilesFunctions) {
 		this.curvedTilesFunctions = curvedTilesFunctions;
 	}
+
+	public boolean isBackgroundScrollingVertically() {
+		return backgroundScrollingVertically;
+	}
+
+	public void setBackgroundScrollingVertically(boolean backgroundScrollingVertically) {
+		this.backgroundScrollingVertically = backgroundScrollingVertically;
+	}
+
 
 }

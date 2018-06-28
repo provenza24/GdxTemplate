@@ -11,9 +11,9 @@ import com.game.core.util.enums.BackgroundTypeEnum;
  * Right to left scrolling image support
  */
 public class FreeScrollingBackground extends AbstractScrollingBackground {
-
-	public FreeScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float pvelocity) {
-		super(camera, followedSprite, batch, backgroundType);		
+		
+	public FreeScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float pvelocity, boolean isScrollingVertically) {
+		super(camera, followedSprite, batch, backgroundType, isScrollingVertically);		
 		setX(width);
 		this.velocity = -pvelocity;
 	}
@@ -34,9 +34,9 @@ public class FreeScrollingBackground extends AbstractScrollingBackground {
 			}
 		}
 				
-		/*if (scrollableVertically) {
+		if (scrollableVertically) {
 			setY(followedSprite.getY()> camera.getMapDimensions().y - 6 ? - (camera.getMapDimensions().y-12) * ScreenConstants.MAP_UNIT_PIXELS 
 				:  followedSprite.getY() > 6 ? (6 - followedSprite.getY()) * ScreenConstants.MAP_UNIT_PIXELS : 0);
-		}*/
+		}
 	}
 }

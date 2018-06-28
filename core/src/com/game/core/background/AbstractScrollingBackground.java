@@ -56,22 +56,22 @@ public abstract class AbstractScrollingBackground extends Sprite implements IScr
 		BACKGROUND_IMAGES.put(BackgroundTypeEnum.SUBURBS, ResourcesLoader.getBackgroundSuburbs());
 	}
 		
-	public AbstractScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType) {
+	public AbstractScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, boolean isScrollingVertically) {
 		super(BACKGROUND_IMAGES.get(backgroundType));
 		this.batch = batch;
 		this.followedSprite = followedSprite;
 		this.enabled = true;
 		this.width = getTexture().getWidth();	
 		this.scrollableHorizontally = camera.isScrollableHorizontally();
-		this.scrollableVertically = camera.isScrollableVertically();
+		this.scrollableVertically = isScrollingVertically;
 		this.camera = camera;
 		this.setY(ScreenConstants.HEIGHT - BACKGROUND_IMAGES.get(backgroundType).getHeight());
 	}
 	
-	public static AbstractScrollingBackground createScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float velocity) {
+	public static AbstractScrollingBackground createScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float velocity, boolean isScrollingVertically) {
 		return camera.getCameraType()==CameraEnum.FREE ? 
-				new FreeScrollingBackground(camera, followedSprite, batch, backgroundType, velocity) 
-				: new MarioLikeScrollingBackground(camera, followedSprite, batch, backgroundType, velocity);			
+				new FreeScrollingBackground(camera, followedSprite, batch, backgroundType, velocity, isScrollingVertically) 
+				: new MarioLikeScrollingBackground(camera, followedSprite, batch, backgroundType, velocity, isScrollingVertically);			
 	}
 			
 	@Override

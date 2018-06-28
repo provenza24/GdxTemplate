@@ -115,33 +115,35 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		
 		boolean startGoingDown = false;
 		
-		float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
-		float yPosition = sprite.getOldPosition().y;
-		Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition-1);
-		mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
-		if (mathFunction!=null) {			
-			boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
-			if (!ascending) {
-				startGoingDown = true;
-				float xDiff = xPosition - (int)xPosition;
-				float yFunc = mathFunction.compute(xDiff);
-				previousCell = cell;
-				if (sprite.getState()==SpriteMoveEnum.FALLING) {
-					sprite.setState(SpriteMoveEnum.IDLE);
-				}
-				sprite.setOnFloor(true);			
-				sprite.setY((int)yPosition - 1 + yFunc);				
-				sprite.getAcceleration().y = 0;
-				sprite.setOnCurvedTile(true);
-			}			
-		}
+		if (sprite.isOnFloor()) {
+			float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
+			float yPosition = sprite.getOldPosition().y;
+			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition-1);
+			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
+			if (mathFunction!=null) {			
+				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
+				if (!ascending) {
+					startGoingDown = true;
+					float xDiff = xPosition - (int)xPosition;
+					float yFunc = mathFunction.compute(xDiff);
+					previousCell = cell;
+					if (sprite.getState()==SpriteMoveEnum.FALLING) {
+						sprite.setState(SpriteMoveEnum.IDLE);
+					}
+					sprite.setOnFloor(true);			
+					sprite.setY((int)yPosition - 1 + yFunc);				
+					sprite.getAcceleration().y = 0;
+					sprite.setOnCurvedTile(true);
+				}			
+			}
+		}		
 		
 		if (!startGoingDown) {
 			
-			xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
-			yPosition = sprite.getOldPosition().y;
+			float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
+			float yPosition = sprite.getOldPosition().y;
 			
-			cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
+			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
 			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
 					
 			if (mathFunction==null) {

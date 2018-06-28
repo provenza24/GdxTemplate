@@ -12,8 +12,8 @@ import com.game.core.util.enums.BackgroundTypeEnum;
  */
 public class MarioLikeScrollingBackground extends AbstractScrollingBackground {
 
-	public MarioLikeScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float pvelocity) {
-		super(camera, followedSprite, batch, backgroundType);		
+	public MarioLikeScrollingBackground(AbstractGameCamera camera, AbstractSprite followedSprite, Batch batch, BackgroundTypeEnum backgroundType, float pvelocity, boolean isScrollingVertically) {
+		super(camera, followedSprite, batch, backgroundType, isScrollingVertically);		
 		setX(width);
 		this.velocity = -pvelocity;
 	}
