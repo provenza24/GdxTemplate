@@ -2,7 +2,6 @@ package com.game.core.collision.tilemap.impl;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
@@ -36,7 +35,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 				// Handle curved tile case
 				if (!handleCurvedTile(tileMap, sprite)) {
 					// Check if player was previously on a cloud/curved tile, update position in consequence
-					leaveSpecialTile(sprite);
+					onFloorCorrection = leaveSpecialTile(sprite);					
 				}				
 			}				
 		}		
@@ -112,44 +111,69 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 	
 	private boolean handleCurvedTile(TmxMap tileMap, Player sprite) {		
 		
-		boolean isThroughFloor=false;		
-				
+		MathFunction mathFunction = null;
+		
+		boolean startGoingDown = false;
+		
 		float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
 		float yPosition = sprite.getOldPosition().y;
-		
-		Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
-		MathFunction mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
-				
-		if (mathFunction==null) {
-			yPosition = sprite.getOldPosition().y + 0.5f;
-			cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
-			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;			
-			isThroughFloor = mathFunction!=null;
-			if (isThroughFloor) {
-				Gdx.app.log("CURVED", "Pass throught");
-			}				
-		}
-		if (mathFunction!=null) {
-			float xDiff = xPosition - (int)xPosition;			
-			float yFunc = mathFunction.compute(xDiff);					
-			if (yPosition<=((int)yPosition + yFunc + 0.1f)) {
+		Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition-1);
+		mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
+		if (mathFunction!=null) {			
+			boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
+			if (!ascending) {
+				startGoingDown = true;
+				float xDiff = xPosition - (int)xPosition;
+				float yFunc = mathFunction.compute(xDiff);
 				previousCell = cell;
 				if (sprite.getState()==SpriteMoveEnum.FALLING) {
 					sprite.setState(SpriteMoveEnum.IDLE);
 				}
 				sprite.setOnFloor(true);			
-				sprite.setY((int)yPosition + yFunc);				
+				sprite.setY((int)yPosition - 1 + yFunc);				
 				sprite.getAcceleration().y = 0;
 				sprite.setOnCurvedTile(true);
-			} else {				
-				mathFunction = null;				
+			}			
+		}
+		
+		if (!startGoingDown) {
+			
+			xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
+			yPosition = sprite.getOldPosition().y;
+			
+			cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
+			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+					
+			if (mathFunction==null) {
+				yPosition = sprite.getOldPosition().y + 0.5f;
+				cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
+				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;			
+			}
+			if (mathFunction!=null) {
+				float xDiff = xPosition - (int)xPosition;			
+				float yFunc = mathFunction.compute(xDiff);					
+				if (yPosition<=((int)yPosition + yFunc + 0.1f)) {
+					previousCell = cell;
+					if (sprite.getState()==SpriteMoveEnum.FALLING) {
+						sprite.setState(SpriteMoveEnum.IDLE);
+					}
+					sprite.setOnFloor(true);			
+					sprite.setY((int)yPosition + yFunc);				
+					sprite.getAcceleration().y = 0;
+					sprite.setOnCurvedTile(true);
+				} else {				
+					mathFunction = null;				
+				}
 			}
 		}
+				
 		return mathFunction!=null;
 	}
 	
-	private void leaveSpecialTile(Player sprite) {
-		if (sprite.isOnCurvedTile()) {						
+	private boolean leaveSpecialTile(Player sprite) {
+		boolean onFloorCorrection = false;
+		if (sprite.isOnCurvedTile()) {
+			onFloorCorrection = true;
 			boolean ascending = previousCell.getTile().getId() <=198; // à partir de 199 -> pente en descente
 			if (sprite.getDirection()==DirectionEnum.RIGHT) {
 				sprite.setY(ascending ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getY() + COLLISION_X_CORRECTIF);
@@ -160,6 +184,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		}	
 		sprite.setOnCurvedTile(false);
 		sprite.setOnCloudTile(false);
+		return onFloorCorrection;
 	}
 	
 	private void checkFloorAndTopCollisions(TmxMap tileMap, Player sprite, boolean onFloorCorrection, Vector2 newPosition) {
