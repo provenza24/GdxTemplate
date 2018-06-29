@@ -44,11 +44,15 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private Animation hitLeftAnimation;
 	
+	private Animation jumpHitRightAnimation;
+	
+	private Animation jumpHitLeftAnimation;
+	
 	private boolean onCurvedTile;
 	
 	private boolean onCloudTile;
 	
-	private boolean hiting;
+	private boolean attacking;
 
 	public Player(MapObject mapObject) {
 		super(mapObject, new Vector2(X_OFFSET,Y_OFFSET));				
@@ -74,6 +78,8 @@ public class Player extends AbstractTileObjectSprite {
 		jumpLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{20,21,22,23}, 20, 0.15f);
 		hitRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{24,25,26,27,28}, 20, 0.075f);
 		hitLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{29,30,31,32,33}, 20, 0.075f);
+		jumpHitRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{34,35,36,37,38,39}, 20, 0.06f);
+		jumpHitLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{40,41,42,43,44,45}, 20, 0.06f);
 		currentAnimation = idleAnimationRight;
 	}
 
@@ -107,12 +113,16 @@ public class Player extends AbstractTileObjectSprite {
 		
 		stateTime = stateTime > 10 ? 0 : stateTime + delta;
 
-		if (isHiting()) {
-			currentAnimation = direction == DirectionEnum.RIGHT ? hitRightAnimation : hitLeftAnimation;
+		if (isAttacking()) {
+			if (onFloor) {
+				currentAnimation = direction == DirectionEnum.RIGHT ? hitRightAnimation : hitLeftAnimation;				
+			} else {
+				currentAnimation = direction == DirectionEnum.RIGHT ? jumpHitRightAnimation : jumpHitLeftAnimation;
+			}
 			isLoopingAnimation = false;
-			if (currentAnimation.isAnimationFinished(stateTime)) {
-				setHiting(false);
-			}			
+			if (onFloor && currentAnimation.isAnimationFinished(stateTime)) {
+				setAttacking(false);
+			}
 		} else if (!onFloor) {
 			currentAnimation = direction == DirectionEnum.RIGHT ? jumpRightAnimation : jumpLeftAnimation;
 			isLoopingAnimation = false;
@@ -125,7 +135,7 @@ public class Player extends AbstractTileObjectSprite {
 					setDirection(DirectionEnum.LEFT);
 				}
 				setState(SpriteMoveEnum.IDLE);
-			}			
+			}				
 			currentAnimation = 						
 				state == SpriteMoveEnum.IDLE ? direction == DirectionEnum.RIGHT ? idleAnimationRight : idleAnimationLeft :
 					state == SpriteMoveEnum.RUNNING_RIGHT || state == SpriteMoveEnum.SLIDING_RIGHT ? runningRightAnimation :
@@ -173,11 +183,13 @@ public class Player extends AbstractTileObjectSprite {
 		this.onCurvedTile = onCurvedTile;
 	}
 
-	public boolean isHiting() {
-		return hiting;
+	public boolean isAttacking() {
+		return attacking;
 	}
 
-	public void setHiting(boolean hiting) {
-		this.hiting = hiting;
+	public void setAttacking(boolean attacking) {
+		this.attacking = attacking;
 	}
+
+	
 }

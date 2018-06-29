@@ -40,7 +40,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private static final int KEY_RIGHT =  KeysConstants.KEY_RIGHT;
 			
-	private static final int KEY_DOWN = KeysConstants.KEY_DOWN;
+	//private static final int KEY_DOWN = KeysConstants.KEY_DOWN;
 	
 	private static final int KEY_UP = KeysConstants.KEY_UP;
 	
@@ -95,8 +95,6 @@ public class GameScreen extends AbstractGameScreen  {
 	private Player player;
 	
 	private boolean canJump;
-	
-	private boolean canHit;
 	
 	private boolean levelFinished = false;		
 				
@@ -229,7 +227,7 @@ public class GameScreen extends AbstractGameScreen  {
 					
 	private void handleInput() {
 									
-		if (!player.isHiting()) {
+		if (!player.isAttacking()) {
 			if (Gdx.input.isKeyPressed(KEY_RIGHT)) {
 				if (player.getDirection() == DirectionEnum.LEFT) {
 					// Sliding on the right				
@@ -269,7 +267,7 @@ public class GameScreen extends AbstractGameScreen  {
 								
 		if (Gdx.input.isKeyPressed(KEY_UP)) {
 			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING 
-					&& canJump && !player.isHiting()) {
+					&& canJump && !player.isAttacking()) {
 				player.setOnFloor(false);
 				player.setState(SpriteMoveEnum.JUMPING);
 				player.getAcceleration().y = 0.25f;		
@@ -282,13 +280,13 @@ public class GameScreen extends AbstractGameScreen  {
 			canJump = true;
 		}
 		
-		if (Gdx.input.isKeyJustPressed(KEY_HIT) && !player.isHiting()) {			
-			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING) {
-				player.setStateTime(0);
-				player.setHiting(true);
+		if (Gdx.input.isKeyJustPressed(KEY_HIT) && !player.isAttacking()) {
+			player.setStateTime(0);
+			player.setAttacking(true);
+			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING) {				
 				player.getAcceleration().x = 0;
-				player.setState(SpriteMoveEnum.HIT_RIGHT);
-			}		
+				player.setState(player.getDirection()== DirectionEnum.RIGHT ? SpriteMoveEnum.HIT_RIGHT: SpriteMoveEnum.HIT_LEFT);
+			}
 		}
 		
 		handleDebugKeys();
@@ -355,7 +353,9 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;
 			debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
 			y = y -20;			
-			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);
+			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);			
+			y = y -20;			
+			debugFont.draw(spriteBatch, "hiting= " + player.isAttacking(), x, y);
 			//y = y -20;			
 			//debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
 			y = y -20;			

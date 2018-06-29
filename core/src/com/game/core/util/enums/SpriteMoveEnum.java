@@ -10,5 +10,6 @@ public enum SpriteMoveEnum {
 	IDLE, 
 	JUMPING, 
 	FALLING,
-	HIT_RIGHT;
+	HIT_RIGHT,
+	HIT_LEFT;
 }
