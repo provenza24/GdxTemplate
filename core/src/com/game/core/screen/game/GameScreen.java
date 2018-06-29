@@ -44,6 +44,8 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private static final int KEY_UP = KeysConstants.KEY_UP;
 	
+	private static final int KEY_HIT = KeysConstants.KEY_A;
+	
 	private static Color DEBUG_BOUNDS_COLOR;
 	
 	private static final Color[] fontColors = new Color[]{Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE};
@@ -93,6 +95,8 @@ public class GameScreen extends AbstractGameScreen  {
 	private Player player;
 	
 	private boolean canJump;
+	
+	private boolean canHit;
 	
 	private boolean levelFinished = false;		
 				
@@ -225,44 +229,47 @@ public class GameScreen extends AbstractGameScreen  {
 					
 	private void handleInput() {
 									
-		if (Gdx.input.isKeyPressed(KEY_RIGHT)) {
-			if (player.getDirection() == DirectionEnum.LEFT) {
-				// Sliding on the right				
-				player.changeState(SpriteMoveEnum.SLIDING_LEFT);
-				player.decelerate(1.5f);
-				if (player.getAcceleration().x <= 0) {
-					// Not sliding anymore
-					player.getAcceleration().x = 0;
-					player.setDirection(DirectionEnum.RIGHT);						
-				}							
-			} else {
-				// Running right
-				player.accelerate();
-				player.setDirection(DirectionEnum.RIGHT);
-				player.changeState(SpriteMoveEnum.RUNNING_RIGHT);
-			}
-		} else if (Gdx.input.isKeyPressed(KEY_LEFT)) {
-			if (player.getDirection() == DirectionEnum.RIGHT) {
-				// Sliding on the left	
-				player.changeState(SpriteMoveEnum.SLIDING_RIGHT);
-				player.decelerate(1.5f);
-				if (player.getAcceleration().x <= 0) {
-					// Not sliding anymore
-					player.getAcceleration().x = 0;
+		if (!player.isHiting()) {
+			if (Gdx.input.isKeyPressed(KEY_RIGHT)) {
+				if (player.getDirection() == DirectionEnum.LEFT) {
+					// Sliding on the right				
+					player.changeState(SpriteMoveEnum.SLIDING_LEFT);
+					player.decelerate(1.5f);
+					if (player.getAcceleration().x <= 0) {
+						// Not sliding anymore
+						player.getAcceleration().x = 0;
+						player.setDirection(DirectionEnum.RIGHT);						
+					}							
+				} else {
+					// Running right
+					player.accelerate();
+					player.setDirection(DirectionEnum.RIGHT);
+					player.changeState(SpriteMoveEnum.RUNNING_RIGHT);
+				}
+			} else if (Gdx.input.isKeyPressed(KEY_LEFT)) {
+				if (player.getDirection() == DirectionEnum.RIGHT) {
+					// Sliding on the left	
+					player.changeState(SpriteMoveEnum.SLIDING_RIGHT);
+					player.decelerate(1.5f);
+					if (player.getAcceleration().x <= 0) {
+						// Not sliding anymore
+						player.getAcceleration().x = 0;
+						player.setDirection(DirectionEnum.LEFT);
+					}							
+				} else {
+					// Running left, not crouched
+					player.accelerate();
 					player.setDirection(DirectionEnum.LEFT);
-				}							
+					player.changeState(SpriteMoveEnum.RUNNING_LEFT);
+				} 
 			} else {
-				// Running left, not crouched
-				player.accelerate();
-				player.setDirection(DirectionEnum.LEFT);
-				player.changeState(SpriteMoveEnum.RUNNING_LEFT);
-			} 
-		} else {
-			player.decelerate(1);			
-		}
+				player.decelerate(1);			
+			}
+		}	
 								
 		if (Gdx.input.isKeyPressed(KEY_UP)) {
-			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING && canJump) {
+			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING 
+					&& canJump && !player.isHiting()) {
 				player.setOnFloor(false);
 				player.setState(SpriteMoveEnum.JUMPING);
 				player.getAcceleration().y = 0.25f;		
@@ -273,7 +280,17 @@ public class GameScreen extends AbstractGameScreen  {
 			canJump = false;
 		} else {
 			canJump = true;
-		}					
+		}
+		
+		if (Gdx.input.isKeyJustPressed(KEY_HIT) && !player.isHiting()) {			
+			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING) {
+				player.setStateTime(0);
+				player.setHiting(true);
+				player.getAcceleration().x = 0;
+				player.setState(SpriteMoveEnum.HIT_RIGHT);
+			}		
+		}
+		
 		handleDebugKeys();
 	}
 	

@@ -40,9 +40,15 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private Animation jumpRightAnimation;
 	
+	private Animation hitRightAnimation;
+	
+	private Animation hitLeftAnimation;
+	
 	private boolean onCurvedTile;
 	
 	private boolean onCloudTile;
+	
+	private boolean hiting;
 
 	public Player(MapObject mapObject) {
 		super(mapObject, new Vector2(X_OFFSET,Y_OFFSET));				
@@ -66,6 +72,8 @@ public class Player extends AbstractTileObjectSprite {
 		runningLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{9,10,11,12,13,14}, 20, 0.075f);
 		jumpRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{15,16,17,18}, 20, 0.15f);
 		jumpLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{20,21,22,23}, 20, 0.15f);
+		hitRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{24,25,26,27,28}, 20, 0.075f);
+		hitLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{29,30,31,32,33}, 20, 0.075f);
 		currentAnimation = idleAnimationRight;
 	}
 
@@ -99,7 +107,13 @@ public class Player extends AbstractTileObjectSprite {
 		
 		stateTime = stateTime > 10 ? 0 : stateTime + delta;
 
-		if (!onFloor) {
+		if (isHiting()) {
+			currentAnimation = direction == DirectionEnum.RIGHT ? hitRightAnimation : hitLeftAnimation;
+			isLoopingAnimation = false;
+			if (currentAnimation.isAnimationFinished(stateTime)) {
+				setHiting(false);
+			}			
+		} else if (!onFloor) {
 			currentAnimation = direction == DirectionEnum.RIGHT ? jumpRightAnimation : jumpLeftAnimation;
 			isLoopingAnimation = false;
 		} else {
@@ -115,7 +129,7 @@ public class Player extends AbstractTileObjectSprite {
 			currentAnimation = 						
 				state == SpriteMoveEnum.IDLE ? direction == DirectionEnum.RIGHT ? idleAnimationRight : idleAnimationLeft :
 					state == SpriteMoveEnum.RUNNING_RIGHT || state == SpriteMoveEnum.SLIDING_RIGHT ? runningRightAnimation :
-						state == SpriteMoveEnum.RUNNING_LEFT || state == SpriteMoveEnum.SLIDING_LEFT ? runningLeftAnimation :
+						state == SpriteMoveEnum.RUNNING_LEFT || state == SpriteMoveEnum.SLIDING_LEFT ? runningLeftAnimation :							
 							idleAnimationRight;
 		}
 		currentFrame = currentAnimation.getKeyFrame(stateTime, isLoopingAnimation);		
@@ -157,5 +171,13 @@ public class Player extends AbstractTileObjectSprite {
 
 	public void setOnCurvedTile(boolean onCurvedTile) {
 		this.onCurvedTile = onCurvedTile;
+	}
+
+	public boolean isHiting() {
+		return hiting;
+	}
+
+	public void setHiting(boolean hiting) {
+		this.hiting = hiting;
 	}
 }

@@ -12,4 +12,6 @@ public class KeysConstants {
 	
 	public static final int KEY_RIGHT = Keys.RIGHT;
 	
+	public static final int KEY_A = Keys.A;
+	
 }
