@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="stonage" tilewidth="16" tileheight="16" tilecount="400" columns="20">
  <image source="stoneage1.png" width="320" height="320"/>
+ <tile id="75">
+  <properties>
+   <property name="curved" value="f9"/>
+  </properties>
+ </tile>
+ <tile id="76">
+  <properties>
+   <property name="curved" value="f9"/>
+  </properties>
+ </tile>
+ <tile id="77">
+  <properties>
+   <property name="curved" value="f9"/>
+  </properties>
+ </tile>
+ <tile id="91">
+  <properties>
+   <property name="curved" value="f9"/>
+  </properties>
+ </tile>
+ <tile id="92">
+  <properties>
+   <property name="curved" value="f9"/>
+  </properties>
+ </tile>
+ <tile id="93">
+  <properties>
+   <property name="curved" value="f9"/>
+  </properties>
+ </tile>
  <tile id="156">
   <properties>
    <property name="cloud" value=""/>

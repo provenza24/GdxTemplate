@@ -56,6 +56,8 @@ public class TmxMap {
 	
 	private Map<Integer, MathFunction> curvedTilesFunctions;
 	
+	private List<Integer> curvedContantTiles;
+	
 	private boolean backgroundScrollingVertically;
 	
 	public TmxMap(String levelName) {
@@ -75,6 +77,7 @@ public class TmxMap {
 		
 		curvedTilesFunctions = new HashMap<Integer, MathFunction>();
 		cloudTiles= new ArrayList<>();
+		curvedContantTiles= new ArrayList<>();
 		
 		TiledMapTileSet tileset = map.getTileSets().getTileSet(1);	
 		for (TiledMapTile tiledMapTile : tileset) {			
@@ -85,8 +88,12 @@ public class TmxMap {
 				String key = keysIterator.next();
 				if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CURVED)) {					
 					String value = valuesIterator.next().toString().toUpperCase();
-					curvedTilesFunctions.put(tiledMapTile.getId(), MathFunctionEnum.valueOf(value).getMathFunction());
-					Gdx.app.log("CURVED", "Adding tile:"+tiledMapTile.getId());
+					MathFunctionEnum mathFunctionEnum = MathFunctionEnum.valueOf(value);
+					curvedTilesFunctions.put(tiledMapTile.getId(), mathFunctionEnum.getMathFunction());
+					if (mathFunctionEnum.isConstant()) {
+						curvedContantTiles.add(tiledMapTile.getId());
+					}
+					Gdx.app.log("CURVED", "Adding tile:"+tiledMapTile.getId());					
 				} else if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CLOUD)) {
 					cloudTiles.add(tiledMapTile.getId());					
 				}
@@ -240,6 +247,10 @@ public class TmxMap {
 	
 	public boolean isCloudTile(Integer idx) {
 		return this.cloudTiles.contains(idx);
+	}
+	
+	public boolean isCurvedConstantTile(Integer idx) {
+		return this.curvedContantTiles.contains(idx);
 	}
 
 	public Map<Integer, MathFunction> getCurvedTilesFunctions() {

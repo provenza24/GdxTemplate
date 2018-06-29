@@ -268,6 +268,7 @@ public class GameScreen extends AbstractGameScreen  {
 				player.getAcceleration().y = 0.25f;		
 				player.setOnCurvedTile(false);
 				player.setOnCloudTile(false);
+				player.setStateTime(0);
 			}			
 			canJump = false;
 		} else {

@@ -64,8 +64,8 @@ public class Player extends AbstractTileObjectSprite {
 		idleAnimationLeft = AnimationBuilder.getInstance().build(textureRegions, new int[]{2}, 20, 1f);
 		runningRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{3,4,5,6,7,8}, 20, 0.075f);
 		runningLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{9,10,11,12,13,14}, 20, 0.075f);
-		jumpRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{15,16,17,18}, 20, 0.075f);
-		jumpLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{20,21,22,23}, 20, 0.075f);
+		jumpRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{15,16,17,18}, 20, 0.15f);
+		jumpLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{20,21,22,23}, 20, 0.15f);
 		currentAnimation = idleAnimationRight;
 	}
 

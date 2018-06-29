@@ -35,7 +35,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 				// Handle curved tile case
 				if (!handleCurvedTile(tileMap, sprite)) {
 					// Check if player was previously on a cloud/curved tile, update position in consequence
-					onFloorCorrection = leaveSpecialTile(sprite);					
+					onFloorCorrection = leaveSpecialTile(tileMap, sprite);					
 				}				
 			}				
 		}		
@@ -172,16 +172,16 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		return mathFunction!=null;
 	}
 	
-	private boolean leaveSpecialTile(Player sprite) {
+	private boolean leaveSpecialTile(TmxMap tilemap, Player sprite) {
 		boolean onFloorCorrection = false;
-		if (sprite.isOnCurvedTile()) {
+		if (sprite.isOnCurvedTile() && !tilemap.isCurvedConstantTile(previousCell.getTile().getId())) {			
 			onFloorCorrection = true;
 			boolean ascending = previousCell.getTile().getId() <=198; // à partir de 199 -> pente en descente
 			if (sprite.getDirection()==DirectionEnum.RIGHT) {
 				sprite.setY(ascending ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getY() + COLLISION_X_CORRECTIF);
 			} else {
 				sprite.setY(ascending ? (int)sprite.getOldPosition().y + COLLISION_X_CORRECTIF : (int)sprite.getY() + 1  + COLLISION_X_CORRECTIF);
-			}
+			}						
 			previousCell = null;
 		}	
 		sprite.setOnCurvedTile(false);

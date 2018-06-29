@@ -21,5 +21,8 @@ public interface MathFunction {
 	
 	public static final MathFunction f8 = x -> 0.25f - x / 4f;		
 	
+	/** */
+	public static final MathFunction f9 = x -> 0.2f;	
+	
 	Float compute(Float x);
 }
