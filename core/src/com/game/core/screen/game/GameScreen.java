@@ -82,7 +82,7 @@ public class GameScreen extends AbstractGameScreen  {
 	private BitmapFont debugFont;
 	
 	/** Debug parameters */
-	private boolean debugShowText = false;
+	private boolean debugShowText = true;
 
 	private boolean debugShowBounds = false;
 
@@ -102,6 +102,7 @@ public class GameScreen extends AbstractGameScreen  {
 										
 		// Initialize fonts
 		debugFont = new BitmapFont();		
+		debugFont.getData().setScale(1.5f, 1.5f);
 		debugFont.setColor(fontColors[currentDebugColor]);	
 		DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
 		

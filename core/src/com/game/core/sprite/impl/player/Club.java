@@ -27,7 +27,7 @@ public class Club extends AbstractSprite {
 		Y_JUMPING_POSITIONS.put(0, -0.2f);
 		Y_JUMPING_POSITIONS.put(1, 0.2f);
 		Y_JUMPING_POSITIONS.put(2, 0.4f);
-		//Y_JUMPING_POSITIONS.put(3, 0.4f);
+		Y_JUMPING_POSITIONS.put(3, 0.4f);
 	}
 	
 	public Club(float x, float y) {
@@ -71,38 +71,22 @@ public class Club extends AbstractSprite {
 			setY(player.getY()+0.4f);
 		}
 		
-		
-		if (player.isOnCurvedTile()) {			
-			this.setRotation(player.isPositiveCurvedTile() ? -20 : 20);
+		float originX = 2;
+		float originY = 1;
+		if (player.isOnCurvedTile()) {
+			if (player.getDirection()==DirectionEnum.RIGHT) {
+				this.setRotation(player.isPositiveCurvedTile()?20:-20); 
+			} else {
+				originX = 0;
+				originY = 0;
+				this.setRotation(player.isPositiveCurvedTile()?-20:20);
+			}
+			
 		} else {
 			this.setRotation(0);
 		}
-		
-		/*TextureRegion currentTexture = player.getDirection()==DirectionEnum.RIGHT ? idleTextureRight : idleTextureLeft;		
-		if (player.getState()==SpriteMoveEnum.IDLE) {
-			setX(player.getDirection()==DirectionEnum.RIGHT ? player.getX()-1.5f : player.getX()+1.5f);
-			//setY(player.getY()-0.2f);
-		} else if (player.getState()==SpriteMoveEnum.JUMPING) {
-			int animationIdx = player.getCurrentAnimation().getKeyFrameIndex(player.getStateTime());
-			if (animationIdx==0) {
-				setX(player.getDirection()==DirectionEnum.RIGHT ? player.getX()-1.8f : player.getX()+1.8f);
-				setY(player.getY()-0.1f);
-			} else if (animationIdx==1) {
-				setX(player.getDirection()==DirectionEnum.RIGHT ? player.getX()-1.8f : player.getX()+1.8f);
-				setY(player.getY()+0.3f);
-			} else {
-				setX(player.getDirection()==DirectionEnum.RIGHT ? player.getX()-1.8f : player.getX()+1.8f);
-				setY(player.getY()+0.4f);
-			}			
-		} else if (player.getState()==SpriteMoveEnum.FALLING) {
-			setX(player.getDirection()==DirectionEnum.RIGHT ? player.getX()-1.8f : player.getX()+1.8f);
-			setY(player.getY()+0.4f);
-		} else {
-			setX(player.getDirection()==DirectionEnum.RIGHT ? player.getX()-1.8f : player.getX()+1.8f);
-			setY(player.getY());
-		}*/
-				
-		batch.draw(currentTexture, getX() , getY(), 2, 1 , renderingSize.x, renderingSize.y, 1,1, this.getRotation());		
+					
+		batch.draw(currentTexture, getX() , getY(), originX, originY , renderingSize.x, renderingSize.y, 1,1, this.getRotation());		
 	}
 	
 	private void update() {
