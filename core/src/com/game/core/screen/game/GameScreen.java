@@ -178,7 +178,6 @@ public class GameScreen extends AbstractGameScreen  {
 		}							
 		// Render tilemap
 		tilemapRenderer.setView(camera.getCamera());
-		//tilemapRenderer.render();
 		tilemapRenderer.getBatch().begin();
 		tilemapRenderer.renderTileLayer(tilemap.getBackgroundLayer());
 		tilemapRenderer.getBatch().end();
@@ -218,9 +217,16 @@ public class GameScreen extends AbstractGameScreen  {
 		}							
 		// Render tilemap
 		tilemapRenderer.setView(camera.getCamera());
-		tilemapRenderer.render();					
+		// Render background
+		tilemapRenderer.getBatch().begin();
+		tilemapRenderer.renderTileLayer(tilemap.getBackgroundLayer());		
+		tilemapRenderer.getBatch().end();
 		// Render Player		
-		player.render(tilemapRenderer.getBatch());								
+		player.render(tilemapRenderer.getBatch());
+		// Render foreground
+		tilemapRenderer.getBatch().begin();
+		tilemapRenderer.renderTileLayer(tilemap.getForegroundLayer());
+		tilemapRenderer.getBatch().end();
 		// Render debug mode
 		renderDebugMode();
 	}
@@ -270,7 +276,7 @@ public class GameScreen extends AbstractGameScreen  {
 					&& canJump && !player.isAttacking()) {
 				player.setOnFloor(false);
 				player.setState(SpriteMoveEnum.JUMPING);
-				player.getAcceleration().y = 0.25f;		
+				player.getAcceleration().y = 0.3f;		
 				player.setOnCurvedTile(false);
 				player.setOnCloudTile(false);
 				player.setStateTime(0);
@@ -362,6 +368,8 @@ public class GameScreen extends AbstractGameScreen  {
 			debugFont.draw(spriteBatch, "curvedTile= " + player.isOnCurvedTile(), x, y);
 			y = y -20;			
 			debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);
+			y = y -20;			
+			debugFont.draw(spriteBatch, "curvedPositiveTile= " + player.isPositiveCurvedTile(), x, y);
 			
 			/*x = 170;
 			y = ScreenConstants.HEIGHT-50;

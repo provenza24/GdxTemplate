@@ -49,7 +49,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			if (sprite.getOldAcceleration().y == 0 && sprite.getMapCollisionEvent().isCollidingBottom()) {
 				// Player was on a plateform and is still on it
 				if (sprite.getState()==SpriteMoveEnum.FALLING) {
-					sprite.setState(SpriteMoveEnum.IDLE);
+					sprite.land();
 				}
 				sprite.setOnFloor(true);			
 				sprite.setY((int) sprite.getY() + 1 + COLLISION_X_CORRECTIF);
@@ -93,13 +93,17 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 	}
 
 	private boolean handleCloudTile(TmxMap tileMap, Player sprite) {
+				
 		Vector2 position = new Vector2(sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x, sprite.getY());
 		Cell cell = tileMap.getTileAt((int)position.x, (int)position.y);
 		boolean isOnCloudTile = cell!=null && tileMap.isCloudTile(cell.getTile().getId());
+		if (!sprite.isOnFloor()) {
+			isOnCloudTile = isOnCloudTile && (int)position.y < (int) sprite.getOldPosition().y;
+		}		
 		if (isOnCloudTile) {
 			previousCell = cell;
 			if (sprite.getState()==SpriteMoveEnum.FALLING) {
-				sprite.setState(SpriteMoveEnum.IDLE);
+				sprite.land();
 			}
 			sprite.setOnFloor(true);				
 			sprite.setY((int)sprite.getY() + 1 + COLLISION_X_CORRECTIF);				
@@ -121,19 +125,20 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition-1);
 			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
 			if (mathFunction!=null) {			
-				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
+				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;				
 				if (!ascending) {
 					startGoingDown = true;
 					float xDiff = xPosition - (int)xPosition;
 					float yFunc = mathFunction.compute(xDiff);
 					previousCell = cell;
 					if (sprite.getState()==SpriteMoveEnum.FALLING) {
-						sprite.setState(SpriteMoveEnum.IDLE);
+						sprite.land();
 					}
 					sprite.setOnFloor(true);			
 					sprite.setY((int)yPosition - 1 + yFunc);				
 					sprite.getAcceleration().y = 0;
 					sprite.setOnCurvedTile(true);
+					sprite.setPositiveCurvedTile(ascending);
 				}			
 			}
 		}		
@@ -152,17 +157,19 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;			
 			}
 			if (mathFunction!=null) {
+				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
 				float xDiff = xPosition - (int)xPosition;			
 				float yFunc = mathFunction.compute(xDiff);					
 				if (yPosition<=((int)yPosition + yFunc + 0.1f)) {
 					previousCell = cell;
 					if (sprite.getState()==SpriteMoveEnum.FALLING) {
-						sprite.setState(SpriteMoveEnum.IDLE);
+						sprite.land();
 					}
 					sprite.setOnFloor(true);			
 					sprite.setY((int)yPosition + yFunc);				
 					sprite.getAcceleration().y = 0;
 					sprite.setOnCurvedTile(true);
+					sprite.setPositiveCurvedTile(ascending);
 				} else {				
 					mathFunction = null;				
 				}
@@ -255,7 +262,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			sprite.getAcceleration().x = 0;	
 			if (sprite.getState()!=SpriteMoveEnum.FALLING 
 					&& sprite.getState()!=SpriteMoveEnum.JUMPING) {
-				sprite.setState(SpriteMoveEnum.IDLE);
+				sprite.land();
 			}
 		}
 		
@@ -287,7 +294,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					newPosition.y = (int) sprite.getY();
 					sprite.getAcceleration().y = 10e-5F;								
 					if (sprite.getState()!=SpriteMoveEnum.FALLING && sprite.getState()!=SpriteMoveEnum.JUMPING) {
-						sprite.setState(SpriteMoveEnum.IDLE);
+						sprite.land();						
 						sprite.setOnFloor(true);		
 					} else if (sprite.getState()==SpriteMoveEnum.JUMPING) {
 						sprite.setState(SpriteMoveEnum.FALLING);
@@ -312,7 +319,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					newPosition.y = (int) sprite.getY() + 1f;						
 					sprite.getAcceleration().y = 0;
 					sprite.setOnFloor(true);		
-					sprite.setState(SpriteMoveEnum.IDLE);
+					sprite.land();
 				} else {								
 					newPosition.x = (int) (sprite.getX() + sprite.getOffset().x) + sprite.getOffset().x - COLLISION_X_CORRECTIF;						
 					sprite.getAcceleration().x = 0;										
@@ -334,7 +341,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					newPosition.y = (int) sprite.getY() + 1f;
 					sprite.getAcceleration().y = 0;
 					sprite.setOnFloor(true);
-					sprite.setState(SpriteMoveEnum.IDLE);
+					sprite.land();
 				} else {
 					newPosition.x = (int) (sprite.getX() + 1) - sprite.getOffset().x + COLLISION_X_CORRECTIF;					
 					sprite.getAcceleration().x = 0;					
@@ -357,7 +364,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					sprite.getAcceleration().y = 10e-5F;
 					
 					if (sprite.getState()!=SpriteMoveEnum.FALLING && sprite.getState()!=SpriteMoveEnum.JUMPING) {
-						sprite.setState(SpriteMoveEnum.IDLE);
+						sprite.land();
 						sprite.setOnFloor(true);
 					} else if (sprite.getState()==SpriteMoveEnum.JUMPING) {
 						sprite.setState(SpriteMoveEnum.FALLING);

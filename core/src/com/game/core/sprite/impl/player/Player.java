@@ -50,9 +50,13 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private boolean onCurvedTile;
 	
+	private boolean isPositiveCurvedTile;
+	
 	private boolean onCloudTile;
 	
 	private boolean attacking;
+	
+	private Club club;
 
 	public Player(MapObject mapObject) {
 		super(mapObject, new Vector2(X_OFFSET,Y_OFFSET));				
@@ -63,7 +67,9 @@ public class Player extends AbstractTileObjectSprite {
 		collidableWithTilemap = true;
 		alive = true;
 		moveable = true;
-		tilemapCollisionHandler = new PlayerTilemapCollisionHandler();		
+		tilemapCollisionHandler = new PlayerTilemapCollisionHandler();
+		
+		club = new Club(getX(), getY());
 	}
 
 	@Override
@@ -85,7 +91,8 @@ public class Player extends AbstractTileObjectSprite {
 
 	public void render(Batch batch) {
 		batch.begin();
-		batch.draw(currentFrame, getX(), getY(), renderingSize.x, renderingSize.y);
+		club.render(batch, this);
+		batch.draw(currentFrame, getX(), getY(), renderingSize.x, renderingSize.y);		
 		batch.end();
 	}
 	
@@ -106,13 +113,17 @@ public class Player extends AbstractTileObjectSprite {
 			this.acceleration.x = 0;
 		}
 	}
-	
+		
 	public void updateAnimation(float delta) {
 
 		boolean isLoopingAnimation = true;
 		
 		stateTime = stateTime > 10 ? 0 : stateTime + delta;
 
+		if (onFloor && (currentAnimation==jumpHitRightAnimation || currentAnimation==jumpHitLeftAnimation)) {
+			setAttacking(false);
+		}
+		
 		if (isAttacking()) {
 			if (onFloor) {
 				currentAnimation = direction == DirectionEnum.RIGHT ? hitRightAnimation : hitLeftAnimation;				
@@ -149,6 +160,10 @@ public class Player extends AbstractTileObjectSprite {
 		if (state != SpriteMoveEnum.FALLING && state != SpriteMoveEnum.JUMPING ) {
 			this.state = pstate;
 		}
+	}
+	
+	public void land() {
+		this.state = direction==DirectionEnum.LEFT ? SpriteMoveEnum.RUNNING_LEFT : SpriteMoveEnum.RUNNING_RIGHT;
 	}
 
 	public SpriteMoveEnum getPreviousState() {
@@ -189,6 +204,14 @@ public class Player extends AbstractTileObjectSprite {
 
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
+	}
+
+	public boolean isPositiveCurvedTile() {
+		return isPositiveCurvedTile;
+	}
+
+	public void setPositiveCurvedTile(boolean isPositiveCurvedTile) {
+		this.isPositiveCurvedTile = isPositiveCurvedTile;
 	}
 
 	

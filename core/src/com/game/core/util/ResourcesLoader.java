@@ -10,6 +10,8 @@ public class ResourcesLoader {
 	
 	public static final Texture PLAYER = new Texture(Gdx.files.internal("sprites/player/chuck_main.png"));
 	
+	public static final Texture CLUB = new Texture(Gdx.files.internal("sprites/player/massue.png"));
+	
 	public static final Texture FLAG = new Texture(Gdx.files.internal("sprites/items/flag.png"));
 	
 	public static Texture BACKGROUND_FOREST;

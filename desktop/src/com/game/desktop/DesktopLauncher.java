@@ -14,9 +14,13 @@ public class DesktopLauncher {
 		config.width = ScreenConstants.WIDTH;
 		config.height = ScreenConstants.HEIGHT;
 		
-		config.resizable = false;
-		config.title = "Libgdx 2D Demo";			
-					
+		config.resizable = false;		
+		config.title = "Chuck Rock II";
+				
+		//config.fullscreen = true;
+		//config.vSyncEnabled = true;
+		//config.foregroundFPS = 20;			
+		
 		new LwjglApplication(GameManager.getGameManager(), config);
 	}
 }
