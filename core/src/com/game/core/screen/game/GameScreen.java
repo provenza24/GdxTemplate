@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -412,6 +413,18 @@ public class GameScreen extends AbstractGameScreen  {
 			shapeRenderer.end();
 			Gdx.gl.glDisable(GL20.GL_BLEND);
 			batch.end();
+			
+			Polygon polygon = player.getClub().getPolygonBounds();
+			if (polygon!=null) {
+				spriteBatch.begin();
+				float vertices[] = polygon.getVertices();
+				drawDebugLine(new Vector2(vertices[0],vertices[1]), new Vector2(vertices[2],vertices[3]), 1, Color.GREEN, camera.getCamera().combined);
+				drawDebugLine(new Vector2(vertices[2],vertices[3]), new Vector2(vertices[4],vertices[5]), 1, Color.GREEN, camera.getCamera().combined);
+				drawDebugLine(new Vector2(vertices[4],vertices[5]), new Vector2(vertices[6],vertices[7]), 1, Color.GREEN, camera.getCamera().combined);
+				drawDebugLine(new Vector2(vertices[6],vertices[7]), new Vector2(vertices[0],vertices[1]), 1, Color.GREEN, camera.getCamera().combined);
+				spriteBatch.end();
+			}
+			
 		}
 		
 		if (showGrid) {			
@@ -426,9 +439,9 @@ public class GameScreen extends AbstractGameScreen  {
 		}
 	}
 	
-	private static ShapeRenderer debugRenderer = new ShapeRenderer();
+	private ShapeRenderer debugRenderer = new ShapeRenderer();
 	
-	public static void drawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
+	public void drawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
     {
         Gdx.gl.glLineWidth(lineWidth);
         debugRenderer.setProjectionMatrix(projectionMatrix);

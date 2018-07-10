@@ -3,9 +3,9 @@ package com.game.core.sprite.impl.player;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.util.ResourcesLoader;
@@ -119,6 +119,15 @@ public class Club extends AbstractSprite {
 				setRotation(LEFT_ATTACK_ANGLES.get(animIdx));		
 			}
 			
+			polygonBounds = new Polygon(new float[]{
+					getX(), getY(),
+					getX(), getY() + getHeight(), 
+					getX() + getWidth(), getY()+getHeight(),
+					getX() + getWidth(), getY()
+					});		
+			polygonBounds.setOrigin(getX(), getY() + 0.5f);
+			polygonBounds.setRotation(getRotation());
+			
 			/*setX(player.getX()-1.5f);
 			setY(player.getY());
 			originX = 2.5f;
@@ -140,7 +149,9 @@ public class Club extends AbstractSprite {
 			}
 		}		
 					
-		batch.draw(currentTexture, getX() , getY(), originX, originY , renderingSize.x, renderingSize.y, 1,1, getRotation());		
+		batch.draw(currentTexture, getX() , getY(), originX, originY , renderingSize.x, renderingSize.y, 1,1, getRotation());
+		
+		
 	}
 
 }

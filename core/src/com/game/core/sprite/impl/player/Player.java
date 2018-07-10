@@ -214,5 +214,13 @@ public class Player extends AbstractTileObjectSprite {
 		this.isPositiveCurvedTile = isPositiveCurvedTile;
 	}
 
+	public Club getClub() {
+		return club;
+	}
+
+	public void setClub(Club club) {
+		this.club = club;
+	}
+
 	
 }
