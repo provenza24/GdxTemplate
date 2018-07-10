@@ -39,7 +39,7 @@ public class GameManager extends AbstractGameManager {
 	public void startGame() {
 		currentLevelIndex=0;		
 		AbstractGameScreen nextGameScreen = new GameScreen(levels.get(currentLevelIndex));				
-		setScreen(nextGameScreen, AbstractScreenTransition.getScreenTransition(ScreenTransitionEnum.FADE));		
+		setScreen(nextGameScreen, AbstractScreenTransition.getScreenTransition(ScreenTransitionEnum.SLICE));		
 	}
 	
 	public void nextLevel() {		

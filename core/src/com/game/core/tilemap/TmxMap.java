@@ -92,8 +92,7 @@ public class TmxMap {
 					curvedTilesFunctions.put(tiledMapTile.getId(), mathFunctionEnum.getMathFunction());
 					if (mathFunctionEnum.isConstant()) {
 						curvedContantTiles.add(tiledMapTile.getId());
-					}
-					Gdx.app.log("CURVED", "Adding tile:"+tiledMapTile.getId());					
+					}									
 				} else if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CLOUD)) {
 					cloudTiles.add(tiledMapTile.getId());					
 				}

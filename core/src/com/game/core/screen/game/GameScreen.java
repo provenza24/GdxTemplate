@@ -82,13 +82,13 @@ public class GameScreen extends AbstractGameScreen  {
 	private BitmapFont debugFont;
 	
 	/** Debug parameters */
-	private boolean debugShowText = true;
+	private boolean debugShowText = false;
 
 	private boolean debugShowBounds = false;
 
-	private boolean debugShowFps = true;
+	private boolean debugShowFps = false;
 	
-	private boolean showForeground = true;
+	private boolean showForeground = false;
 	
 	private boolean showGrid = false;
 	
@@ -97,12 +97,14 @@ public class GameScreen extends AbstractGameScreen  {
 	private boolean canJump;
 	
 	private boolean levelFinished = false;		
+	
+	private float debugFontSize = 1f; //1.5f
 				
 	public GameScreen(Level level) {
 										
 		// Initialize fonts
 		debugFont = new BitmapFont();		
-		debugFont.getData().setScale(1.5f, 1.5f);
+		debugFont.getData().setScale(debugFontSize, debugFontSize);
 		debugFont.setColor(fontColors[currentDebugColor]);	
 		DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
 		
@@ -225,11 +227,13 @@ public class GameScreen extends AbstractGameScreen  {
 		// Render Player		
 		player.render(tilemapRenderer.getBatch());
 		// Render foreground
-		tilemapRenderer.getBatch().begin();
-		tilemapRenderer.renderTileLayer(tilemap.getForegroundLayer());
-		tilemapRenderer.getBatch().end();
+		if (showForeground) {
+			tilemapRenderer.getBatch().begin();
+			tilemapRenderer.renderTileLayer(tilemap.getForegroundLayer());
+			tilemapRenderer.getBatch().end();
+		}		
 		// Render debug mode
-		renderDebugMode();
+		//renderDebugMode();
 	}
 					
 	private void handleInput() {
@@ -322,19 +326,23 @@ public class GameScreen extends AbstractGameScreen  {
 			showForeground = !showForeground;
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F12)) {
+		if (Gdx.input.isKeyJustPressed(Keys.F2)) {
 			debugShowFps = !debugShowFps;
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F11)) {
+		if (Gdx.input.isKeyJustPressed(Keys.F3)) {
 			debugShowText = !debugShowText;
 		}						
 
-		if (Gdx.input.isKeyJustPressed(Keys.F10)) {
+		if (Gdx.input.isKeyJustPressed(Keys.F4)) {
 			debugShowBounds = !debugShowBounds;
 		}
 		
-		if (Gdx.input.isKeyJustPressed(Keys.F9)) {		
+		if (Gdx.input.isKeyJustPressed(Keys.F5)) {
+			showGrid = !showGrid;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F6)) {		
 			currentDebugColor++;
 			currentDebugColor = fontColors.length == currentDebugColor ? 0 : currentDebugColor;
 			debugFont.setColor(fontColors[currentDebugColor]);
@@ -409,10 +417,10 @@ public class GameScreen extends AbstractGameScreen  {
 		if (showGrid) {			
 			spriteBatch.begin();
 			for (int i=1; i<100;i++) {
-				DrawDebugLine(new Vector2(i, 0), new Vector2(i, ScreenConstants.NB_HORIZONTAL_TILES), 1, Color.GREEN, camera.getCamera().combined);
+				drawDebugLine(new Vector2(i, 0), new Vector2(i, ScreenConstants.NB_HORIZONTAL_TILES), 1, Color.GREEN, camera.getCamera().combined);
 			}			
 			for (int i=1; i<ScreenConstants.NB_HORIZONTAL_TILES;i++) {
-				DrawDebugLine(new Vector2(0, i), new Vector2(100, i), 1, Color.GREEN, camera.getCamera().combined);
+				drawDebugLine(new Vector2(0, i), new Vector2(100, i), 1, Color.GREEN, camera.getCamera().combined);
 			}
 			spriteBatch.end();
 		}
@@ -420,7 +428,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private static ShapeRenderer debugRenderer = new ShapeRenderer();
 	
-	public static void DrawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
+	public static void drawDebugLine(Vector2 start, Vector2 end, int lineWidth, Color color, Matrix4 projectionMatrix)
     {
         Gdx.gl.glLineWidth(lineWidth);
         debugRenderer.setProjectionMatrix(projectionMatrix);
