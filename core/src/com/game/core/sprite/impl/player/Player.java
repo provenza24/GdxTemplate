@@ -1,5 +1,6 @@
 package com.game.core.sprite.impl.player;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,6 +8,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.tilemap.impl.PlayerTilemapCollisionHandler;
 import com.game.core.sprite.tileobject.AbstractTileObjectSprite;
+import com.game.core.tilemap.TmxMap;
 import com.game.core.util.ResourcesLoader;
 import com.game.core.util.animation.AnimationBuilder;
 import com.game.core.util.enums.DirectionEnum;
@@ -69,7 +71,7 @@ public class Player extends AbstractTileObjectSprite {
 		moveable = true;
 		tilemapCollisionHandler = new PlayerTilemapCollisionHandler();
 		
-		club = new Club(getX(), getY());
+		club = new Club(getX(), getY(), this);
 	}
 
 	@Override
@@ -91,7 +93,7 @@ public class Player extends AbstractTileObjectSprite {
 
 	public void render(Batch batch) {
 		batch.begin();
-		club.render(batch, this);
+		club.render(batch);
 		batch.draw(currentFrame, getX(), getY(), renderingSize.x, renderingSize.y);		
 		batch.end();
 	}
@@ -112,6 +114,13 @@ public class Player extends AbstractTileObjectSprite {
 		if (this.acceleration.x < 0) {
 			this.acceleration.x = 0;
 		}
+	}
+	
+	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {		
+		updateAnimation(deltaTime);
+		move(deltaTime);
+		tilemapCollisionHandler.collideWithTilemap(tileMap, this);
+		updateBounds();					
 	}
 		
 	public void updateAnimation(float delta) {

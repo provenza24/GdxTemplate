@@ -14,6 +14,8 @@ import com.game.core.util.enums.SpriteMoveEnum;
 
 public class Club extends AbstractSprite {
 
+	private Player player;
+	
 	private TextureRegion idleTextureRight;
 	
 	private TextureRegion idleTextureLeft;
@@ -31,6 +33,16 @@ public class Club extends AbstractSprite {
 	private final static Map<Integer, Vector2> LEFT_ATTACK_POSITIONS = new HashMap<>();
 	
 	private final static Map<Integer, Float> LEFT_ATTACK_ANGLES = new HashMap<>();
+	
+	private Vector2 origin;
+	
+	private Vector2 attackPosition;
+	
+	private Vector2 attackOrigin;
+	
+	private float attackRotation;
+	
+	private TextureRegion currentTexture;
 	
 	static {
 		Y_JUMPING_POSITIONS.put(0, -0.2f);
@@ -64,14 +76,18 @@ public class Club extends AbstractSprite {
 		LEFT_ATTACK_ANGLES.put(4, 45f);		
 	}
 	
-	public Club(float x, float y) {
+	public Club(float x, float y, Player player) {
 		super(x, y);
 		gravitating = false;
 		collidableWithTilemap = false;		
 		moveable = false;
+		this.player = player;
 		
 		setSize(2, 1);
 		setRenderingSize(2, 1);
+		origin = new Vector2();
+		attackPosition = new Vector2();
+		attackOrigin = new Vector2();		
 	}
 
 	@Override
@@ -87,9 +103,9 @@ public class Club extends AbstractSprite {
 		walkTextureLeft.flip(true, false);						
 	}
 
-	public void render(Batch batch, Player player) {
+	public void update() {
 		
-		TextureRegion currentTexture = player.getDirection()==DirectionEnum.RIGHT ? walkTextureRight : walkTextureLeft;				
+		currentTexture = player.getDirection()==DirectionEnum.RIGHT ? walkTextureRight : walkTextureLeft;				
 		setX(player.getDirection()==DirectionEnum.RIGHT ? player.getX()-1.8f : player.getX()+1.8f);	
 		setY(player.getY());
 		
@@ -102,45 +118,43 @@ public class Club extends AbstractSprite {
 			setY(player.getY()+0.4f);
 		}
 		
-		float originX = 2;
-		float originY = 0.5f;
+		origin.set(2, 0.5f);
 		
 		if (player.isAttacking()) {
 			int animIdx = player.getCurrentAnimation().getKeyFrameIndex(player.getStateTime());
 			if (player.getDirection()==DirectionEnum.RIGHT) {
 				setX(player.getX()+RIGHT_ATTACK_POSITIONS.get(animIdx).x);
 				setY(player.getY()+RIGHT_ATTACK_POSITIONS.get(animIdx).y);
-				setRotation(RIGHT_ATTACK_ANGLES.get(animIdx));				
+				setRotation(RIGHT_ATTACK_ANGLES.get(animIdx));
+				attackPosition.set(player.getX()-1.5f, player.getY());
+				attackOrigin.set(attackPosition.x + 2.5f, attackPosition.y + 0.5f);
+				attackRotation = attackRotation >= 360 ? 360 : attackRotation+16;
 			} else {
-				originX = 0;
-				originY = 0.5f;
+				origin.set(0, 0.5f);
 				setX(player.getX()+LEFT_ATTACK_POSITIONS.get(animIdx).x);
 				setY(player.getY()+LEFT_ATTACK_POSITIONS.get(animIdx).y);
 				setRotation(LEFT_ATTACK_ANGLES.get(animIdx));		
+				attackPosition.set(player.getX()+1.5f, player.getY());
+				attackOrigin.set(attackPosition.x - 0.5f, attackPosition.y + 0.5f);
+				attackRotation = attackRotation <= -360 ? -360 : attackRotation-16;
 			}
-			
+						
 			polygonBounds = new Polygon(new float[]{
-					getX(), getY(),
-					getX(), getY() + getHeight(), 
-					getX() + getWidth(), getY()+getHeight(),
-					getX() + getWidth(), getY()
+					attackPosition.x, attackPosition.y,
+					attackPosition.x, attackPosition.y + getHeight(), 
+					attackPosition.x + getWidth(), attackPosition.y+getHeight(),
+					attackPosition.x + getWidth(), attackPosition.y
 					});		
-			polygonBounds.setOrigin(getX(), getY() + 0.5f);
-			polygonBounds.setRotation(getRotation());
-			
-			/*setX(player.getX()-1.5f);
-			setY(player.getY());
-			originX = 2.5f;
-			originY = 0.5f;
-			setRotation(getRotation()>=360 ? 360 : getRotation()+16f);*/
+			polygonBounds.setOrigin(attackOrigin.x, attackOrigin.y);
+			polygonBounds.setRotation(attackRotation);							
 		} else {
 			setRotation(0);
+			attackRotation =0;
 			if (player.isOnCurvedTile()) {
 				if (player.getDirection()==DirectionEnum.RIGHT) {
 					this.setRotation(player.isPositiveCurvedTile()?20:-20); 
 				} else {
-					originX = 0;
-					originY = 0.5f;
+					origin.set(0, 0.5f);					
 					this.setRotation(player.isPositiveCurvedTile()?-20:20);
 				}
 				
@@ -148,10 +162,10 @@ public class Club extends AbstractSprite {
 				this.setRotation(0);
 			}
 		}		
-					
-		batch.draw(currentTexture, getX() , getY(), originX, originY , renderingSize.x, renderingSize.y, 1,1, getRotation());
-		
-		
+	}
+	
+	public void render(Batch batch) {		
+		batch.draw(currentTexture, getX() , getY(), origin.x, origin.y , renderingSize.x, renderingSize.y, 1,1, getRotation());		
 	}
 
 }

@@ -164,6 +164,7 @@ public class GameScreen extends AbstractGameScreen  {
 		AbstractSprite.updateCommonStateTime(delta);
 		handleInput();
 		player.update(tilemap, camera.getCamera(), delta);
+		player.getClub().update();
 		// Draw the scene
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -414,16 +415,14 @@ public class GameScreen extends AbstractGameScreen  {
 			Gdx.gl.glDisable(GL20.GL_BLEND);
 			batch.end();
 			
-			Polygon polygon = player.getClub().getPolygonBounds();
-			if (polygon!=null) {
-				spriteBatch.begin();
-				float vertices[] = polygon.getVertices();
-				drawDebugLine(new Vector2(vertices[0],vertices[1]), new Vector2(vertices[2],vertices[3]), 1, Color.GREEN, camera.getCamera().combined);
-				drawDebugLine(new Vector2(vertices[2],vertices[3]), new Vector2(vertices[4],vertices[5]), 1, Color.GREEN, camera.getCamera().combined);
-				drawDebugLine(new Vector2(vertices[4],vertices[5]), new Vector2(vertices[6],vertices[7]), 1, Color.GREEN, camera.getCamera().combined);
-				drawDebugLine(new Vector2(vertices[6],vertices[7]), new Vector2(vertices[0],vertices[1]), 1, Color.GREEN, camera.getCamera().combined);
-				spriteBatch.end();
-			}
+			if (player.isAttacking()) {
+				Polygon polygon = player.getClub().getPolygonBounds();
+				if (polygon!=null) {
+					shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+					shapeRenderer.polygon(polygon.getTransformedVertices());
+					shapeRenderer.end();					
+				}
+			}			
 			
 		}
 		

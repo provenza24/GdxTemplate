@@ -208,7 +208,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		boolean onFloorCorrection = false;
 		if (sprite.isOnCurvedTile() && !tilemap.isCurvedConstantTile(previousCell.getTile().getId())) {			
 			onFloorCorrection = true;
-			boolean ascending = previousCell.getTile().getId() <=198; // à partir de 199 -> pente en descente
+			boolean ascending = previousCell.getTile().getId() <=198;
 			if (sprite.getDirection()==DirectionEnum.RIGHT) {
 				sprite.setY(ascending ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getY() + COLLISION_X_CORRECTIF);
 			} else {
