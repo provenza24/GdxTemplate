@@ -36,7 +36,11 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	/** Rendering size */
 	protected Vector2 renderingSize;
 	
-	/** Sprite will be visible when player will reach this abscissa value */
+	protected float halfWidth;
+	
+	protected float halfHeight;
+	
+	/** Sprite will be visible when player will reach this absciss value */
 	protected float xAlive;
 	
 	/** States */
@@ -90,13 +94,11 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	protected boolean bumped;
 	
+	protected boolean isAnimated;
+	
 	protected boolean isAnimationLooping;
 	
 	protected boolean onFloor;
-	
-	protected float halfWidth;
-	
-	protected float halfHeight;
 	
 	public AbstractSprite(float x, float y, Vector2 size, Vector2 offset) {
 		
@@ -152,7 +154,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {
 							
 		if (alive) {
-			// The sprite is alive, we first update its animation
+			// The sprite is alive, we first update its animation			
 			updateAnimation(deltaTime);
 			if (getActions().size>0) {
 				// If sprite is acting (ex: sprite is an enemy, and has just been killed, an animation is playing to simulate its death) 
@@ -171,9 +173,10 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 			// Update sprite bounds (for future collisions)
 			updateBounds();
 			// Update visible / deletable booleans
-			updateDeletableAndVisibleStatus(camera);					
+			//updateDeletableAndVisibleStatus(camera);
+			visible = getX() < camera.position.x+7;
 		} else {			
-			alive = camera.position.x-10>xAlive;							
+			alive = camera.position.x-7>xAlive;							
 		}				
 	}
 	
@@ -207,8 +210,10 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	}
 
 	protected void updateAnimation(float delta) {
-		stateTime = stateTime + delta;
-		currentFrame = currentAnimation.getKeyFrame(stateTime, isAnimationLooping);		
+		if (isAnimated) {
+			stateTime = stateTime + delta;
+			currentFrame = currentAnimation.getKeyFrame(stateTime, isAnimationLooping);
+		}				
 	}
 	
 	protected void storeOldPosition() {

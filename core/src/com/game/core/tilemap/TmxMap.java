@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.game.core.collision.math.MathFunction;
 import com.game.core.sprite.AbstractItem;
+import com.game.core.sprite.impl.item.Candy;
 import com.game.core.sprite.impl.item.Flag;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.util.constants.TilemapConstants;
@@ -132,6 +133,9 @@ public class TmxMap {
 			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_FLAG)) {
 				flag = new Flag(mapObject, new Vector2());
 				items.add(flag);
+			}
+			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_CANDY)) {
+				items.add(new Candy(mapObject, new Vector2()));				
 			}
 		}
 	}

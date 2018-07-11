@@ -14,6 +14,8 @@ public class ResourcesLoader {
 	
 	public static final Texture FLAG = new Texture(Gdx.files.internal("sprites/items/flag.png"));
 	
+	public static final Texture CANDY = new Texture(Gdx.files.internal("sprites/items/candy.png"));
+	
 	public static Texture BACKGROUND_FOREST;
 	
 	public static Texture getBackgroundForest() {

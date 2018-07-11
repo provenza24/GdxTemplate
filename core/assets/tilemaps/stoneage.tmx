@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="150" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="12">
+<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="150" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="14">
  <tileset firstgid="1" source="player.tsx"/>
  <tileset firstgid="11" source="stoneage.tsx"/>
+ <tileset firstgid="411" source="candy.tsx"/>
  <layer id="12" name="background" width="150" height="28">
   <properties>
    <property name="background.vertical.scrolling" value="false"/>
@@ -73,5 +74,10 @@
  </layer>
  <objectgroup id="3" name="objectsLayer">
   <object id="9" name="player" type="player" gid="1" x="20" y="304" width="32" height="32"/>
+  <object id="12" name="candy" type="candy" gid="411" x="208" y="304" width="16" height="16">
+   <properties>
+    <property name="xAlive" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

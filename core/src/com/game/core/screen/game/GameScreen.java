@@ -2,6 +2,7 @@ package com.game.core.screen.game;
 
 import java.util.List;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
@@ -101,8 +102,11 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private float debugFontSize = 1f; //1.5f
 				
+	
 	public GameScreen(Level level) {
-										
+				
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		
 		// Initialize fonts
 		debugFont = new BitmapFont();		
 		debugFont.getData().setScale(debugFontSize, debugFontSize);
@@ -312,7 +316,8 @@ public class GameScreen extends AbstractGameScreen  {
 			item.update(tilemap, camera.getCamera(), deltaTime);
 			boolean collidePlayer = item.overlaps(player);						
 			if (collidePlayer) {
-				levelFinished = true;				
+				//levelFinished = true;
+				Gdx.app.debug("GameScreen::handleItems", item.getName());
 			}
 			if (item.isDeletable()) {				
 				items.remove(i--);
@@ -362,25 +367,25 @@ public class GameScreen extends AbstractGameScreen  {
 			int y = ScreenConstants.HEIGHT-10;
 						
 			spriteBatch.begin();
-			debugFont.draw(spriteBatch, "position=" + String.format("%.3f", player.getX()) + " | " + String.format("%.3f", player.getY()), x, y);
-			y = y -20;
-			debugFont.draw(spriteBatch, "acceleration=" + String.format("%.1f", player.getAcceleration().x) + " | " + String.format("%.1f", player.getAcceleration().y), x, y);
-			y = y -20;
-			debugFont.draw(spriteBatch, "state=" + player.getState().toString(), x, y);
-			y = y -20;
-			debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
-			y = y -20;			
-			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);			
-			y = y -20;			
-			debugFont.draw(spriteBatch, "hiting= " + player.isAttacking(), x, y);
+			//debugFont.draw(spriteBatch, "position=" + String.format("%.3f", player.getX()) + " | " + String.format("%.3f", player.getY()), x, y);
+			//y = y -20;
+			//debugFont.draw(spriteBatch, "acceleration=" + String.format("%.1f", player.getAcceleration().x) + " | " + String.format("%.1f", player.getAcceleration().y), x, y);
+			//y = y -20;
+			//debugFont.draw(spriteBatch, "state=" + player.getState().toString(), x, y);
+			//y = y -20;
+			//debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
+			//y = y -20;			
+			//debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);			
+			//y = y -20;			
+			//debugFont.draw(spriteBatch, "hiting= " + player.isAttacking(), x, y);
 			//y = y -20;			
 			//debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
-			y = y -20;			
-			debugFont.draw(spriteBatch, "curvedTile= " + player.isOnCurvedTile(), x, y);
-			y = y -20;			
-			debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);
-			y = y -20;			
-			debugFont.draw(spriteBatch, "curvedPositiveTile= " + player.isPositiveCurvedTile(), x, y);
+			//y = y -20;			
+			//debugFont.draw(spriteBatch, "curvedTile= " + player.isOnCurvedTile(), x, y);
+			//y = y -20;			
+			//debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);
+			//y = y -20;			
+			//debugFont.draw(spriteBatch, "curvedPositiveTile= " + player.isPositiveCurvedTile(), x, y);
 			
 			/*x = 170;
 			y = ScreenConstants.HEIGHT-50;
@@ -389,7 +394,14 @@ public class GameScreen extends AbstractGameScreen  {
 			debugFont.draw(spriteBatch, "camera.position=" + String.format("%.3f", camera.getCamera().position.x) + " | " + String.format("%.3f", camera.getCamera().position.y), x, y);			
 			y = y -20;			
 			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);*/			
-			
+			//y = y -20;
+					
+			int alive = 0;
+			for (AbstractSprite item : tilemap.getItems()) {
+				alive += item.isAlive() ? 1 : 0;
+			}
+			debugFont.draw(spriteBatch, "Items: " + tilemap.getItems().size() + " - " + alive + " alive", x, y);
+						
 			spriteBatch.end();
 		}
 		
@@ -411,8 +423,14 @@ public class GameScreen extends AbstractGameScreen  {
 			shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
 			shapeRenderer.rect(player.getX() + player.getOffset().x, player.getY(), player.getWidth(), player.getHeight());
 			
+			for (AbstractSprite sprite : tilemap.getItems()) {
+				shapeRenderer.rect(sprite.getX() + sprite.getOffset().x, sprite.getY(), sprite.getWidth(),
+						sprite.getHeight());
+			}
+			
 			shapeRenderer.end();
 			Gdx.gl.glDisable(GL20.GL_BLEND);
+									
 			batch.end();
 			
 			if (player.isAttacking()) {

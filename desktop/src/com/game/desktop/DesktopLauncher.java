@@ -19,7 +19,7 @@ public class DesktopLauncher {
 				
 		//config.fullscreen = true;
 		//config.vSyncEnabled = true;
-		//config.foregroundFPS = 20;			
+		//config.foregroundFPS = 20;				
 		
 		new LwjglApplication(GameManager.getGameManager(), config);
 	}
