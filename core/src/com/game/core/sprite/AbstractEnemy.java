@@ -1,7 +1,6 @@
 package com.game.core.sprite;
 
 import com.badlogic.gdx.math.Vector2;
-import com.game.core.util.enums.EnemyTypeEnum;
 import com.game.core.util.enums.SpriteMoveEnum;
 
 public abstract class AbstractEnemy extends AbstractSprite {
@@ -23,9 +22,7 @@ public abstract class AbstractEnemy extends AbstractSprite {
 	public AbstractEnemy(float x, float y) {
 		this(x, y, new Vector2(1,1), new Vector2());
 	}
-	
-	public abstract EnemyTypeEnum getEnemyType();
-	
+
 	public void killByFireball(AbstractSprite fireball) {
 		this.bump();
 		acceleration.x = fireball.getAcceleration().x > 0 ? 3 : -3;		

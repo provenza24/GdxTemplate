@@ -16,6 +16,8 @@ public class ResourcesLoader {
 	
 	public static final Texture CANDY = new Texture(Gdx.files.internal("sprites/items/candy.png"));
 	
+	public static final Texture CAVEMAN = new Texture(Gdx.files.internal("sprites/enemies/caveman.png"));
+	
 	public static Texture BACKGROUND_FOREST;
 	
 	public static Texture getBackgroundForest() {

@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.sprite.tileobject.AbstractTileObjectItem;
 import com.game.core.util.ResourcesLoader;
-import com.game.core.util.enums.ItemEnum;
 
 public class Candy extends AbstractTileObjectItem {
 
@@ -22,11 +21,6 @@ public class Candy extends AbstractTileObjectItem {
 		isAnimated = false;		
 		origin = new Vector2(getHalfWidth(),getHalfHeight());
 		setName("CANDY");
-	}
-
-	@Override
-	public ItemEnum getType() {
-		return null;
 	}
 
 	@Override

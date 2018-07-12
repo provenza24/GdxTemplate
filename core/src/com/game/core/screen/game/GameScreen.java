@@ -22,6 +22,7 @@ import com.game.core.GameManager;
 import com.game.core.background.AbstractScrollingBackground;
 import com.game.core.background.IScrollingBackground;
 import com.game.core.camera.AbstractGameCamera;
+import com.game.core.sprite.AbstractEnemy;
 import com.game.core.sprite.AbstractItem;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.sprite.impl.item.Candy;
@@ -91,7 +92,7 @@ public class GameScreen extends AbstractGameScreen  {
 
 	private boolean debugShowFps = false;
 	
-	private boolean showForeground = false;
+	private boolean showForeground = true;
 	
 	private boolean showGrid = false;
 	
@@ -191,8 +192,11 @@ public class GameScreen extends AbstractGameScreen  {
 		tilemapRenderer.getBatch().begin();
 		tilemapRenderer.renderTileLayer(tilemap.getBackgroundLayer());
 		tilemapRenderer.getBatch().end();
+		
 		// Move items, check collisions, render
 		handleItems(delta);
+		// Move enemies, check collisions, render
+		handleEnemies(delta);		
 		
 		// Render Player		
 		player.render(tilemapRenderer.getBatch());		
@@ -328,6 +332,36 @@ public class GameScreen extends AbstractGameScreen  {
 			}
 		}
 	}
+	
+	private void handleEnemies(float deltaTime) {
+
+		List<AbstractEnemy> enemies = tilemap.getEnemies();		
+		for (int i = 0; i < enemies.size(); i++) {
+			AbstractEnemy enemy = enemies.get(i);
+			enemy.update(tilemap, camera.getCamera(), deltaTime);
+			// Draw it
+			if (enemy.isAlive()) {				
+				if (!enemy.isKilled()) {
+					if (player.isAttacking()) {
+						boolean isClubKillEnemy = player.getClub().overlaps(enemy);
+						if (isClubKillEnemy) {
+							enemy.setDeletable(true);
+						}
+					}
+					boolean collidePlayer = enemy.overlaps(player);
+					if (collidePlayer) {
+						Gdx.app.log("GameScreen::handleEnemies", "L'ennemi me touche");
+					}
+				}
+			}
+			if (enemy.isDeletable()) {				
+				enemies.remove(i--);
+			} else if (enemy.isVisible()) {
+				enemy.render(tilemapRenderer.getBatch());
+			}
+
+		}
+	}
 
 	private void handleDebugKeys() {
 		
@@ -427,6 +461,12 @@ public class GameScreen extends AbstractGameScreen  {
 			shapeRenderer.setColor(DEBUG_BOUNDS_COLOR);
 			shapeRenderer.rect(player.getX() + player.getOffset().x, player.getY(), player.getWidth(), player.getHeight());
 			
+			// Green rectangle around enemies
+			for (AbstractSprite sprite : tilemap.getEnemies()) {
+				shapeRenderer.rect(sprite.getX() + sprite.getOffset().x, sprite.getY(), sprite.getWidth(),
+						sprite.getHeight());
+			}
+			// Green rectangle around items
 			for (AbstractSprite sprite : tilemap.getItems()) {
 				shapeRenderer.rect(sprite.getX() + sprite.getOffset().x, sprite.getY(), sprite.getWidth(),
 						sprite.getHeight());
@@ -437,6 +477,7 @@ public class GameScreen extends AbstractGameScreen  {
 									
 			batch.end();
 			
+			// Green rectangle around club
 			if (player.isAttacking()) {
 				Polygon polygon = player.getClub().getPolygonBounds();
 				if (polygon!=null) {

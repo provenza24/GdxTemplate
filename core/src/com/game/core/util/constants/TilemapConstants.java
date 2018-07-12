@@ -26,4 +26,6 @@ public class TilemapConstants {
 	
 	public static final String TILE_TYPE_CANDY = "candy";
 	
+	public static final String TILE_TYPE_CAVEMAN = "caveman";
+	
 }

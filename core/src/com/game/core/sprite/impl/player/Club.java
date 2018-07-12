@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.sprite.AbstractSprite;
@@ -162,6 +163,17 @@ public class Club extends AbstractSprite {
 				this.setRotation(0);
 			}
 		}		
+	}
+	
+	@Override
+	public boolean overlaps(AbstractSprite sprite) {
+		
+		Polygon spritePolygon = new Polygon(new float[]{sprite.getBounds().getX(), sprite.getBounds().getY(),
+				sprite.getBounds().getX(), sprite.getBounds().getY() + sprite.getBounds().getHeight(),
+				sprite.getBounds().getX()+ sprite.getBounds().getWidth(), sprite.getBounds().getY() + sprite.getBounds().getHeight(),
+				sprite.getBounds().getX()+ sprite.getBounds().getWidth(), sprite.getBounds().getY()});
+		
+		return Intersector.overlapConvexPolygons(spritePolygon, polygonBounds);				
 	}
 	
 	public void render(Batch batch) {		

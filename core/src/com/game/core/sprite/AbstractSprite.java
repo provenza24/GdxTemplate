@@ -120,6 +120,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		this.xAlive = getX() - ScreenConstants.MAP_UNIT_PIXELS/2 ;
 		
 		this.initializeAnimations();
+		this.isAnimated = true;
 		
 		this.tilemapCollisionHandler = new BasicTilemapCollisionHandler();				
 	}

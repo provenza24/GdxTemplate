@@ -20,7 +20,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.game.core.collision.math.MathFunction;
+import com.game.core.sprite.AbstractEnemy;
 import com.game.core.sprite.AbstractItem;
+import com.game.core.sprite.impl.ennemy.Caveman;
 import com.game.core.sprite.impl.item.Candy;
 import com.game.core.sprite.impl.item.Flag;
 import com.game.core.sprite.impl.player.Player;
@@ -52,6 +54,8 @@ public class TmxMap {
 	private Flag flag;
 	
 	private List<AbstractItem> items;		
+	
+	private List<AbstractEnemy> enemies;
 	
 	private List<Integer> cloudTiles;
 	
@@ -120,6 +124,7 @@ public class TmxMap {
 	private void initMapObjects() {
 
 		items = new ArrayList<AbstractItem>();
+		enemies = new ArrayList<AbstractEnemy>();
 		
 		MapObjects objects = objectsLayer.getObjects();
 		
@@ -136,6 +141,9 @@ public class TmxMap {
 			}
 			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_CANDY)) {
 				items.add(new Candy(mapObject, new Vector2()));				
+			}
+			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_CAVEMAN)) {
+				enemies.add(new Caveman(mapObject, new Vector2(0.1f, 0.1f)));				
 			}
 		}
 	}
@@ -270,6 +278,14 @@ public class TmxMap {
 
 	public void setBackgroundScrollingVertically(boolean backgroundScrollingVertically) {
 		this.backgroundScrollingVertically = backgroundScrollingVertically;
+	}
+
+	public List<AbstractEnemy> getEnemies() {
+		return enemies;
+	}
+
+	public void setEnemies(List<AbstractEnemy> enemies) {
+		this.enemies = enemies;
 	}
 
 

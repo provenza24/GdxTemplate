@@ -6,7 +6,6 @@ import com.game.core.sprite.impl.player.Player;
 import com.game.core.sprite.tileobject.AbstractTileObjectItem;
 import com.game.core.util.ResourcesLoader;
 import com.game.core.util.animation.AnimationBuilder;
-import com.game.core.util.enums.ItemEnum;
 
 public class Flag extends AbstractTileObjectItem {
 
@@ -15,11 +14,6 @@ public class Flag extends AbstractTileObjectItem {
 		collidableWithTilemap = false;
 		gravitating = false;
 		isAnimationLooping = false;
-	}
-
-	@Override
-	public ItemEnum getType() {
-		return null;
 	}
 
 	@Override
