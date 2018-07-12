@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="150" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="14">
+<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="150" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="16">
  <tileset firstgid="1" source="player.tsx"/>
  <tileset firstgid="11" source="stoneage.tsx"/>
  <tileset firstgid="411" source="candy.tsx"/>
@@ -79,5 +79,17 @@
     <property name="xAlive" value="0"/>
    </properties>
   </object>
+  <object id="13" name="candy" type="candy" gid="411" x="360" y="304" width="16" height="16"/>
+  <object id="14" name="candy" type="candy" gid="411" x="380" y="304" width="16" height="16"/>
+  <object id="15" name="candy" type="candy" gid="411" x="400" y="304" width="16" height="16"/>
+  <object id="16" name="candy" type="candy" gid="411" x="420" y="304" width="16" height="16"/>
+  <object id="17" name="candy" type="candy" gid="411" x="440" y="304" width="16" height="16"/>
+  <object id="18" name="candy" type="candy" gid="411" x="460" y="304" width="16" height="16"/>
+  <object id="19" name="candy" type="candy" gid="411" x="480" y="304" width="16" height="16"/>
+  <object id="20" name="candy" type="candy" gid="411" x="500" y="304" width="16" height="16"/>
+  <object id="21" name="candy" type="candy" gid="411" x="520" y="304" width="16" height="16"/>
+  <object id="22" name="candy" type="candy" gid="411" x="540" y="304" width="16" height="16"/>
+  <object id="23" name="candy" type="candy" gid="411" x="560" y="304" width="16" height="16"/>
+  <object id="14" name="candy" type="candy" gid="411" x="1096" y="182" width="16" height="16"/>
  </objectgroup>
 </map>

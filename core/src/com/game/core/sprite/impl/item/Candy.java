@@ -4,12 +4,15 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.game.core.sprite.impl.player.Player;
 import com.game.core.sprite.tileobject.AbstractTileObjectItem;
 import com.game.core.util.ResourcesLoader;
 import com.game.core.util.enums.ItemEnum;
 
 public class Candy extends AbstractTileObjectItem {
 
+	private static float commonRotation;
+	
 	private Vector2 origin;
 	
 	public Candy(MapObject mapObject, Vector2 offset) {
@@ -33,15 +36,24 @@ public class Candy extends AbstractTileObjectItem {
 	}	
 	
 	@Override
-	public void move(float deltaTime) {
-		setRotation(getRotation()-15);
+	public void move(float deltaTime) {			
 	}
 	
 	@Override
 	public void render(Batch batch) {
 		batch.begin();		
-		batch.draw(currentFrame, getX() , getY(), origin.x, origin.y , renderingSize.x, renderingSize.y, 1, 1, getRotation());			
+		batch.draw(currentFrame, getX() , getY(), origin.x, origin.y , renderingSize.x, renderingSize.y, 1, 1, commonRotation);			
 		batch.end();
-	}		
+	}	
+	
+	public static void updateRotation() {
+		commonRotation+=15;
+	}
+
+	@Override
+	public void collideWithPlayer(Player player) {
+		this.setDeletable(true);
+		
+	}
 	
 }

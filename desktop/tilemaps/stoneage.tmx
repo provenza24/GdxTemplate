@@ -79,5 +79,7 @@
     <property name="xAlive" value="0"/>
    </properties>
   </object>
+  <object id="13" name="candy" type="candy" gid="411" x="360" y="304" width="16" height="16">   
+  </object>
  </objectgroup>
 </map>

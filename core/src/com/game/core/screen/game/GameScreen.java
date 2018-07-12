@@ -24,6 +24,7 @@ import com.game.core.background.IScrollingBackground;
 import com.game.core.camera.AbstractGameCamera;
 import com.game.core.sprite.AbstractItem;
 import com.game.core.sprite.AbstractSprite;
+import com.game.core.sprite.impl.item.Candy;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.tilemap.TmxMap;
 import com.game.core.util.Level;
@@ -311,13 +312,14 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private void handleItems(float deltaTime) {
 		List<AbstractItem> items = tilemap.getItems();		
+		Candy.updateRotation();
 		for (int i = 0; i < items.size(); i++) {
 			AbstractItem item = items.get(i);						
 			item.update(tilemap, camera.getCamera(), deltaTime);
 			boolean collidePlayer = item.overlaps(player);						
 			if (collidePlayer) {
 				//levelFinished = true;
-				Gdx.app.debug("GameScreen::handleItems", item.getName());
+				item.collideWithPlayer(player);
 			}
 			if (item.isDeletable()) {				
 				items.remove(i--);
@@ -367,40 +369,42 @@ public class GameScreen extends AbstractGameScreen  {
 			int y = ScreenConstants.HEIGHT-10;
 						
 			spriteBatch.begin();
-			//debugFont.draw(spriteBatch, "position=" + String.format("%.3f", player.getX()) + " | " + String.format("%.3f", player.getY()), x, y);
-			//y = y -20;
-			//debugFont.draw(spriteBatch, "acceleration=" + String.format("%.1f", player.getAcceleration().x) + " | " + String.format("%.1f", player.getAcceleration().y), x, y);
-			//y = y -20;
-			//debugFont.draw(spriteBatch, "state=" + player.getState().toString(), x, y);
-			//y = y -20;
-			//debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
-			//y = y -20;			
-			//debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);			
-			//y = y -20;			
-			//debugFont.draw(spriteBatch, "hiting= " + player.isAttacking(), x, y);
-			//y = y -20;			
+			debugFont.draw(spriteBatch, "position=" + String.format("%.3f", player.getX()) + " | " + String.format("%.3f", player.getY()), x, y);
+			y = y -20;
+			debugFont.draw(spriteBatch, "acceleration=" + String.format("%.1f", player.getAcceleration().x) + " | " + String.format("%.1f", player.getAcceleration().y), x, y);
+			y = y -20;
+			debugFont.draw(spriteBatch, "state=" + player.getState().toString(), x, y);
+			y = y -20;
+			debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
+			y = y -20;			
+			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);			
+			y = y -20;			
+			debugFont.draw(spriteBatch, "hiting= " + player.isAttacking(), x, y);
+			y = y -20;			
 			//debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
 			//y = y -20;			
-			//debugFont.draw(spriteBatch, "curvedTile= " + player.isOnCurvedTile(), x, y);
-			//y = y -20;			
-			//debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);
-			//y = y -20;			
-			//debugFont.draw(spriteBatch, "curvedPositiveTile= " + player.isPositiveCurvedTile(), x, y);
+			debugFont.draw(spriteBatch, "curvedTile= " + player.isOnCurvedTile(), x, y);
+			y = y -20;			
+			debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);
+			y = y -20;			
+			debugFont.draw(spriteBatch, "curvedPositiveTile= " + player.isPositiveCurvedTile(), x, y);
 			
-			/*x = 170;
-			y = ScreenConstants.HEIGHT-50;
+			x = ScreenConstants.WIDTH-200;
+			y = ScreenConstants.HEIGHT-10;
 			debugFont.draw(spriteBatch, "camera.type=" + tilemap.getCameraEnum(), x, y);			
 			y = y -20;
 			debugFont.draw(spriteBatch, "camera.position=" + String.format("%.3f", camera.getCamera().position.x) + " | " + String.format("%.3f", camera.getCamera().position.y), x, y);			
 			y = y -20;			
-			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);*/			
-			//y = y -20;
+			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);			
+			y = y -20;
 					
 			int alive = 0;
+			int visible = 0;
 			for (AbstractSprite item : tilemap.getItems()) {
 				alive += item.isAlive() ? 1 : 0;
+				visible += item.isVisible() ? 1 : 0;
 			}
-			debugFont.draw(spriteBatch, "Items: " + tilemap.getItems().size() + " - " + alive + " alive", x, y);
+			debugFont.draw(spriteBatch, "Items: " + tilemap.getItems().size() + " - " + alive + "/"+visible + " alive/visible", x, y);
 						
 			spriteBatch.end();
 		}

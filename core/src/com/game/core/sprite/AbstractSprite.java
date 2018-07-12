@@ -43,6 +43,8 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	/** Sprite will be visible when player will reach this absciss value */
 	protected float xAlive;
 	
+	protected float yAlive;
+	
 	/** States */
 	protected DirectionEnum direction;
 	
@@ -142,7 +144,9 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		bounds=new Rectangle(getX() + offset.x, getY(), getWidth(), getHeight());
 		
 		String xAliveString = (String) mapObject.getProperties().get("xAlive");
-		xAlive = xAliveString!=null ? Float.parseFloat(xAliveString) / ScreenConstants.MAP_UNIT_PIXELS : getX() - ScreenConstants.MAP_UNIT_PIXELS/2 ;
+		xAlive = xAliveString!=null ? Float.parseFloat(xAliveString) / ScreenConstants.MAP_UNIT_PIXELS : getX() - ScreenConstants.NB_HORIZONTAL_TILES/2 - 1;
+		String yAliveString = (String) mapObject.getProperties().get("yAlive");
+		yAlive = yAliveString!=null ? Float.parseFloat(yAliveString) / ScreenConstants.MAP_UNIT_PIXELS : getY() - ScreenConstants.NB_VERTICAL_TILES/2 - 1;
 	}
 		
 	public Rectangle getBounds() {
@@ -172,26 +176,11 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 			}
 			// Update sprite bounds (for future collisions)
 			updateBounds();
-			// Update visible / deletable booleans
-			//updateDeletableAndVisibleStatus(camera);
-			visible = getX() < camera.position.x+7;
+			// Update visible / deletable booleans	
+			visible = Math.abs(getX() - camera.position.x)<=11 && Math.abs(getY() - camera.position.y)<=9;
 		} else {			
-			alive = camera.position.x-7>xAlive;							
+			alive = camera.position.x>=xAlive && camera.position.y>=yAlive;							
 		}				
-	}
-	
-	protected void updateDeletableAndVisibleStatus(OrthographicCamera camera) {
-		if (isDeletable(camera)) {
-			// Sprite is left out of screen, or has felt out of down screen
-			deletable = true;				
-		} else {
-			// Check if sprite is visible
-			visible = getX() < camera.position.x+10;				
-		}		
-	}
-	
-	protected boolean isDeletable(OrthographicCamera camera) {
-		return getX()<camera.position.x-11 || getY() < -1;
 	}
 
 	public void collideWithTilemap(TmxMap tilemap) {
