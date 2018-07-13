@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
@@ -81,7 +82,10 @@ public class GameScreen extends AbstractGameScreen  {
 
 	/** Backgrounds displayed un game */
 	private Array<IScrollingBackground> backgrounds;
-					
+	
+	/** Show foreground */
+	private boolean showForeground = true;
+	
 	/** Debug font */
 	private BitmapFont debugFont;
 	
@@ -91,8 +95,7 @@ public class GameScreen extends AbstractGameScreen  {
 	private boolean debugShowBounds = false;
 
 	private boolean debugShowFps = false;
-	
-	private boolean showForeground = true;
+		
 	
 	private boolean showGrid = false;
 	
@@ -392,6 +395,16 @@ public class GameScreen extends AbstractGameScreen  {
 			DEBUG_BOUNDS_COLOR = debugBounds[currentDebugColor];
 		}
 		
+		if (Gdx.input.isKeyJustPressed(Keys.NUMPAD_6)) {
+			player.setX(player.getX()+6);
+			camera.getCamera().position.x+=6;
+		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.NUMPAD_8)) {
+			player.setY(player.getY()+6);
+			camera.getCamera().position.y+=6;
+		}
+		
 		
 	}
 		
@@ -471,6 +484,21 @@ public class GameScreen extends AbstractGameScreen  {
 				shapeRenderer.rect(sprite.getX() + sprite.getOffset().x, sprite.getY(), sprite.getWidth(),
 						sprite.getHeight());
 			}
+			
+			
+			int widht = tilemap.getBackgroundLayer().getWidth();
+			int height = tilemap.getBackgroundLayer().getHeight();
+			for (int i=0;i<widht;i++) {
+				if (Math.abs(i-camera.getCamera().position.x)<12) {
+					for (int j=0;j<height;j++) {
+						Cell cell = tilemap.getBackgroundLayer().getCell(i, j);
+						if (cell!=null && tilemap.getCurvedTilesFunctions().get(cell.getTile().getId())!=null) {
+							shapeRenderer.rect(i , j, 1, 1);
+						}
+					}
+				}			
+			}
+			
 			
 			shapeRenderer.end();
 			Gdx.gl.glDisable(GL20.GL_BLEND);

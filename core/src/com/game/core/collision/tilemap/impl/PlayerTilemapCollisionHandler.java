@@ -2,6 +2,7 @@ package com.game.core.collision.tilemap.impl;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.collision.CollisionPoint;
@@ -18,7 +19,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 
 	private static final float COLLISION_X_CORRECTIF = 10e-5F;
 	
-	private static Cell previousCell;
+	private Cell previousCell;
 	
 	public PlayerTilemapCollisionHandler() {		
 	}		
@@ -76,7 +77,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					checkMapCollision(tileMap, sprite);
 					i++;
 					if (i>10) {						
-						System.out.println("Erreur de collision ? "+i + " tours de boucle");
+						Gdx.app.error("PlayerTilemapCollisionHandler::collideWithTilemap", "Erreur de collision !!!");
 						System.exit(0);
 					}					
 				}	
@@ -132,9 +133,9 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					float xDiff = xPosition - (int)xPosition;
 					float yFunc = mathFunction.compute(xDiff);
 					previousCell = cell;
-					if (sprite.getState()==SpriteMoveEnum.FALLING) {
+					/*if (sprite.getState()==SpriteMoveEnum.FALLING) {
 						sprite.land();
-					}
+					}*/
 					sprite.setOnFloor(true);			
 					sprite.setY((int)yPosition - 1 + yFunc);				
 					sprite.getAcceleration().y = 0;
@@ -156,9 +157,9 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					float xDiff = xPosition - (int)xPosition;
 					float yFunc = mathFunction.compute(xDiff);
 					previousCell = cell;
-					if (sprite.getState()==SpriteMoveEnum.FALLING) {
+					/*if (sprite.getState()==SpriteMoveEnum.FALLING) {
 						sprite.land();
-					}
+					}*/
 					sprite.setOnFloor(true);			
 					sprite.setY((int)yPosition + 1 + yFunc);				
 					sprite.getAcceleration().y = 0;
@@ -170,35 +171,74 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		
 		if (!startGoingDown && !startGoingUp) {
 			
-			float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
-			float yPosition = sprite.getOldPosition().y;
-			
-			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
-			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
-					
-			if (mathFunction==null) {
-				yPosition = sprite.getOldPosition().y + 0.8f;
-				cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
-				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;			
-			}
-			if (mathFunction!=null) {
-				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
-				float xDiff = xPosition - (int)xPosition;			
-				float yFunc = mathFunction.compute(xDiff);					
-				if (yPosition<=((int)yPosition + yFunc + 0.1f)) {
-					previousCell = cell;
-					if (sprite.getState()==SpriteMoveEnum.FALLING) {
-						sprite.land();
-					}
-					sprite.setOnFloor(true);			
-					sprite.setY((int)yPosition + yFunc);				
-					sprite.getAcceleration().y = 0;
-					sprite.setOnCurvedTile(true);
-					sprite.setPositiveCurvedTile(ascending);
-				} else {				
-					mathFunction = null;				
+			if (sprite.isOnFloor()) {
+				boolean autoCorrection = false;
+				
+				float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
+				float yPosition = sprite.getOldPosition().y;
+				
+				Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
+				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+						
+				if (mathFunction==null) {
+					yPosition = sprite.getOldPosition().y + 0.8f;
+					cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
+					mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+					autoCorrection = mathFunction!=null;
 				}
-			}
+				if (mathFunction!=null) {
+					boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
+					float xDiff = xPosition - (int)xPosition;			
+					float yFunc = mathFunction.compute(xDiff);					
+					if (autoCorrection || yPosition<=((int)yPosition + yFunc + 0.1f)) {
+						previousCell = cell;
+						if (sprite.getState()==SpriteMoveEnum.FALLING) {
+							sprite.land();
+						}
+						sprite.setOnFloor(true);			
+						sprite.setY((int)yPosition + yFunc);				
+						sprite.getAcceleration().y = 0;
+						sprite.setOnCurvedTile(true);
+						sprite.setPositiveCurvedTile(ascending);
+					} else {				
+						mathFunction = null;				
+					}
+				}
+			} else {				
+				boolean autoCorrection = false;
+				
+				float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
+				float yPosition = sprite.getY();
+				
+				Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
+				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+						
+				if (mathFunction==null) {
+					yPosition += 1;
+					cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
+					mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+					autoCorrection = mathFunction!=null;
+				}
+				if (mathFunction!=null) {
+					boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
+					float xDiff = xPosition - (int)xPosition;			
+					float yFunc = mathFunction.compute(xDiff);					
+					if (autoCorrection || yPosition<=((int)yPosition + yFunc + 0.1f)) {
+						previousCell = cell;
+						if (sprite.getState()==SpriteMoveEnum.FALLING) {
+							sprite.land();
+						}
+						sprite.setOnFloor(true);			
+						sprite.setY((int)yPosition + yFunc);				
+						sprite.getAcceleration().y = 0;
+						sprite.setOnCurvedTile(true);
+						sprite.setPositiveCurvedTile(ascending);
+					} else {				
+						mathFunction = null;				
+					}
+				}				
+			}			
+			
 		}
 				
 		return mathFunction!=null;

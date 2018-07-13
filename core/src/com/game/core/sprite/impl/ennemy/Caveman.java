@@ -59,8 +59,6 @@ public class Caveman extends AbstractTileObjectEnemy {
 			currentAnimation = direction==DirectionEnum.RIGHT ? walkRightAnimation : walkLeftAnimation;
 			this.acceleration.x = 2f;
 		}
-		
-		
 	}
 	
 }
