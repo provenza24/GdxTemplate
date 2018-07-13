@@ -10,13 +10,19 @@ public class ResourcesLoader {
 	
 	public static final Texture PLAYER = new Texture(Gdx.files.internal("sprites/player/chuck_main.png"));
 	
-	public static final Texture CLUB = new Texture(Gdx.files.internal("sprites/player/massue.png"));
+	public static final Texture CLUB = new Texture(Gdx.files.internal("sprites/player/club.png"));
 	
 	public static final Texture FLAG = new Texture(Gdx.files.internal("sprites/items/flag.png"));
 	
 	public static final Texture CANDY = new Texture(Gdx.files.internal("sprites/items/candy.png"));
 	
 	public static final Texture CAVEMAN = new Texture(Gdx.files.internal("sprites/enemies/caveman.png"));
+	
+	public static final Texture CAVEMAN_DEAD = new Texture(Gdx.files.internal("sprites/enemies/caveman_dead.png"));
+	
+	public static final Texture FLY = new Texture(Gdx.files.internal("sprites/enemies/fly.png"));
+	
+	public static final Texture FLY_DEAD = new Texture(Gdx.files.internal("sprites/enemies/fly_dead.png"));
 	
 	public static Texture BACKGROUND_FOREST;
 	

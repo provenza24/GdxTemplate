@@ -23,6 +23,7 @@ import com.game.core.collision.math.MathFunction;
 import com.game.core.sprite.AbstractEnemy;
 import com.game.core.sprite.AbstractItem;
 import com.game.core.sprite.impl.ennemy.Caveman;
+import com.game.core.sprite.impl.ennemy.Fly;
 import com.game.core.sprite.impl.item.Candy;
 import com.game.core.sprite.impl.item.Flag;
 import com.game.core.sprite.impl.player.Player;
@@ -144,6 +145,9 @@ public class TmxMap {
 			}
 			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_CAVEMAN)) {
 				enemies.add(new Caveman(mapObject, new Vector2(0.1f, 0.1f)));				
+			}
+			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_FLY)) {
+				enemies.add(new Fly(mapObject, new Vector2()));				
 			}
 		}
 	}

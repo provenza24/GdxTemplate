@@ -28,4 +28,6 @@ public class TilemapConstants {
 	
 	public static final String TILE_TYPE_CAVEMAN = "caveman";
 	
+	public static final String TILE_TYPE_FLY = "fly";
+	
 }

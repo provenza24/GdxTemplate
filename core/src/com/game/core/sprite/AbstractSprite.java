@@ -179,6 +179,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 			updateBounds();
 			// Update visible / deletable booleans	
 			visible = Math.abs(getX() - camera.position.x)<=11 && Math.abs(getY() - camera.position.y)<=9;
+			deletable = getY() < -1;
 		} else {			
 			alive = camera.position.x>=xAlive && camera.position.y>=yAlive;							
 		}				

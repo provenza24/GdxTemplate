@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
+import com.game.core.sprite.AbstractSprite;
 import com.game.core.sprite.tileobject.AbstractTileObjectEnemy;
 import com.game.core.util.ResourcesLoader;
 import com.game.core.util.animation.AnimationBuilder;
@@ -48,7 +49,7 @@ public class Caveman extends AbstractTileObjectEnemy {
 	@Override
 	public void move(float deltaTime) {		
 		super.move(deltaTime);		
-		 if ((direction==DirectionEnum.LEFT && getX()<X_MIN_LIMIT) || (direction==DirectionEnum.RIGHT && getX()>X_MAX_LIMIT)) {
+		if ((direction==DirectionEnum.LEFT && getX()<X_MIN_LIMIT) || (direction==DirectionEnum.RIGHT && getX()>X_MAX_LIMIT)) {
 			setX(direction==DirectionEnum.LEFT ? X_MIN_LIMIT : X_MAX_LIMIT);
 			setDirection(direction==DirectionEnum.LEFT ? DirectionEnum.RIGHT : DirectionEnum.LEFT);
 			currentAnimation = turnAnimation;				
@@ -59,6 +60,11 @@ public class Caveman extends AbstractTileObjectEnemy {
 			currentAnimation = direction==DirectionEnum.RIGHT ? walkRightAnimation : walkLeftAnimation;
 			this.acceleration.x = 2f;
 		}
+	}
+
+	@Override
+	public AbstractSprite generateDeadSprite(DirectionEnum directionEnum) {		
+		return new DeadCaveman(getX(), getY() , directionEnum);
 	}
 	
 }

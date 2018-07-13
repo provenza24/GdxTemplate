@@ -1,5 +1,6 @@
 package com.game.core.screen.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Application;
@@ -106,7 +107,8 @@ public class GameScreen extends AbstractGameScreen  {
 	private boolean levelFinished = false;		
 	
 	private float debugFontSize = 1f; //1.5f
-				
+					
+	private List<AbstractSprite> deadEnemies;
 	
 	public GameScreen(Level level) {
 				
@@ -148,7 +150,9 @@ public class GameScreen extends AbstractGameScreen  {
 		}
 		
 		// Initialize stage, the stage is used for sprites actions
-		stage = new Stage();																	
+		stage = new Stage();	
+		
+		deadEnemies = new ArrayList<>();
 	}
 		
 	@Override
@@ -190,9 +194,15 @@ public class GameScreen extends AbstractGameScreen  {
 				backgrounds.get(1).render();
 			}
 		}							
+		
+		for (AbstractSprite deadSprite : deadEnemies) {
+			deadSprite.update(tilemap, camera.getCamera(), delta);
+			deadSprite.render(tilemapRenderer.getBatch());
+		}
+		
 		// Render tilemap
 		tilemapRenderer.setView(camera.getCamera());
-		tilemapRenderer.getBatch().begin();
+		tilemapRenderer.getBatch().begin();		
 		tilemapRenderer.renderTileLayer(tilemap.getBackgroundLayer());
 		tilemapRenderer.getBatch().end();
 		
@@ -348,6 +358,7 @@ public class GameScreen extends AbstractGameScreen  {
 					if (player.isAttacking()) {
 						boolean isClubKillEnemy = player.getClub().overlaps(enemy);
 						if (isClubKillEnemy) {
+							deadEnemies.add(enemy.generateDeadSprite(player.getDirection()));
 							enemy.setDeletable(true);
 						}
 					}
