@@ -248,6 +248,23 @@ public class GameScreen extends AbstractGameScreen  {
 		tilemapRenderer.getBatch().begin();
 		tilemapRenderer.renderTileLayer(tilemap.getBackgroundLayer());		
 		tilemapRenderer.getBatch().end();
+		// Render items
+		List<AbstractItem> items = tilemap.getItems();
+		for (int i = 0; i < items.size(); i++) {
+			AbstractItem item = items.get(i);						
+			if (item.isVisible()) {
+				item.render(tilemapRenderer.getBatch());
+			}
+		}
+		// Render enemies
+		List<AbstractEnemy> enemies = tilemap.getEnemies();
+		for (int i = 0; i < enemies.size(); i++) {
+			AbstractEnemy enemy = enemies.get(i);						
+			if (enemy.isVisible()) {
+				enemy.render(tilemapRenderer.getBatch());
+			}
+		}
+			
 		// Render Player		
 		player.render(tilemapRenderer.getBatch());
 		// Render foreground

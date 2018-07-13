@@ -1,5 +1,7 @@
 package com.game.core.tilemap;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +24,7 @@ import com.badlogic.gdx.utils.Array;
 import com.game.core.collision.math.MathFunction;
 import com.game.core.sprite.AbstractEnemy;
 import com.game.core.sprite.AbstractItem;
+import com.game.core.sprite.TileObjectEnum;
 import com.game.core.sprite.impl.ennemy.Caveman;
 import com.game.core.sprite.impl.ennemy.Fly;
 import com.game.core.sprite.impl.item.Candy;
@@ -30,6 +33,7 @@ import com.game.core.sprite.impl.player.Player;
 import com.game.core.util.constants.TilemapConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
 import com.game.core.util.enums.CameraEnum;
+import com.game.core.util.enums.SpriteTypeEnum;
 import com.game.core.util.enums.math.MathFunctionEnum;
 
 public class TmxMap {
@@ -135,8 +139,25 @@ public class TmxMap {
 		
 			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_PLAYER)) {
 				player = new Player(mapObject);
-			}			
-			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_FLAG)) {
+			} else {														
+				try {
+					TileObjectEnum tileObjectEnum = TileObjectEnum.valueOf(objectProperty.get("type").toString().toUpperCase());					
+					Constructor constructor = tileObjectEnum.getZclass().getConstructor(MapObject.class, Vector2.class);
+					Object object = constructor.newInstance(mapObject, tileObjectEnum.getOffset());
+					if (tileObjectEnum.getSpriteTypeEnum()==SpriteTypeEnum.ENEMY) {
+						enemies.add((AbstractEnemy) object);
+					} else if (tileObjectEnum.getSpriteTypeEnum()==SpriteTypeEnum.ITEM) {
+						if (object instanceof Flag) {
+							flag = (Flag)object;
+						}
+						items.add((AbstractItem) object);
+					} 
+				} catch (Exception e) {					
+					e.printStackTrace();	
+				}
+			}
+			
+			/*if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_FLAG)) {
 				flag = new Flag(mapObject, new Vector2());
 				items.add(flag);
 			}
@@ -148,7 +169,7 @@ public class TmxMap {
 			}
 			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_FLY)) {
 				enemies.add(new Fly(mapObject, new Vector2()));				
-			}
+			}*/
 		}
 	}
 
