@@ -129,7 +129,7 @@ public class Club extends AbstractSprite {
 				setRotation(RIGHT_ATTACK_ANGLES.get(animIdx));
 				attackPosition.set(player.getX()-1.5f, player.getY());
 				attackOrigin.set(attackPosition.x + 2.5f, attackPosition.y + 0.5f);
-				attackRotation = attackRotation >= 360 ? 360 : attackRotation+16;
+				attackRotation = attackRotation >= 300 ? 300 : attackRotation+16f;
 			} else {
 				origin.set(0, 0.5f);
 				setX(player.getX()+LEFT_ATTACK_POSITIONS.get(animIdx).x);
@@ -137,7 +137,7 @@ public class Club extends AbstractSprite {
 				setRotation(LEFT_ATTACK_ANGLES.get(animIdx));		
 				attackPosition.set(player.getX()+1.5f, player.getY());
 				attackOrigin.set(attackPosition.x - 0.5f, attackPosition.y + 0.5f);
-				attackRotation = attackRotation <= -360 ? -360 : attackRotation-16;
+				attackRotation = attackRotation <= -300 ? -300 : attackRotation-16;
 			}
 						
 			polygonBounds = new Polygon(new float[]{

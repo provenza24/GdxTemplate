@@ -24,6 +24,8 @@ public class ResourcesLoader {
 	
 	public static final Texture FLY_DEAD = new Texture(Gdx.files.internal("sprites/enemies/fly_dead.png"));
 	
+	public static final Texture DINAUSORMAN = new Texture(Gdx.files.internal("sprites/enemies/dinausorman.png"));
+	
 	public static Texture BACKGROUND_FOREST;
 	
 	public static Texture getBackgroundForest() {

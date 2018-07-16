@@ -106,7 +106,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private boolean levelFinished = false;		
 	
-	private float debugFontSize = 1f; //1.5f
+	private float debugFontSize = 2f;
 					
 	private List<AbstractSprite> deadEnemies;
 	
@@ -195,10 +195,8 @@ public class GameScreen extends AbstractGameScreen  {
 			}
 		}							
 		
-		for (AbstractSprite deadSprite : deadEnemies) {
-			deadSprite.update(tilemap, camera.getCamera(), delta);
-			deadSprite.render(tilemapRenderer.getBatch());
-		}
+		// Move dead enemies, render
+		handleDeadEnemies(delta);
 		
 		// Render tilemap
 		tilemapRenderer.setView(camera.getCamera());
@@ -226,6 +224,18 @@ public class GameScreen extends AbstractGameScreen  {
 		
 		// Render debug mode
 		renderDebugMode();
+	}
+
+	private void handleDeadEnemies(float delta) {
+		for (int i = 0; i < deadEnemies.size(); i++) {
+			AbstractSprite deadSprite = deadEnemies.get(i);
+			deadSprite.update(tilemap, camera.getCamera(), delta);
+			if (deadSprite.isDeletable()) {				
+				deadEnemies.remove(i--);
+			} else if (deadSprite.isVisible()) {
+				deadSprite.render(tilemapRenderer.getBatch());
+			}
+		}
 	}
 
 	private void renderTransitionScreen() {
@@ -464,7 +474,7 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;			
 			debugFont.draw(spriteBatch, "curvedPositiveTile= " + player.isPositiveCurvedTile(), x, y);
 			
-			x = ScreenConstants.WIDTH-200;
+			x = ScreenConstants.WIDTH-400;
 			y = ScreenConstants.HEIGHT-10;
 			debugFont.draw(spriteBatch, "camera.type=" + tilemap.getCameraEnum(), x, y);			
 			y = y -20;
@@ -472,15 +482,36 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;			
 			debugFont.draw(spriteBatch, "camera.offset=" + String.format("%.3f", camera.getCameraOffset()), x, y);			
 			y = y -20;
-					
+			
 			int alive = 0;
 			int visible = 0;
+			for (AbstractSprite enemy : tilemap.getEnemies()) {
+				alive += enemy.isAlive() ? 1 : 0;
+				visible += enemy.isVisible() ? 1 : 0;
+			}
+			debugFont.draw(spriteBatch, "Enemies: " + tilemap.getEnemies().size() + " - " + alive + "/"+visible + " alive/visible", x, y);
+			
+			y = y -20;
+			
+			alive = 0;
+			visible = 0;
 			for (AbstractSprite item : tilemap.getItems()) {
 				alive += item.isAlive() ? 1 : 0;
 				visible += item.isVisible() ? 1 : 0;
 			}
 			debugFont.draw(spriteBatch, "Items: " + tilemap.getItems().size() + " - " + alive + "/"+visible + " alive/visible", x, y);
-						
+					
+			y = y -20;
+			alive = 0;
+			visible = 0;
+			for (AbstractSprite enemy : deadEnemies) {
+				alive += enemy.isAlive() ? 1 : 0;
+				visible += enemy.isVisible() ? 1 : 0;
+			}
+			debugFont.draw(spriteBatch, "Dead: " + deadEnemies.size() + " - " + alive + "/"+visible + " alive/visible", x, y);
+			
+			y = y -20;
+			
 			spriteBatch.end();
 		}
 		
