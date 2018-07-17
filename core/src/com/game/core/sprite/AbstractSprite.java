@@ -102,6 +102,12 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	protected boolean onFloor;
 	
+	protected boolean onCurvedTile;
+	
+	protected boolean isPositiveCurvedTile;
+	
+	protected boolean onCloudTile;
+	
 	public AbstractSprite(float x, float y, Vector2 size, Vector2 offset) {
 		
 		this.setPosition(x, y);		
@@ -496,6 +502,34 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 
 	public void setHalfHeight(float halfHeight) {
 		this.halfHeight = halfHeight;
+	}
+	
+	public boolean isOnCloudTile() {
+		return onCloudTile;
+	}
+
+	public void setOnCloudTile(boolean onCloudTile) {
+		this.onCloudTile = onCloudTile;
+	}
+
+	public boolean isOnCurvedTile() {
+		return onCurvedTile;
+	}
+
+	public void setOnCurvedTile(boolean onCurvedTile) {
+		this.onCurvedTile = onCurvedTile;
+	}
+
+	public boolean isPositiveCurvedTile() {
+		return isPositiveCurvedTile;
+	}
+
+	public void setPositiveCurvedTile(boolean isPositiveCurvedTile) {
+		this.isPositiveCurvedTile = isPositiveCurvedTile;
+	}
+	
+	public void inverseDirection() {
+		setDirection(direction==DirectionEnum.LEFT ? DirectionEnum.RIGHT : DirectionEnum.LEFT);
 	}
 
 }

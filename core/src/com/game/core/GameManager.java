@@ -13,6 +13,7 @@ import com.game.core.screen.transition.AbstractScreenTransition;
 import com.game.core.screen.transition.AbstractScreenTransition.ScreenTransitionEnum;
 import com.game.core.util.Level;
 import com.game.core.util.enums.ScreenEnum;
+import com.game.core.util.setting.GameSettings;
 
 public class GameManager extends AbstractGameManager {
 
@@ -33,7 +34,7 @@ public class GameManager extends AbstractGameManager {
 		currentLevelIndex=0;				
 		levels.add(new Level.Builder("stoneage.tmx").levelNumber(1).levelName("STONE AGE SUBURBS").build());
 		//levels.add(new Level.Builder("tilemap2.tmx").levelNumber(1).levelName("FOREST").build());
-		setScreen(SCREENS.get(ScreenEnum.MAIN_MENU));
+		setScreen(SCREENS.get(ScreenEnum.MAIN_MENU));				
 	}
 	
 	public void startGame() {

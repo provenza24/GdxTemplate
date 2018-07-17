@@ -48,13 +48,7 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private Animation jumpHitRightAnimation;
 	
-	private Animation jumpHitLeftAnimation;
-	
-	private boolean onCurvedTile;
-	
-	private boolean isPositiveCurvedTile;
-	
-	private boolean onCloudTile;
+	private Animation jumpHitLeftAnimation;		
 	
 	private boolean attacking;
 	
@@ -191,20 +185,12 @@ public class Player extends AbstractTileObjectSprite {
 		this.move = move;
 	}
 
-	public boolean isOnCloudTile() {
-		return onCloudTile;
+	public Club getClub() {
+		return club;
 	}
 
-	public void setOnCloudTile(boolean onCloudTile) {
-		this.onCloudTile = onCloudTile;
-	}
-
-	public boolean isOnCurvedTile() {
-		return onCurvedTile;
-	}
-
-	public void setOnCurvedTile(boolean onCurvedTile) {
-		this.onCurvedTile = onCurvedTile;
+	public void setClub(Club club) {
+		this.club = club;
 	}
 
 	public boolean isAttacking() {
@@ -214,22 +200,5 @@ public class Player extends AbstractTileObjectSprite {
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
 	}
-
-	public boolean isPositiveCurvedTile() {
-		return isPositiveCurvedTile;
-	}
-
-	public void setPositiveCurvedTile(boolean isPositiveCurvedTile) {
-		this.isPositiveCurvedTile = isPositiveCurvedTile;
-	}
-
-	public Club getClub() {
-		return club;
-	}
-
-	public void setClub(Club club) {
-		this.club = club;
-	}
-
 	
 }

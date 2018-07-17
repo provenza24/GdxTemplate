@@ -14,13 +14,17 @@ public class Fly extends AbstractTileObjectEnemy {
 
 	private Animation flyLeftAnimation;
 	
+	private float Y_START;
+	
 	public Fly(MapObject mapObject, Vector2 offset) {
 		super(mapObject, offset);
 		moveable = true;
 		collidableWithTilemap = false;
 		gravitating = false;	
 		this.acceleration.x = 2f;
-		this.direction = DirectionEnum.LEFT;			
+		this.direction = DirectionEnum.LEFT;
+		Y_START = getY();
+		
 	}
 
 	@Override
@@ -29,6 +33,12 @@ public class Fly extends AbstractTileObjectEnemy {
 		TextureRegion[][] textureRegions = TextureRegion.split(spriteSheet, spriteSheet.getWidth(), spriteSheet.getHeight()/4);		
 		flyLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{0,1}, 1, 0.07f);					
 		currentAnimation = flyLeftAnimation;
+	}
+
+	@Override
+	public void move(float deltaTime) {
+		super.move(deltaTime);		
+		setY(Y_START + (float)Math.cos(getX()*10)/5);				
 	}
 
 	@Override
