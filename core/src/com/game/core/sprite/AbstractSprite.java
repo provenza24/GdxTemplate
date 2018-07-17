@@ -77,8 +77,6 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	protected Animation currentAnimation;
 	
-	protected Animation killedAnimation;
-	
 	/** Booleans */
 	protected boolean visible;
 	
@@ -167,20 +165,15 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		if (alive) {
 			// The sprite is alive, we first update its animation			
 			updateAnimation(deltaTime);
-			if (getActions().size>0) {
-				// If sprite is acting (ex: sprite is an enemy, and has just been killed, an animation is playing to simulate its death) 
-				act(deltaTime);
-			} else {
-				// else sprite is not acting
-				if (isMoveable()) {
-					// if sprite is moveable, we move it
-					move(deltaTime);
-				}
-				if (isCollidableWithTilemap()) {
-					// if sprite collides with tilemap, collide it
-					tilemapCollisionHandler.collideWithTilemap(tileMap, this);
-				}				
+			// else sprite is not acting
+			if (isMoveable()) {
+				// if sprite is moveable, we move it
+				move(deltaTime);
 			}
+			if (isCollidableWithTilemap()) {
+				// if sprite collides with tilemap, collide it
+				tilemapCollisionHandler.collideWithTilemap(tileMap, this);
+			}							
 			// Update sprite bounds (for future collisions)
 			updateBounds();
 			// Update visible / deletable booleans	
@@ -191,6 +184,10 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		}				
 	}
 
+	protected void update() {
+		
+	}
+	
 	public void collideWithTilemap(TmxMap tilemap) {
 		tilemapCollisionHandler.collideWithTilemap(tilemap, this);
 	}
@@ -262,14 +259,6 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 
 	public void setAcceleration(Vector2 acceleration) {
 		this.acceleration = acceleration;
-	}
-
-	public Animation getKilledAnimation() {
-		return killedAnimation;
-	}
-
-	public void setKilledAnimation(Animation killedAnimation) {
-		this.killedAnimation = killedAnimation;
 	}
 
 	public float getStateTime() {

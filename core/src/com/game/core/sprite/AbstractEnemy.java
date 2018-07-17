@@ -10,6 +10,10 @@ public abstract class AbstractEnemy extends AbstractSprite {
 	
 	protected boolean killableByPlayer;
 	
+	protected int nbHitBeforeDeath;
+		
+	protected float invincibleTimeCount;
+	
 	public AbstractEnemy(float x, float y, Vector2 size, Vector2 offset) {
 		super(x, y, size, offset);		
 		state = SpriteMoveEnum.WALKING;
@@ -18,22 +22,23 @@ public abstract class AbstractEnemy extends AbstractSprite {
 		moveable = true;
 		collidableWithTilemap = true;
 		collidableWithEnnemies = true;
+		nbHitBeforeDeath = 0;
 	}
 	
 	public AbstractEnemy(float x, float y) {
 		this(x, y, new Vector2(1,1), new Vector2());
 	}
 	
-	public abstract AbstractSprite generateDeadSprite(DirectionEnum directionEnum);
-
-	public void killByFireball(AbstractSprite fireball) {
-		this.bump();
-		acceleration.x = fireball.getAcceleration().x > 0 ? 3 : -3;		
-	}		
-	
-	public void killByStar() {
-		this.bump();		
+	public boolean hit() {
+		nbHitBeforeDeath--;
+		if (nbHitBeforeDeath<0) {
+			setKilled(true);
+			setDeletable(true);
+		}		
+		return true;
 	}
+	
+	public abstract AbstractSprite generateDeadSprite(DirectionEnum directionEnum);
 
 	public boolean isKillable() {
 		return killableByPlayer;
@@ -50,6 +55,13 @@ public abstract class AbstractEnemy extends AbstractSprite {
 	public void setCollidableWithEnnemies(boolean collidableWithEnnemies) {
 		this.collidableWithEnnemies = collidableWithEnnemies;
 	}
-		
+
+	public float getInvincibleTimeCount() {
+		return invincibleTimeCount;
+	}
+
+	public void setInvincibleTimeCount(float invincibleTimeCount) {
+		this.invincibleTimeCount = invincibleTimeCount;
+	}		
 
 }

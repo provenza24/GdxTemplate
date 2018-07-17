@@ -382,11 +382,12 @@ public class GameScreen extends AbstractGameScreen  {
 			// Draw it
 			if (enemy.isAlive()) {				
 				if (!enemy.isKilled()) {
-					if (player.isAttacking()) {
-						boolean isClubKillEnemy = player.getClub().overlaps(enemy);
-						if (isClubKillEnemy) {
-							deadEnemies.add(enemy.generateDeadSprite(player.getDirection()));
-							enemy.setDeletable(true);
+					if (player.isAttacking() && enemy.isKillable()) {
+						boolean isEnemyHit = player.getClub().overlaps(enemy);
+						if (isEnemyHit) {
+							if (enemy.hit()) {
+								deadEnemies.add(enemy.generateDeadSprite(player.getDirection()));
+							}							
 						}
 					}
 					boolean collidePlayer = enemy.overlaps(player);
