@@ -333,7 +333,7 @@ public class GameScreen extends AbstractGameScreen  {
 				player.setOnFloor(false);
 				player.setState(SpriteMoveEnum.JUMPING);
 				player.getAcceleration().y = 0.3f;		
-				player.setOnCurvedTile(false);
+				player.setOnSlopeTile(false);
 				player.setOnCloudTile(false);
 				player.setStateTime(0);
 			}			
@@ -468,11 +468,11 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;			
 			//debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
 			//y = y -20;			
-			debugFont.draw(spriteBatch, "curvedTile= " + player.isOnCurvedTile(), x, y);
+			debugFont.draw(spriteBatch, "slopeTile= " + player.isOnSlopeTile(), x, y);
 			y = y -20;			
 			debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);
 			y = y -20;			
-			debugFont.draw(spriteBatch, "curvedPositiveTile= " + player.isPositiveCurvedTile(), x, y);
+			debugFont.draw(spriteBatch, "slopePositiveTile= " + player.isPositiveSlopeTile(), x, y);
 			
 			x = ScreenConstants.WIDTH-400;
 			y = ScreenConstants.HEIGHT-10;
@@ -551,7 +551,7 @@ public class GameScreen extends AbstractGameScreen  {
 				if (Math.abs(i-camera.getCamera().position.x)<12) {
 					for (int j=0;j<height;j++) {
 						Cell cell = tilemap.getBackgroundLayer().getCell(i, j);
-						if (cell!=null && tilemap.getCurvedTilesFunctions().get(cell.getTile().getId())!=null) {
+						if (cell!=null && tilemap.getSlopeTilesFunctions().get(cell.getTile().getId())!=null) {
 							shapeRenderer.rect(i , j, 1, 1);
 						}
 					}

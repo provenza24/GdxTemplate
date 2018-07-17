@@ -64,9 +64,9 @@ public class TmxMap {
 	
 	private List<Integer> cloudTiles;
 	
-	private Map<Integer, MathFunction> curvedTilesFunctions;
+	private Map<Integer, MathFunction> slopeTilesFunctions;
 	
-	private List<Integer> curvedContantTiles;
+	private List<Integer> slopeContantTiles;
 	
 	private boolean backgroundScrollingVertically;
 	
@@ -85,9 +85,9 @@ public class TmxMap {
 
 	private void initTilesProperties() {
 		
-		curvedTilesFunctions = new HashMap<Integer, MathFunction>();
+		slopeTilesFunctions = new HashMap<Integer, MathFunction>();
 		cloudTiles= new ArrayList<>();
-		curvedContantTiles= new ArrayList<>();
+		slopeContantTiles= new ArrayList<>();
 		
 		TiledMapTileSet tileset = map.getTileSets().getTileSet(1);	
 		for (TiledMapTile tiledMapTile : tileset) {			
@@ -96,12 +96,12 @@ public class TmxMap {
 			Iterator<Object> valuesIterator = props.getValues();
 			while(keysIterator.hasNext()) {	
 				String key = keysIterator.next();
-				if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CURVED)) {					
+				if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_SLOPE)) {					
 					String value = valuesIterator.next().toString().toUpperCase();
 					MathFunctionEnum mathFunctionEnum = MathFunctionEnum.valueOf(value);
-					curvedTilesFunctions.put(tiledMapTile.getId(), mathFunctionEnum.getMathFunction());
+					slopeTilesFunctions.put(tiledMapTile.getId(), mathFunctionEnum.getMathFunction());
 					if (mathFunctionEnum.isConstant()) {
-						curvedContantTiles.add(tiledMapTile.getId());
+						slopeContantTiles.add(tiledMapTile.getId());
 					}									
 				} else if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CLOUD)) {
 					cloudTiles.add(tiledMapTile.getId());					
@@ -285,16 +285,16 @@ public class TmxMap {
 		return this.cloudTiles.contains(idx);
 	}
 	
-	public boolean isCurvedConstantTile(Integer idx) {
-		return this.curvedContantTiles.contains(idx);
+	public boolean isSlopeConstantTile(Integer idx) {
+		return this.slopeContantTiles.contains(idx);
 	}
 
-	public Map<Integer, MathFunction> getCurvedTilesFunctions() {
-		return curvedTilesFunctions;
+	public Map<Integer, MathFunction> getSlopeTilesFunctions() {
+		return slopeTilesFunctions;
 	}
 
-	public void setCurvedTilesFunctions(Map<Integer, MathFunction> curvedTilesFunctions) {
-		this.curvedTilesFunctions = curvedTilesFunctions;
+	public void setSlopeTilesFunctions(Map<Integer, MathFunction> slopeTilesFunctions) {
+		this.slopeTilesFunctions = slopeTilesFunctions;
 	}
 
 	public boolean isBackgroundScrollingVertically() {

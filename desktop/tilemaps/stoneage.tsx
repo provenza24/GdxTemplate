@@ -3,32 +3,32 @@
  <image source="stoneage1.png" width="320" height="320"/>
  <tile id="75">
   <properties>
-   <property name="curved" value="f9"/>
+   <property name="slope" value="f9"/>
   </properties>
  </tile>
  <tile id="76">
   <properties>
-   <property name="curved" value="f9"/>
+   <property name="slope" value="f9"/>
   </properties>
  </tile>
  <tile id="77">
   <properties>
-   <property name="curved" value="f9"/>
+   <property name="slope" value="f9"/>
   </properties>
  </tile>
  <tile id="91">
   <properties>
-   <property name="curved" value="f9"/>
+   <property name="slope" value="f9"/>
   </properties>
  </tile>
  <tile id="92">
   <properties>
-   <property name="curved" value="f9"/>
+   <property name="slope" value="f9"/>
   </properties>
  </tile>
  <tile id="93">
   <properties>
-   <property name="curved" value="f9"/>
+   <property name="slope" value="f9"/>
   </properties>
  </tile>
  <tile id="156">
@@ -43,82 +43,82 @@
  </tile>
  <tile id="180">
   <properties>
-   <property name="curved" value="f1"/>
+   <property name="slope" value="f1"/>
   </properties>
  </tile>
  <tile id="181">
   <properties>
-   <property name="curved" value="f2"/>
+   <property name="slope" value="f2"/>
   </properties>
  </tile>
  <tile id="182">
   <properties>
-   <property name="curved" value="f3"/>
+   <property name="slope" value="f3"/>
   </properties>
  </tile>
  <tile id="183">
   <properties>
-   <property name="curved" value="f4"/>
+   <property name="slope" value="f4"/>
   </properties>
  </tile>
  <tile id="184">
   <properties>
-   <property name="curved" value="f1"/>
+   <property name="slope" value="f1"/>
   </properties>
  </tile>
  <tile id="185">
   <properties>
-   <property name="curved" value="f2"/>
+   <property name="slope" value="f2"/>
   </properties>
  </tile>
  <tile id="186">
   <properties>
-   <property name="curved" value="f3"/>
+   <property name="slope" value="f3"/>
   </properties>
  </tile>
  <tile id="187">
   <properties>
-   <property name="curved" value="f4"/>
+   <property name="slope" value="f4"/>
   </properties>
  </tile>
  <tile id="188">
   <properties>
-   <property name="curved" value="f5"/>
+   <property name="slope" value="f5"/>
   </properties>
  </tile>
  <tile id="189">
   <properties>
-   <property name="curved" value="f6"/>
+   <property name="slope" value="f6"/>
   </properties>
  </tile>
  <tile id="190">
   <properties>
-   <property name="curved" value="f7"/>
+   <property name="slope" value="f7"/>
   </properties>
  </tile>
  <tile id="191">
   <properties>
-   <property name="curved" value="f8"/>
+   <property name="slope" value="f8"/>
   </properties>
  </tile>
  <tile id="192">
   <properties>
-   <property name="curved" value="f5"/>
+   <property name="slope" value="f5"/>
   </properties>
  </tile>
  <tile id="193">
   <properties>
-   <property name="curved" value="f6"/>
+   <property name="slope" value="f6"/>
   </properties>
  </tile>
  <tile id="194">
   <properties>
-   <property name="curved" value="f7"/>
+   <property name="slope" value="f7"/>
   </properties>
  </tile>
  <tile id="195">
   <properties>
-   <property name="curved" value="f8"/>
+   <property name="slope" value="f8"/>
   </properties>
  </tile>
  <tile id="196">

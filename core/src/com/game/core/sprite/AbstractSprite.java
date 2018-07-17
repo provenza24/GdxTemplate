@@ -102,9 +102,9 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	
 	protected boolean onFloor;
 	
-	protected boolean onCurvedTile;
+	protected boolean onSlopeTile;
 	
-	protected boolean isPositiveCurvedTile;
+	protected boolean isPositiveSlopeTile;
 	
 	protected boolean onCloudTile;
 	
@@ -512,20 +512,20 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		this.onCloudTile = onCloudTile;
 	}
 
-	public boolean isOnCurvedTile() {
-		return onCurvedTile;
+	public boolean isOnSlopeTile() {
+		return onSlopeTile;
 	}
 
-	public void setOnCurvedTile(boolean onCurvedTile) {
-		this.onCurvedTile = onCurvedTile;
+	public void setOnSlopeTile(boolean onSlopeTile) {
+		this.onSlopeTile = onSlopeTile;
 	}
 
-	public boolean isPositiveCurvedTile() {
-		return isPositiveCurvedTile;
+	public boolean isPositiveSlopeTile() {
+		return isPositiveSlopeTile;
 	}
 
-	public void setPositiveCurvedTile(boolean isPositiveCurvedTile) {
-		this.isPositiveCurvedTile = isPositiveCurvedTile;
+	public void setPositiveSlopeTile(boolean isPositiveSlopeTile) {
+		this.isPositiveSlopeTile = isPositiveSlopeTile;
 	}
 	
 	public void inverseDirection() {

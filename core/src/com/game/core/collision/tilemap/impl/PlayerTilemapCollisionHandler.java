@@ -33,16 +33,16 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		if (sprite.getState()!=SpriteMoveEnum.JUMPING) {
 			// Handle cloud tile case
 			if (!handleCloudTile(tileMap, sprite)) {
-				// Handle curved tile case
-				if (!handleCurvedTile(tileMap, sprite)) {
-					// Check if player was previously on a cloud/curved tile, update position in consequence
+				// Handle slope tile case
+				if (!handleSlopeTile(tileMap, sprite)) {
+					// Check if player was previously on a cloud/slope tile, update position in consequence
 					onFloorCorrection = leaveSpecialTile(tileMap, sprite);					
 				}				
 			}				
 		}		
 											
-		if (!sprite.isOnCurvedTile() && !sprite.isOnCloudTile()) {
-			// Player is not on a special tile (cloud/curved), handle collisions
+		if (!sprite.isOnSlopeTile() && !sprite.isOnCloudTile()) {
+			// Player is not on a special tile (cloud/slope), handle collisions
 			sprite.setCollidingCells(new ArrayList<TmxCell>());						
 			sprite.setMove(new Vector2(sprite.getX() - sprite.getOldPosition().x, sprite.getY() - sprite.getOldPosition().y));
 			// Check floor collision
@@ -114,7 +114,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		return isOnCloudTile;
 	}
 	
-	private boolean handleCurvedTile(TmxMap tileMap, Player sprite) {		
+	private boolean handleSlopeTile(TmxMap tileMap, Player sprite) {		
 		
 		MathFunction mathFunction = null;
 		
@@ -125,7 +125,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
 			float yPosition = sprite.getOldPosition().y;
 			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition-1);
-			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
+			mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;		
 			if (mathFunction!=null) {			
 				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;				
 				if (!ascending) {
@@ -139,8 +139,8 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					sprite.setOnFloor(true);			
 					sprite.setY((int)yPosition - 1 + yFunc);				
 					sprite.getAcceleration().y = 0;
-					sprite.setOnCurvedTile(true);
-					sprite.setPositiveCurvedTile(ascending);
+					sprite.setOnSlopeTile(true);
+					sprite.setPositiveSlopeTile(ascending);
 				}			
 			}
 		}
@@ -149,7 +149,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
 			float yPosition = sprite.getOldPosition().y;
 			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition+1);
-			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
+			mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;		
 			if (mathFunction!=null) {			
 				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;				
 				if (ascending) {
@@ -163,8 +163,8 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					sprite.setOnFloor(true);			
 					sprite.setY((int)yPosition + 1 + yFunc);				
 					sprite.getAcceleration().y = 0;
-					sprite.setOnCurvedTile(true);
-					sprite.setPositiveCurvedTile(ascending);
+					sprite.setOnSlopeTile(true);
+					sprite.setPositiveSlopeTile(ascending);
 				}			
 			}
 		}
@@ -178,12 +178,12 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 				float yPosition = sprite.getOldPosition().y;
 				
 				Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
-				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+				mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;
 						
 				if (mathFunction==null) {
 					yPosition = sprite.getOldPosition().y + 0.8f;
 					cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
-					mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+					mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;
 					autoCorrection = mathFunction!=null;
 				}
 				if (mathFunction!=null) {
@@ -198,8 +198,8 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 						sprite.setOnFloor(true);			
 						sprite.setY((int)yPosition + yFunc);				
 						sprite.getAcceleration().y = 0;
-						sprite.setOnCurvedTile(true);
-						sprite.setPositiveCurvedTile(ascending);
+						sprite.setOnSlopeTile(true);
+						sprite.setPositiveSlopeTile(ascending);
 					} else {				
 						mathFunction = null;				
 					}
@@ -211,12 +211,12 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 				float yPosition = sprite.getY();
 				
 				Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
-				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+				mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;
 						
 				if (mathFunction==null) {
 					yPosition += 1;
 					cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
-					mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+					mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;
 					autoCorrection = mathFunction!=null;
 				}
 				if (mathFunction!=null) {
@@ -231,8 +231,8 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 						sprite.setOnFloor(true);			
 						sprite.setY((int)yPosition + yFunc);				
 						sprite.getAcceleration().y = 0;
-						sprite.setOnCurvedTile(true);
-						sprite.setPositiveCurvedTile(ascending);
+						sprite.setOnSlopeTile(true);
+						sprite.setPositiveSlopeTile(ascending);
 					} else {				
 						mathFunction = null;				
 					}
@@ -246,7 +246,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 	
 	private boolean leaveSpecialTile(TmxMap tilemap, Player sprite) {
 		boolean onFloorCorrection = false;
-		if (sprite.isOnCurvedTile() && !tilemap.isCurvedConstantTile(previousCell.getTile().getId())) {			
+		if (sprite.isOnSlopeTile() && !tilemap.isSlopeConstantTile(previousCell.getTile().getId())) {			
 			onFloorCorrection = true;
 			boolean ascending = previousCell.getTile().getId() <=198;
 			if (sprite.getDirection()==DirectionEnum.RIGHT) {
@@ -256,7 +256,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			}						
 			previousCell = null;
 		}	
-		sprite.setOnCurvedTile(false);
+		sprite.setOnSlopeTile(false);
 		sprite.setOnCloudTile(false);
 		return onFloorCorrection;
 	}

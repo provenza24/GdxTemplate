@@ -23,12 +23,12 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 		
 		sprite.setCollidingCells(new ArrayList<TmxCell>());
 		
-		if (!handleCurvedTile(tileMap, sprite)) {
+		if (!handleSlopeTile(tileMap, sprite)) {
 			leaveSpecialTile(tileMap, sprite);
 		}
 		
-		if (!sprite.isOnCurvedTile()) {
-			// Player is not on a special tile (cloud/curved), handle collisions
+		if (!sprite.isOnSlopeTile()) {
+			// Player is not on a special tile (cloud/Slope), handle collisions
 			sprite.setCollidingCells(new ArrayList<TmxCell>());						
 			
 			// Check floor collision
@@ -50,7 +50,7 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 		
 	}
 	
-	private boolean handleCurvedTile(TmxMap tileMap, AbstractSprite sprite) {		
+	private boolean handleSlopeTile(TmxMap tileMap, AbstractSprite sprite) {		
 		
 		MathFunction mathFunction = null;
 		
@@ -61,7 +61,7 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 			float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
 			float yPosition = sprite.getOldPosition().y;
 			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition-1);
-			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
+			mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;		
 			if (mathFunction!=null) {			
 				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;				
 				if (!ascending) {
@@ -72,8 +72,8 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 					sprite.setOnFloor(true);			
 					sprite.setY((int)yPosition - 1 + yFunc);				
 					sprite.getAcceleration().y = 0;
-					sprite.setOnCurvedTile(true);
-					sprite.setPositiveCurvedTile(ascending);
+					sprite.setOnSlopeTile(true);
+					sprite.setPositiveSlopeTile(ascending);
 				}			
 			}
 		}
@@ -82,7 +82,7 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 			float xPosition = sprite.getX() + sprite.getHalfWidth() + sprite.getOffset().x;
 			float yPosition = sprite.getOldPosition().y;
 			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition+1);
-			mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;		
+			mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;		
 			if (mathFunction!=null) {			
 				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;				
 				if (ascending) {
@@ -92,8 +92,8 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 					sprite.setOnFloor(true);			
 					sprite.setY((int)yPosition + 1 + yFunc);				
 					sprite.getAcceleration().y = 0;
-					sprite.setOnCurvedTile(true);
-					sprite.setPositiveCurvedTile(ascending);
+					sprite.setOnSlopeTile(true);
+					sprite.setPositiveSlopeTile(ascending);
 				}			
 			}
 		}
@@ -107,12 +107,12 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 				float yPosition = sprite.getOldPosition().y;
 				
 				Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
-				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+				mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;
 						
 				if (mathFunction==null) {
 					yPosition = sprite.getOldPosition().y + 0.8f;
 					cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
-					mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+					mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;
 					autoCorrection = mathFunction!=null;
 				}
 				if (mathFunction!=null) {
@@ -124,8 +124,8 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 						sprite.setOnFloor(true);			
 						sprite.setY((int)yPosition + yFunc);				
 						sprite.getAcceleration().y = 0;
-						sprite.setOnCurvedTile(true);
-						sprite.setPositiveCurvedTile(ascending);
+						sprite.setOnSlopeTile(true);
+						sprite.setPositiveSlopeTile(ascending);
 					} else {				
 						mathFunction = null;				
 					}
@@ -137,12 +137,12 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 				float yPosition = sprite.getY();
 				
 				Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition);
-				mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+				mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;
 						
 				if (mathFunction==null) {
 					yPosition += 1;
 					cell = tileMap.getTileAt((int)xPosition, (int)yPosition);			
-					mathFunction = cell!=null ? tileMap.getCurvedTilesFunctions().get(cell.getTile().getId()) : null;
+					mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;
 					autoCorrection = mathFunction!=null;
 				}
 				if (mathFunction!=null) {
@@ -154,8 +154,8 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 						sprite.setOnFloor(true);			
 						sprite.setY((int)yPosition + yFunc);				
 						sprite.getAcceleration().y = 0;
-						sprite.setOnCurvedTile(true);
-						sprite.setPositiveCurvedTile(ascending);
+						sprite.setOnSlopeTile(true);
+						sprite.setPositiveSlopeTile(ascending);
 					} else {				
 						mathFunction = null;				
 					}
@@ -169,7 +169,7 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 	
 	private boolean leaveSpecialTile(TmxMap tilemap, AbstractSprite sprite) {
 		boolean onFloorCorrection = false;
-		if (sprite.isOnCurvedTile() && !tilemap.isCurvedConstantTile(previousCell.getTile().getId())) {			
+		if (sprite.isOnSlopeTile() && !tilemap.isSlopeConstantTile(previousCell.getTile().getId())) {			
 			onFloorCorrection = true;
 			boolean ascending = previousCell.getTile().getId() <=198;
 			if (sprite.getDirection()==DirectionEnum.RIGHT) {
@@ -179,7 +179,7 @@ public class BasicTilemapCollisionHandler extends AbstractTilemapCollisionHandle
 			}						
 			previousCell = null;
 		}	
-		sprite.setOnCurvedTile(false);
+		sprite.setOnSlopeTile(false);
 		sprite.setOnCloudTile(false);
 		return onFloorCorrection;
 	}

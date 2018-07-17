@@ -12,7 +12,7 @@ public class TilemapConstants {
 	
 	public static final String LAYER_NAME_OBJECTS = "objectsLayer";
 	
-	public static final String TILE_PROPERTY_CURVED = "CURVED";
+	public static final String TILE_PROPERTY_SLOPE = "SLOPE";
 	
 	public static final String TILE_PROPERTY_CLOUD = "CLOUD";
 	

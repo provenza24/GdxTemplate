@@ -151,12 +151,12 @@ public class Club extends AbstractSprite {
 		} else {
 			setRotation(0);
 			attackRotation =0;
-			if (player.isOnCurvedTile()) {
+			if (player.isOnSlopeTile()) {
 				if (player.getDirection()==DirectionEnum.RIGHT) {
-					this.setRotation(player.isPositiveCurvedTile()?20:-20); 
+					this.setRotation(player.isPositiveSlopeTile()?20:-20); 
 				} else {
 					origin.set(0, 0.5f);					
-					this.setRotation(player.isPositiveCurvedTile()?-20:20);
+					this.setRotation(player.isPositiveSlopeTile()?-20:20);
 				}
 				
 			} else {
