@@ -40,11 +40,11 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 	@Override
 	public void initializeAnimations() {		
 		spriteSheet = ResourcesLoader.DINOSAURMAN;			
-		TextureRegion[][] textureRegions = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/8, spriteSheet.getHeight()/2);		
-		walkLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{0,1,2,3}, 8, 0.07f);			
-		walkRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{4,5,6,7}, 8, 0.07f);
-		walkLeftNoCostumeAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{8,9,10,11}, 8, 0.07f);			
-		walkRightNoCostumeAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{4,5,6,7}, 8, 0.07f);
+		TextureRegion[][] textureRegions = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/9, spriteSheet.getHeight()/2);		
+		walkLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{0,1,2,3}, 9, 0.07f);			
+		walkRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{4,5,6,7}, 9, 0.07f);
+		walkLeftNoCostumeAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{9,10,11,12}, 9, 0.07f);			
+		walkRightNoCostumeAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{13,14,15,16}, 9, 0.07f);
 		currentAnimation = walkLeftAnimation;
 	}
 
@@ -63,8 +63,7 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 	
 	@Override
 	public AbstractSprite generateDeadSprite(DirectionEnum directionEnum) {
-		// TODO Auto-generated method stub
-		return null;
+		return new DeadDinosaurMan(getX(), getY(), directionEnum);
 	}
 
 	public StateMachine<DinosaurMan> getStateMachine() {
