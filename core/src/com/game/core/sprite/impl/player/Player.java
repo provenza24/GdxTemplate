@@ -110,11 +110,11 @@ public class Player extends AbstractTileObjectSprite {
 		}
 	}
 	
-	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {		
-		updateAnimation(deltaTime);
+	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {				
 		move(deltaTime);
 		tilemapCollisionHandler.collideWithTilemap(tileMap, this);
 		updateBounds();					
+		updateAnimation(deltaTime);
 	}
 		
 	public void updateAnimation(float delta) {

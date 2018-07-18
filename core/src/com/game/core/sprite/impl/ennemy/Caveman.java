@@ -21,7 +21,7 @@ public class Caveman extends AbstractTileObjectEnemy {
 	private int X_MOVE = 8;
 	
 	private float X_MIN_LIMIT;
-	
+		
 	private float X_MAX_LIMIT;
 	
 	public Caveman(MapObject mapObject, Vector2 offset) {
@@ -61,7 +61,7 @@ public class Caveman extends AbstractTileObjectEnemy {
 			this.acceleration.x = 2f;
 		}
 	}
-
+	
 	@Override
 	public AbstractSprite generateDeadSprite(DirectionEnum directionEnum) {		
 		return new DeadCaveman(getX(), getY() , directionEnum);

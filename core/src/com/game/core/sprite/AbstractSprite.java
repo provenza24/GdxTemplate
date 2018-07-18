@@ -95,7 +95,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	protected boolean bumped;
 	
 	protected boolean isAnimated;
-	
+		
 	protected boolean isAnimationLooping;
 	
 	protected boolean onFloor;
@@ -163,9 +163,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {
 							
 		if (alive) {
-			// The sprite is alive, we first update its animation			
-			updateAnimation(deltaTime);
-			// else sprite is not acting
+			// The sprite is alive
 			if (isMoveable()) {
 				// if sprite is moveable, we move it
 				move(deltaTime);
@@ -173,7 +171,9 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 			if (isCollidableWithTilemap()) {
 				// if sprite collides with tilemap, collide it
 				tilemapCollisionHandler.collideWithTilemap(tileMap, this);
-			}							
+			}					
+			// Update sprite animation
+			updateAnimation(deltaTime);
 			// Update sprite bounds (for future collisions)
 			updateBounds();
 			// Update visible / deletable booleans	
@@ -521,4 +521,20 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		setDirection(direction==DirectionEnum.LEFT ? DirectionEnum.RIGHT : DirectionEnum.LEFT);
 	}
 
+	public boolean isAnimated() {
+		return isAnimated;
+	}
+
+	public void setAnimated(boolean isAnimated) {
+		this.isAnimated = isAnimated;
+	}
+
+	public boolean isAnimationLooping() {
+		return isAnimationLooping;
+	}
+
+	public void setAnimationLooping(boolean isAnimationLooping) {
+		this.isAnimationLooping = isAnimationLooping;
+	}
+	
 }

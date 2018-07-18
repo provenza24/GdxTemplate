@@ -90,6 +90,6 @@
   <object id="23" name="candy" type="candy" gid="411" x="560" y="304" width="16" height="16"/>
   <object id="14" name="candy" type="candy" gid="411" x="1096" y="182" width="16" height="16"/>
   <object id="17" name="fly" type="fly" gid="421" x="560" y="205" width="16" height="13"/>
-  <object id="18" name="dinosaurman" type="dinosaurman" gid="425" x="1076" y="368" width="32" height="40"/>
+  <object id="18" name="dinosaurman" type="dinosaurman" gid="425" x="480" y="304" width="32" height="40"/>
  </objectgroup>
 </map>

@@ -380,21 +380,16 @@ public class GameScreen extends AbstractGameScreen  {
 			AbstractEnemy enemy = enemies.get(i);
 			enemy.update(tilemap, camera.getCamera(), deltaTime);
 			// Draw it
-			if (enemy.isAlive()) {				
-				if (!enemy.isKilled()) {
-					if (player.isAttacking() && enemy.isKillable()) {
-						boolean isEnemyHit = player.getClub().overlaps(enemy);
-						if (isEnemyHit) {
-							if (enemy.hit()) {
-								deadEnemies.add(enemy.generateDeadSprite(player.getDirection()));
-							}							
-						}
-					}
-					boolean collidePlayer = enemy.overlaps(player);
-					if (collidePlayer) {
-						Gdx.app.log("GameScreen::handleEnemies", "L'ennemi me touche");
+			if (enemy.isAlive() && !enemy.isKilled() && enemy.isKillable()) {				
+				if (player.isAttacking() && enemy.isKillable()) {						
+					if (player.getClub().overlaps(enemy) && enemy.hit()) {
+						deadEnemies.add(enemy.generateDeadSprite(player.getDirection()));							
 					}
 				}
+				boolean collidePlayer = enemy.overlaps(player);
+				if (collidePlayer) {
+					//Gdx.app.log("GameScreen::handleEnemies", "L'ennemi me touche");
+				}				
 			}
 			if (enemy.isDeletable()) {				
 				enemies.remove(i--);
