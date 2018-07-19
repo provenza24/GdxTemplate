@@ -1,4 +1,4 @@
-package com.game.core.sprite.impl.ennemy;
+package com.game.core.sprite.impl.ennemy.fly;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

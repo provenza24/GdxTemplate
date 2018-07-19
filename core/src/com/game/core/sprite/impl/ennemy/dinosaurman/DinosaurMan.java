@@ -1,4 +1,4 @@
-package com.game.core.sprite.impl.ennemy;
+package com.game.core.sprite.impl.ennemy.dinosaurman;
 
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
@@ -22,9 +22,9 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 	
 	private Animation walkRightAnimation;
 	
-	private Animation walkLeftNoCostumeAnimation;
+	private Animation walkLeftMasklessAnimation;
 	
-	private Animation walkRightNoCostumeAnimation;	
+	private Animation walkRightMasklessAnimation;	
 	
 	private StateMachine<DinosaurMan> stateMachine;
 
@@ -43,15 +43,15 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 		TextureRegion[][] textureRegions = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/9, spriteSheet.getHeight()/2);		
 		walkLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{0,1,2,3}, 9, 0.07f);			
 		walkRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{4,5,6,7}, 9, 0.07f);
-		walkLeftNoCostumeAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{9,10,11,12}, 9, 0.07f);			
-		walkRightNoCostumeAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{13,14,15,16}, 9, 0.07f);
+		walkLeftMasklessAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{9,10,11,12}, 9, 0.07f);			
+		walkRightMasklessAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{13,14,15,16}, 9, 0.07f);
 		currentAnimation = walkLeftAnimation;
 	}
 
 	@Override
 	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {
 		setDeltaTime(deltaTime);
-		stateMachine.update();
+		stateMachine.update();		
 		super.update(tileMap, camera, deltaTime);		
 	}			
 
@@ -64,6 +64,10 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 	@Override
 	public AbstractSprite generateDeadSprite(DirectionEnum directionEnum) {
 		return new DeadDinosaurMan(getX(), getY(), directionEnum);
+	}
+	
+	public void removeMask() {
+		this.getSfxSprites().add(new DinosaurManMask(getX(), getY()+this.getHeight(), direction==DirectionEnum.LEFT ? DirectionEnum.RIGHT : DirectionEnum.LEFT));
 	}
 
 	public StateMachine<DinosaurMan> getStateMachine() {
@@ -82,12 +86,12 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 		return walkRightAnimation;
 	}
 
-	public Animation getWalkLeftNoCostumeAnimation() {
-		return walkLeftNoCostumeAnimation;
+	public Animation getWalkLeftMasklessAnimation() {
+		return walkLeftMasklessAnimation;
 	}
 
-	public Animation getWalkRightNoCostumeAnimation() {
-		return walkRightNoCostumeAnimation;
+	public Animation getWalkRightMasklessAnimation() {
+		return walkRightMasklessAnimation;
 	}
 
 }

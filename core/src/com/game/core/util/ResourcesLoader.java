@@ -26,6 +26,8 @@ public class ResourcesLoader {
 	
 	public static final Texture DINOSAURMAN = new Texture(Gdx.files.internal("sprites/enemies/dinosaurman.png"));
 	
+	public static final Texture DINOSAURMAN_MASK = new Texture(Gdx.files.internal("sprites/sfx/mask.png"));
+	
 	public static Texture BACKGROUND_FOREST;
 	
 	public static Texture getBackgroundForest() {

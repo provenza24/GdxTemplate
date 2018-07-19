@@ -1,4 +1,4 @@
-package com.game.core.sprite.impl.ennemy;
+package com.game.core.sprite.impl.ennemy.caveman;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;

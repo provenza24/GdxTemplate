@@ -1,4 +1,4 @@
-package com.game.core.sprite.impl.ennemy;
+package com.game.core.sprite.impl.ennemy.caveman;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -44,6 +44,7 @@ public class Caveman extends AbstractTileObjectEnemy {
 		walkRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{4,7,5,6}, 9, 0.07f);
 		turnAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{8}, 9, 0.1f);
 		currentAnimation = walkLeftAnimation;
+		currentFrame = currentAnimation.getKeyFrame(0);
 	}
 
 	@Override

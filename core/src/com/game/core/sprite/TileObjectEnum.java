@@ -1,9 +1,9 @@
 package com.game.core.sprite;
 
 import com.badlogic.gdx.math.Vector2;
-import com.game.core.sprite.impl.ennemy.Caveman;
-import com.game.core.sprite.impl.ennemy.DinosaurMan;
-import com.game.core.sprite.impl.ennemy.Fly;
+import com.game.core.sprite.impl.ennemy.caveman.Caveman;
+import com.game.core.sprite.impl.ennemy.dinosaurman.DinosaurMan;
+import com.game.core.sprite.impl.ennemy.fly.Fly;
 import com.game.core.sprite.impl.item.Candy;
 import com.game.core.sprite.impl.item.Flag;
 import com.game.core.util.enums.SpriteTypeEnum;

@@ -106,9 +106,9 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private boolean levelFinished = false;		
 	
-	private float debugFontSize = 2f;
+	private float debugFontSize = ScreenConstants.PREFERED_WIDHT * 2f / 800;
 					
-	private List<AbstractSprite> deadEnemies;
+	private List<AbstractSprite> sfxSprites;
 	
 	public GameScreen(Level level) {
 				
@@ -152,7 +152,11 @@ public class GameScreen extends AbstractGameScreen  {
 		// Initialize stage, the stage is used for sprites actions
 		stage = new Stage();	
 		
-		deadEnemies = new ArrayList<>();
+		sfxSprites = new ArrayList<>();
+		
+		for (AbstractEnemy enemy : tilemap.getEnemies()) {
+			enemy.setSfxSprites(sfxSprites);
+		}
 	}
 		
 	@Override
@@ -196,7 +200,7 @@ public class GameScreen extends AbstractGameScreen  {
 		}							
 		
 		// Move dead enemies, render
-		handleDeadEnemies(delta);
+		handleSfxSprites(delta);
 		
 		// Render tilemap
 		tilemapRenderer.setView(camera.getCamera());
@@ -226,14 +230,14 @@ public class GameScreen extends AbstractGameScreen  {
 		renderDebugMode();
 	}
 
-	private void handleDeadEnemies(float delta) {
-		for (int i = 0; i < deadEnemies.size(); i++) {
-			AbstractSprite deadSprite = deadEnemies.get(i);
-			deadSprite.update(tilemap, camera.getCamera(), delta);
-			if (deadSprite.isDeletable()) {				
-				deadEnemies.remove(i--);
-			} else if (deadSprite.isVisible()) {
-				deadSprite.render(tilemapRenderer.getBatch());
+	private void handleSfxSprites(float delta) {
+		for (int i = 0; i < sfxSprites.size(); i++) {
+			AbstractSprite sprite = sfxSprites.get(i);
+			sprite.update(tilemap, camera.getCamera(), delta);
+			if (sprite.isDeletable()) {				
+				sfxSprites.remove(i--);
+			} else if (sprite.isVisible()) {
+				sprite.render(tilemapRenderer.getBatch());
 			}
 		}
 	}
@@ -262,7 +266,8 @@ public class GameScreen extends AbstractGameScreen  {
 		List<AbstractItem> items = tilemap.getItems();
 		for (int i = 0; i < items.size(); i++) {
 			AbstractItem item = items.get(i);						
-			if (item.isVisible()) {
+			if (Math.abs(item.getX() - camera.getCamera().position.x)<=11 
+					&& Math.abs(item.getY() - camera.getCamera().position.y)<=9) {
 				item.render(tilemapRenderer.getBatch());
 			}
 		}
@@ -270,7 +275,8 @@ public class GameScreen extends AbstractGameScreen  {
 		List<AbstractEnemy> enemies = tilemap.getEnemies();
 		for (int i = 0; i < enemies.size(); i++) {
 			AbstractEnemy enemy = enemies.get(i);						
-			if (enemy.isVisible()) {
+			if (Math.abs(enemy.getX() - camera.getCamera().position.x)<=11 
+					&& Math.abs(enemy.getY() - camera.getCamera().position.y)<=9) {
 				enemy.render(tilemapRenderer.getBatch());
 			}
 		}
@@ -383,7 +389,7 @@ public class GameScreen extends AbstractGameScreen  {
 			if (enemy.isAlive() && !enemy.isKilled() && enemy.isKillable()) {				
 				if (player.isAttacking() && enemy.isKillable()) {						
 					if (player.getClub().overlaps(enemy) && enemy.hit()) {
-						deadEnemies.add(enemy.generateDeadSprite(player.getDirection()));							
+						sfxSprites.add(enemy.generateDeadSprite(player.getDirection()));							
 					}
 				}
 				boolean collidePlayer = enemy.overlaps(player);
@@ -454,24 +460,14 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;
 			debugFont.draw(spriteBatch, "acceleration=" + String.format("%.1f", player.getAcceleration().x) + " | " + String.format("%.1f", player.getAcceleration().y), x, y);
 			y = y -20;
-			debugFont.draw(spriteBatch, "state=" + player.getState().toString(), x, y);
-			y = y -20;
-			debugFont.draw(spriteBatch, "direction=" + player.getDirection().toString(), x, y);		
-			y = y -20;			
-			debugFont.draw(spriteBatch, "onFloor=" + player.isOnFloor(), x, y);			
+			debugFont.draw(spriteBatch, "state=" + player.getState().toString() + " / direction=" + player.getDirection().toString() + " / onFloor=" + player.isOnFloor(), x, y);
 			y = y -20;			
 			debugFont.draw(spriteBatch, "hiting= " + player.isAttacking(), x, y);
+			y = y -20;							
+			debugFont.draw(spriteBatch, "slopeTile= " + player.isOnSlopeTile() + " / slopePositiveTile= " + player.isPositiveSlopeTile(), x, y);
 			y = y -20;			
-			//debugFont.draw(spriteBatch, "move= " + String.format("%.2f",player.getMove().x) + " | " +String.format("%.2f",player.getMove().y), x, y);			
-			//y = y -20;			
-			debugFont.draw(spriteBatch, "slopeTile= " + player.isOnSlopeTile(), x, y);
-			y = y -20;			
-			debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);
-			y = y -20;			
-			debugFont.draw(spriteBatch, "slopePositiveTile= " + player.isPositiveSlopeTile(), x, y);
-			
-			x = ScreenConstants.WIDTH-400;
-			y = ScreenConstants.HEIGHT-10;
+			debugFont.draw(spriteBatch, "cloudTile= " + player.isOnCloudTile(), x, y);			
+			y = y -20;
 			debugFont.draw(spriteBatch, "camera.type=" + tilemap.getCameraEnum(), x, y);			
 			y = y -20;
 			debugFont.draw(spriteBatch, "camera.position=" + String.format("%.3f", camera.getCamera().position.x) + " | " + String.format("%.3f", camera.getCamera().position.y), x, y);			
@@ -500,11 +496,11 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;
 			alive = 0;
 			visible = 0;
-			for (AbstractSprite enemy : deadEnemies) {
+			for (AbstractSprite enemy : sfxSprites) {
 				alive += enemy.isAlive() ? 1 : 0;
 				visible += enemy.isVisible() ? 1 : 0;
 			}
-			debugFont.draw(spriteBatch, "Dead: " + deadEnemies.size() + " - " + alive + "/"+visible + " alive/visible", x, y);
+			debugFont.draw(spriteBatch, "Dead: " + sfxSprites.size() + " - " + alive + "/"+visible + " alive/visible", x, y);
 			
 			y = y -20;
 			

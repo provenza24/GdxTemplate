@@ -2,7 +2,7 @@ package com.game.core.ia;
 
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
-import com.game.core.sprite.impl.ennemy.DinosaurMan;
+import com.game.core.sprite.impl.ennemy.dinosaurman.DinosaurMan;
 import com.game.core.util.enums.DirectionEnum;
 
 public enum DinosaurManState implements State<DinosaurMan> {
@@ -17,13 +17,13 @@ public enum DinosaurManState implements State<DinosaurMan> {
 		public void update(DinosaurMan entity) {
 			// Update animation
 			if (entity.getNbHitBeforeDeath()>0) {
-				// With costume
+				// Fully dressed
 				entity.setCurrentAnimation(entity.getDirection()==DirectionEnum.LEFT ? 
 						entity.getWalkLeftAnimation() : entity.getWalkRightAnimation());
 			} else {
-				// Without costume
+				// Mask less
 				entity.setCurrentAnimation(entity.getDirection()==DirectionEnum.LEFT ? 
-						entity.getWalkLeftNoCostumeAnimation() : entity.getWalkRightNoCostumeAnimation());
+						entity.getWalkLeftMasklessAnimation() : entity.getWalkRightMasklessAnimation());
 			}
 			
 		}
@@ -36,12 +36,13 @@ public enum DinosaurManState implements State<DinosaurMan> {
 			switch (entity.getNbHitBeforeDeath()) {
 			case 0:
 				entity.setCurrentAnimation(entity.getDirection()==DirectionEnum.LEFT ? 
-						entity.getWalkLeftNoCostumeAnimation() : entity.getWalkRightNoCostumeAnimation());
+						entity.getWalkLeftMasklessAnimation() : entity.getWalkRightMasklessAnimation());
 				entity.setCurrentFrame(entity.getCurrentAnimation().getKeyFrame(0));
 				entity.setAnimated(false);
 				entity.setKillable(false);
 				entity.setInvincibleTimeCount(0);
 				entity.getAcceleration().x = 0;
+				entity.removeMask();
 				break;
 			default:
 				entity.setKilled(true);
@@ -64,6 +65,7 @@ public enum DinosaurManState implements State<DinosaurMan> {
 		@Override
 		public void exit(DinosaurMan entity) {							
 		}
+		
 	}, DEAD;
 	
 	@Override

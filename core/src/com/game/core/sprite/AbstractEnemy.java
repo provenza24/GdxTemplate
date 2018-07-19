@@ -1,5 +1,7 @@
 package com.game.core.sprite;
 
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.util.enums.DirectionEnum;
 import com.game.core.util.enums.SpriteMoveEnum;
@@ -15,6 +17,8 @@ public abstract class AbstractEnemy extends AbstractSprite {
 	protected float deltaTime;
 	
 	protected float invincibleTimeCount;
+	
+	protected List<AbstractSprite> sfxSprites;
 	
 	public AbstractEnemy(float x, float y, Vector2 size, Vector2 offset) {
 		super(x, y, size, offset);		
@@ -88,6 +92,14 @@ public abstract class AbstractEnemy extends AbstractSprite {
 	
 	public void updateInvincibleTimeCount() {
 		this.invincibleTimeCount+=this.deltaTime;
+	}
+
+	public List<AbstractSprite> getSfxSprites() {
+		return sfxSprites;
+	}
+
+	public void setSfxSprites(List<AbstractSprite> sfxSprites) {
+		this.sfxSprites = sfxSprites;
 	}
 
 }
