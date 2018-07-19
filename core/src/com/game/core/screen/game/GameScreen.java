@@ -95,8 +95,7 @@ public class GameScreen extends AbstractGameScreen  {
 
 	private boolean debugShowBounds = false;
 
-	private boolean debugShowFps = false;
-		
+	private boolean debugShowFps = false;		
 	
 	private boolean showGrid = false;
 	
@@ -108,7 +107,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private float debugFontSize = ScreenConstants.PREFERED_WIDHT * 2f / 800;
 					
-	private List<AbstractSprite> sfxSprites;
+	private List<AbstractSprite> sfxSprites;			
 	
 	public GameScreen(Level level) {
 				
@@ -179,7 +178,7 @@ public class GameScreen extends AbstractGameScreen  {
 
 	private void renderGame(float delta) {
 		AbstractSprite.updateCommonStateTime(delta);
-		handleInput();
+		handleInput();		
 		player.update(tilemap, camera.getCamera(), delta);
 		player.getClub().update();
 		// Draw the scene
@@ -353,7 +352,7 @@ public class GameScreen extends AbstractGameScreen  {
 			player.setAttacking(true);
 			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING) {				
 				player.getAcceleration().x = 0;
-				player.setState(player.getDirection()== DirectionEnum.RIGHT ? SpriteMoveEnum.HIT_RIGHT: SpriteMoveEnum.HIT_LEFT);
+				player.setState(player.getDirection()== DirectionEnum.RIGHT ? SpriteMoveEnum.ATTACK_RIGHT: SpriteMoveEnum.ATTACK_LEFT);
 			}
 		}
 		
@@ -392,10 +391,13 @@ public class GameScreen extends AbstractGameScreen  {
 						sfxSprites.add(enemy.generateDeadSprite(player.getDirection()));							
 					}
 				}
-				boolean collidePlayer = enemy.overlaps(player);
-				if (collidePlayer) {
-					//Gdx.app.log("GameScreen::handleEnemies", "L'ennemi me touche");
-				}				
+				if (!player.isInvincible() && enemy.overlaps(player)) {					
+					player.setAcceleration(new Vector2(0,0));					
+					player.setInvincible(true);
+					//player.setState(SpriteMoveEnum.ENEMY_HIT);
+					player.setAttacking(false);					
+					Gdx.app.log("GameScreen::handleEnemies", "1 point de vie en moins !!!");				
+				}								
 			}
 			if (enemy.isDeletable()) {				
 				enemies.remove(i--);
@@ -462,7 +464,7 @@ public class GameScreen extends AbstractGameScreen  {
 			y = y -20;
 			debugFont.draw(spriteBatch, "state=" + player.getState().toString() + " / direction=" + player.getDirection().toString() + " / onFloor=" + player.isOnFloor(), x, y);
 			y = y -20;			
-			debugFont.draw(spriteBatch, "hiting= " + player.isAttacking(), x, y);
+			debugFont.draw(spriteBatch, "hiting= " + player.isAttacking() + " / Invincibe="+player.isInvincible(), x, y);
 			y = y -20;							
 			debugFont.draw(spriteBatch, "slopeTile= " + player.isOnSlopeTile() + " / slopePositiveTile= " + player.isPositiveSlopeTile(), x, y);
 			y = y -20;			

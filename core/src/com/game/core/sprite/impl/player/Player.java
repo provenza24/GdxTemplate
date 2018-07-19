@@ -48,7 +48,7 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private Animation jumpHitRightAnimation;
 	
-	private Animation jumpHitLeftAnimation;		
+	private Animation jumpHitLeftAnimation;
 	
 	private boolean attacking;
 	
@@ -86,6 +86,16 @@ public class Player extends AbstractTileObjectSprite {
 	}
 
 	public void render(Batch batch) {
+		if (isInvincible()) {
+			batch.setColor(1, 1, 1, 0.5f);
+			draw(batch);
+			batch.setColor(1, 1, 1, 1);
+		}  else {
+			draw(batch);
+		}				
+	}
+	
+	private void draw(Batch batch) {
 		batch.begin();
 		club.render(batch);
 		batch.draw(currentFrame, getX(), getY(), renderingSize.x, renderingSize.y);		
@@ -113,8 +123,16 @@ public class Player extends AbstractTileObjectSprite {
 	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {				
 		move(deltaTime);
 		tilemapCollisionHandler.collideWithTilemap(tileMap, this);
-		updateBounds();					
+		updateBounds();
+		updateInvincibleStatus(deltaTime);
 		updateAnimation(deltaTime);
+	}
+	
+	private void updateInvincibleStatus(float deltaTime) {
+		if (isInvincible) {
+			invincibleTimeCount+=deltaTime;
+			isInvincible = invincibleTimeCount<=3;
+		}
 	}
 		
 	public void updateAnimation(float delta) {

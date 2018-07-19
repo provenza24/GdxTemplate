@@ -11,13 +11,9 @@ public abstract class AbstractEnemy extends AbstractSprite {
 	protected boolean collidableWithEnnemies;
 	
 	protected boolean killableByPlayer;
-	
-	protected int nbHitBeforeDeath;
 		
 	protected float deltaTime;
-	
-	protected float invincibleTimeCount;
-	
+		
 	protected List<AbstractSprite> sfxSprites;
 	
 	public AbstractEnemy(float x, float y, Vector2 size, Vector2 offset) {
@@ -68,18 +64,6 @@ public abstract class AbstractEnemy extends AbstractSprite {
 
 	public void setInvincibleTimeCount(float invincibleTimeCount) {
 		this.invincibleTimeCount = invincibleTimeCount;
-	}
-
-	public int getNbHitBeforeDeath() {
-		return nbHitBeforeDeath;
-	}
-
-	public void setNbHitBeforeDeath(int nbHitBeforeDeath) {
-		this.nbHitBeforeDeath = nbHitBeforeDeath;
-	}		
-	
-	public void decreaseNbHitBeforeDeath() {
-		this.nbHitBeforeDeath--;
 	}
 
 	public float getDeltaTime() {

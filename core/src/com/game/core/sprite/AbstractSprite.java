@@ -48,6 +48,8 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	/** States */
 	protected DirectionEnum direction;
 	
+	protected int nbHitBeforeDeath;
+	
 	protected SpriteMoveEnum state;	
 		
 	/** Physics : default is 0.018f */
@@ -105,6 +107,10 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	protected boolean isPositiveSlopeTile;
 	
 	protected boolean onCloudTile;
+	
+	protected boolean isInvincible;
+	
+	protected float invincibleTimeCount;
 	
 	public AbstractSprite(float x, float y, Vector2 size, Vector2 offset) {
 		
@@ -536,5 +542,35 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 	public void setAnimationLooping(boolean isAnimationLooping) {
 		this.isAnimationLooping = isAnimationLooping;
 	}
+	
+	public int getNbHitBeforeDeath() {
+		return nbHitBeforeDeath;
+	}
+
+	public void setNbHitBeforeDeath(int nbHitBeforeDeath) {
+		this.nbHitBeforeDeath = nbHitBeforeDeath;
+	}		
+	
+	public void decreaseNbHitBeforeDeath() {
+		this.nbHitBeforeDeath--;
+	}
+
+	public boolean isInvincible() {
+		return isInvincible;
+	}
+
+	public void setInvincible(boolean isInvincible) {
+		this.isInvincible = isInvincible;
+		this.invincibleTimeCount=0;
+	}
+
+	public float getInvincibleTimeCount() {
+		return invincibleTimeCount;
+	}
+
+	public void setInvincibleTimeCount(float invincibleTimeCount) {
+		this.invincibleTimeCount = invincibleTimeCount;
+	}
+
 	
 }
