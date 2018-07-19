@@ -24,7 +24,9 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 	
 	private Animation walkLeftMasklessAnimation;
 	
-	private Animation walkRightMasklessAnimation;	
+	private Animation walkRightMasklessAnimation;
+	
+	private TextureRegion hitAnimation;
 	
 	private StateMachine<DinosaurMan> stateMachine;
 
@@ -45,6 +47,7 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 		walkRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{4,5,6,7}, 9, 0.07f);
 		walkLeftMasklessAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{9,10,11,12}, 9, 0.07f);			
 		walkRightMasklessAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{13,14,15,16}, 9, 0.07f);
+		hitAnimation = textureRegions[0][8];
 		currentAnimation = walkLeftAnimation;
 	}
 
@@ -67,7 +70,7 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 	}
 	
 	public void removeMask() {
-		this.getSfxSprites().add(new DinosaurManMask(getX(), getY()+this.getHeight(), direction==DirectionEnum.LEFT ? DirectionEnum.RIGHT : DirectionEnum.LEFT));
+		this.getSfxSprites().add(new DinosaurManMask(getX()+0.5f, getY()+1.75f, direction==DirectionEnum.LEFT ? DirectionEnum.RIGHT : DirectionEnum.LEFT));
 	}
 
 	public StateMachine<DinosaurMan> getStateMachine() {
@@ -92,6 +95,10 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 
 	public Animation getWalkRightMasklessAnimation() {
 		return walkRightMasklessAnimation;
+	}
+
+	public TextureRegion getHitAnimation() {
+		return hitAnimation;
 	}
 
 }

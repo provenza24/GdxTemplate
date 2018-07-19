@@ -13,7 +13,4 @@ public abstract class AbstractTileObjectItem extends AbstractItem {
 		super.initTileObjectSprite(mapObject, offset);
 	}
 	
-	@Override
-	public void addAppearAction() {		
-	}
 }

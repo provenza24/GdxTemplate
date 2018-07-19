@@ -37,7 +37,7 @@ public enum DinosaurManState implements State<DinosaurMan> {
 			case 0:
 				entity.setCurrentAnimation(entity.getDirection()==DirectionEnum.LEFT ? 
 						entity.getWalkLeftMasklessAnimation() : entity.getWalkRightMasklessAnimation());
-				entity.setCurrentFrame(entity.getCurrentAnimation().getKeyFrame(0));
+				entity.setCurrentFrame(entity.getHitAnimation());
 				entity.setAnimated(false);
 				entity.setKillable(false);
 				entity.setInvincibleTimeCount(0);
