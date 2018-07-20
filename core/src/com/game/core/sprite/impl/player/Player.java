@@ -50,7 +50,11 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private Animation jumpHitLeftAnimation;
 	
+	private Animation idleAnimation;
+	
 	private boolean attacking;
+	
+	private float idleTimeCount;
 	
 	private Club club;
 
@@ -73,7 +77,7 @@ public class Player extends AbstractTileObjectSprite {
 		spriteSheet = ResourcesLoader.PLAYER;
 		TextureRegion[][] textureRegions = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/20, spriteSheet.getHeight()/15);
 		idleAnimationRight = AnimationBuilder.getInstance().build(textureRegions, new int[]{1}, 20, 1f);
-		idleAnimationLeft = AnimationBuilder.getInstance().build(textureRegions, new int[]{2}, 20, 1f);
+		idleAnimationLeft = AnimationBuilder.getInstance().build(textureRegions, new int[]{2}, 20, 1f);		
 		runningRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{3,4,5,6,7,8}, 20, 0.075f);
 		runningLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{9,10,11,12,13,14}, 20, 0.075f);
 		jumpRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{15,16,17,18}, 20, 0.15f);
@@ -82,7 +86,8 @@ public class Player extends AbstractTileObjectSprite {
 		hitLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{29,30,31,32,33}, 20, 0.075f);
 		jumpHitRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{34,35,36,37,38,39}, 20, 0.06f);
 		jumpHitLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{40,41,42,43,44,45}, 20, 0.06f);
-		currentAnimation = idleAnimationRight;
+		idleAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{49,50,51,50,51,50,51,50}, 20, 0.3f);
+		currentAnimation = idleAnimationRight;				
 	}
 
 	public void render(Batch batch) {
@@ -139,41 +144,51 @@ public class Player extends AbstractTileObjectSprite {
 
 		boolean isLoopingAnimation = true;
 		
-		stateTime = stateTime > 10 ? 0 : stateTime + delta;
-
-		if (onFloor && (currentAnimation==jumpHitRightAnimation || currentAnimation==jumpHitLeftAnimation)) {
-			setAttacking(false);
-		}
+		stateTime = stateTime > 240 ? 0 : stateTime + delta;		
+		idleTimeCount = state == SpriteMoveEnum.IDLE ? idleTimeCount + delta : 0;
 		
-		if (isAttacking()) {
-			if (onFloor) {
-				currentAnimation = direction == DirectionEnum.RIGHT ? hitRightAnimation : hitLeftAnimation;				
-			} else {
-				currentAnimation = direction == DirectionEnum.RIGHT ? jumpHitRightAnimation : jumpHitLeftAnimation;
-			}
-			isLoopingAnimation = false;
-			if (onFloor && currentAnimation.isAnimationFinished(stateTime)) {
+		if (idleTimeCount>=10f) {
+			if (currentAnimation!=idleAnimation) {
+				stateTime = 0;
+				currentAnimation = idleAnimation;
+			}			
+		} else {
+			if (onFloor && (currentAnimation==jumpHitRightAnimation || currentAnimation==jumpHitLeftAnimation)) {
 				setAttacking(false);
 			}
-		} else if (!onFloor) {
-			currentAnimation = direction == DirectionEnum.RIGHT ? jumpRightAnimation : jumpLeftAnimation;
-			isLoopingAnimation = false;
-		} else {
-			float xMove = getX() - getOldPosition().x;
-			if (xMove == 0) {	
-				if (getState() == SpriteMoveEnum.SLIDING_LEFT) {
-					setDirection(DirectionEnum.RIGHT);
-				} else if (getState() == SpriteMoveEnum.SLIDING_RIGHT) {
-					setDirection(DirectionEnum.LEFT);
+			
+			if (isAttacking()) {
+				if (onFloor) {
+					currentAnimation = direction == DirectionEnum.RIGHT ? hitRightAnimation : hitLeftAnimation;				
+				} else {
+					currentAnimation = direction == DirectionEnum.RIGHT ? jumpHitRightAnimation : jumpHitLeftAnimation;
 				}
-				setState(SpriteMoveEnum.IDLE);
-			}				
-			currentAnimation = 						
-				state == SpriteMoveEnum.IDLE ? direction == DirectionEnum.RIGHT ? idleAnimationRight : idleAnimationLeft :
-					state == SpriteMoveEnum.RUNNING_RIGHT || state == SpriteMoveEnum.SLIDING_RIGHT ? runningRightAnimation :
-						state == SpriteMoveEnum.RUNNING_LEFT || state == SpriteMoveEnum.SLIDING_LEFT ? runningLeftAnimation :							
-							idleAnimationRight;
+				isLoopingAnimation = false;
+				if (onFloor && currentAnimation.isAnimationFinished(stateTime)) {
+					setAttacking(false);
+				}
+			} else if (!onFloor) {
+				currentAnimation = direction == DirectionEnum.RIGHT ? jumpRightAnimation : jumpLeftAnimation;
+				isLoopingAnimation = false;
+			} else {
+				float xMove = getX() - getOldPosition().x;
+				if (xMove == 0) {	
+					if (getState() == SpriteMoveEnum.SLIDING_LEFT) {
+						setDirection(DirectionEnum.RIGHT);
+					} else if (getState() == SpriteMoveEnum.SLIDING_RIGHT) {
+						setDirection(DirectionEnum.LEFT);
+					}
+					setState(SpriteMoveEnum.IDLE);
+				}				
+				currentAnimation = 						
+					state == SpriteMoveEnum.IDLE ? direction == DirectionEnum.RIGHT ? idleAnimationRight : idleAnimationLeft :
+						state == SpriteMoveEnum.RUNNING_RIGHT || state == SpriteMoveEnum.SLIDING_RIGHT ? runningRightAnimation :
+							state == SpriteMoveEnum.RUNNING_LEFT || state == SpriteMoveEnum.SLIDING_LEFT ? runningLeftAnimation :							
+								idleAnimationRight;
+			}
 		}
+
+		
 		currentFrame = currentAnimation.getKeyFrame(stateTime, isLoopingAnimation);		
 	}
 	
