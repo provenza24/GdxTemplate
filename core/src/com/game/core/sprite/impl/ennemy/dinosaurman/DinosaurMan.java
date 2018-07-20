@@ -32,7 +32,7 @@ public class DinosaurMan extends AbstractTileObjectEnemy {
 
 	public DinosaurMan(MapObject mapObject, Vector2 offset) {
 		super(mapObject, offset);
-		this.acceleration.x = 2.5f;
+		this.acceleration.x = 3f;
 		this.direction = DirectionEnum.LEFT;
 		tilemapCollisionHandler = new BasicTilemapCollisionHandler();	
 		nbHitBeforeDeath = 1;		

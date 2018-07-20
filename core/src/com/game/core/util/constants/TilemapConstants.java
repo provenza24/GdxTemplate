@@ -16,6 +16,8 @@ public class TilemapConstants {
 	
 	public static final String TILE_PROPERTY_CLOUD = "CLOUD";
 	
+	public static final String TILE_PROPERTY_PEAK = "PEAK";
+	
 	public static final String MAP_PROPERTY_WIDTH = "width";
 	
 	public static final String MAP_PROPERTY_HEIGHT = "height";

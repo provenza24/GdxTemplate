@@ -385,17 +385,14 @@ public class GameScreen extends AbstractGameScreen  {
 			AbstractEnemy enemy = enemies.get(i);
 			enemy.update(tilemap, camera.getCamera(), deltaTime);
 			// Draw it
-			if (enemy.isAlive() && !enemy.isKilled() && enemy.isKillable()) {				
+			if (enemy.isAlive() && !enemy.isKilled()) {				
 				if (player.isAttacking() && enemy.isKillable()) {						
 					if (player.getClub().overlaps(enemy) && enemy.hit()) {
 						sfxSprites.add(enemy.generateDeadSprite(player.getDirection()));							
 					}
 				}
 				if (!player.isInvincible() && enemy.overlaps(player)) {					
-					player.setAcceleration(new Vector2(0,0));					
-					player.setInvincible(true);
-					//player.setState(SpriteMoveEnum.ENEMY_HIT);
-					player.setAttacking(false);					
+					enemy.hitPlayer(player);	
 					Gdx.app.log("GameScreen::handleEnemies", "1 point de vie en moins !!!");				
 				}								
 			}

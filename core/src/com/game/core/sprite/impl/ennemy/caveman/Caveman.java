@@ -12,6 +12,8 @@ import com.game.core.util.enums.DirectionEnum;
 
 public class Caveman extends AbstractTileObjectEnemy {
 
+	private static final float X_ACCELERATION = 3;
+	
 	private Animation walkLeftAnimation;
 	
 	private Animation walkRightAnimation;
@@ -29,7 +31,7 @@ public class Caveman extends AbstractTileObjectEnemy {
 		moveable = true;
 		collidableWithTilemap = false;
 		gravitating = false;	
-		this.acceleration.x = 2.5f;
+		this.acceleration.x = X_ACCELERATION;
 		this.direction = DirectionEnum.LEFT;
 		String xMoveString = (String) mapObject.getProperties().get("xMove");
 		X_MIN_LIMIT = xMoveString!=null ? getX() - Float.parseFloat(xMoveString) : getX() - X_MOVE;
@@ -59,7 +61,7 @@ public class Caveman extends AbstractTileObjectEnemy {
 		} 
 		if (currentAnimation==turnAnimation && turnAnimation.isAnimationFinished(stateTime)) {						
 			currentAnimation = direction==DirectionEnum.RIGHT ? walkRightAnimation : walkLeftAnimation;
-			this.acceleration.x = 2f;
+			acceleration.x = X_ACCELERATION;
 		}
 	}
 	

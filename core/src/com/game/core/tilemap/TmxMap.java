@@ -1,7 +1,6 @@
 package com.game.core.tilemap;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,9 +24,7 @@ import com.game.core.collision.math.MathFunction;
 import com.game.core.sprite.AbstractEnemy;
 import com.game.core.sprite.AbstractItem;
 import com.game.core.sprite.TileObjectEnum;
-import com.game.core.sprite.impl.ennemy.caveman.Caveman;
-import com.game.core.sprite.impl.ennemy.fly.Fly;
-import com.game.core.sprite.impl.item.Candy;
+import com.game.core.sprite.impl.ennemy.Peak;
 import com.game.core.sprite.impl.item.Flag;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.util.constants.TilemapConstants;
@@ -68,6 +65,8 @@ public class TmxMap {
 	
 	private List<Integer> slopeContantTiles;
 	
+	private List<Integer> peakTiles;
+	
 	private boolean backgroundScrollingVertically;
 	
 	public TmxMap(String levelName) {
@@ -79,15 +78,17 @@ public class TmxMap {
 		initBackgrounds();
 		initMapObjects();
 		initTilesProperties();
+		createObjectFromTiles();
 		dimensions = new Vector2((Integer)map.getProperties().get(TilemapConstants.MAP_PROPERTY_WIDTH), (Integer)map.getProperties().get(TilemapConstants.MAP_PROPERTY_HEIGHT));
 		cameraEnum = CameraEnum.valueOf(((String) properties.get(TilemapConstants.MAP_PROPERTY_CAMERA)).toUpperCase());						
-	}
+	}	
 
 	private void initTilesProperties() {
 		
 		slopeTilesFunctions = new HashMap<Integer, MathFunction>();
 		cloudTiles= new ArrayList<>();
-		slopeContantTiles= new ArrayList<>();
+		slopeContantTiles = new ArrayList<>();
+		peakTiles = new ArrayList<>();
 		
 		TiledMapTileSet tileset = map.getTileSets().getTileSet(1);	
 		for (TiledMapTile tiledMapTile : tileset) {			
@@ -105,9 +106,25 @@ public class TmxMap {
 					}									
 				} else if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_CLOUD)) {
 					cloudTiles.add(tiledMapTile.getId());					
-				}
+				} else if (key.equalsIgnoreCase(TilemapConstants.TILE_PROPERTY_PEAK)) {
+					peakTiles.add(tiledMapTile.getId());
+				} 
 			}
 		}
+	}
+	
+	private void createObjectFromTiles() {
+		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("foreground");
+        for(int x = 0; x < layer.getWidth();x++){
+            for(int y = 0; y < layer.getHeight();y++){
+                TiledMapTileLayer.Cell cell = layer.getCell(x,y);
+                if (cell!=null && peakTiles.contains(cell.getTile().getId())) {                
+                	enemies.add(new Peak(new Vector2(x, y)));                	
+                }                
+            }
+
+        }
+		
 	}
 	
 	private void initBackgrounds() {			

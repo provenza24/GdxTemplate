@@ -3,6 +3,7 @@ package com.game.core.sprite;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
+import com.game.core.sprite.impl.player.Player;
 import com.game.core.util.enums.DirectionEnum;
 import com.game.core.util.enums.SpriteMoveEnum;
 
@@ -38,6 +39,12 @@ public abstract class AbstractEnemy extends AbstractSprite {
 			setDeletable(true);
 		}		
 		return true;
+	}
+	
+	public void hitPlayer(Player player) {
+		player.setAcceleration(new Vector2(0,0));					
+		player.setInvincible(true);		
+		player.setAttacking(false);									
 	}
 	
 	public abstract AbstractSprite generateDeadSprite(DirectionEnum directionEnum);
