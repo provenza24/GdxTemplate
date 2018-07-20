@@ -52,11 +52,15 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private Animation idleAnimation;
 	
+	private Animation cryAnimation;
+	
 	private boolean attacking;
 	
 	private float idleTimeCount;
 	
 	private Club club;
+	
+	private boolean isCrying;
 
 	public Player(MapObject mapObject) {
 		super(mapObject, new Vector2(X_OFFSET,Y_OFFSET));				
@@ -86,6 +90,7 @@ public class Player extends AbstractTileObjectSprite {
 		hitLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{29,30,31,32,33}, 20, 0.075f);
 		jumpHitRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{34,35,36,37,38,39}, 20, 0.06f);
 		jumpHitLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{40,41,42,43,44,45}, 20, 0.06f);
+		cryAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{46,47,48}, 20, 0.06f);
 		idleAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{49,50,51,50,51,50,51,50}, 20, 0.3f);
 		currentAnimation = idleAnimationRight;				
 	}
@@ -125,14 +130,22 @@ public class Player extends AbstractTileObjectSprite {
 		}
 	}
 	
-	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {				
-		move(deltaTime);
-		tilemapCollisionHandler.collideWithTilemap(tileMap, this);
+	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {
+		if (!isCrying) {
+			move(deltaTime);
+			tilemapCollisionHandler.collideWithTilemap(tileMap, this);
+		}
 		updateBounds();
 		updateInvincibleStatus(deltaTime);
+		updateTimeCounters(deltaTime);
 		updateAnimation(deltaTime);
 	}
 	
+	private void updateTimeCounters(float deltaTime) {
+		stateTime = stateTime > 240 ? 0 : stateTime + deltaTime;		
+		idleTimeCount = state == SpriteMoveEnum.IDLE ? idleTimeCount + deltaTime : 0;				
+	}
+
 	private void updateInvincibleStatus(float deltaTime) {
 		if (isInvincible) {
 			invincibleTimeCount+=deltaTime;
@@ -144,10 +157,13 @@ public class Player extends AbstractTileObjectSprite {
 
 		boolean isLoopingAnimation = true;
 		
-		stateTime = stateTime > 240 ? 0 : stateTime + delta;		
-		idleTimeCount = state == SpriteMoveEnum.IDLE ? idleTimeCount + delta : 0;
-		
-		if (idleTimeCount>=10f) {
+		if (isCrying) {
+			if (currentAnimation!=cryAnimation) {				
+				stateTime = 0;
+				currentAnimation = cryAnimation;				
+			}						
+			isCrying = !currentAnimation.isAnimationFinished(stateTime);
+		} else if (idleTimeCount>=10f) {
 			if (currentAnimation!=idleAnimation) {
 				stateTime = 0;
 				currentAnimation = idleAnimation;
@@ -186,9 +202,9 @@ public class Player extends AbstractTileObjectSprite {
 							state == SpriteMoveEnum.RUNNING_LEFT || state == SpriteMoveEnum.SLIDING_LEFT ? runningLeftAnimation :							
 								idleAnimationRight;
 			}
-		}
-
-		
+		}{
+			
+		}		
 		currentFrame = currentAnimation.getKeyFrame(stateTime, isLoopingAnimation);		
 	}
 	
@@ -233,5 +249,13 @@ public class Player extends AbstractTileObjectSprite {
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
 	}
+
+	public boolean isCrying() {
+		return isCrying;
+	}
+
+	public void setCrying(boolean isCrying) {
+		this.isCrying = isCrying;
+	}		
 	
 }

@@ -392,8 +392,7 @@ public class GameScreen extends AbstractGameScreen  {
 					}
 				}
 				if (!player.isInvincible() && enemy.overlaps(player)) {					
-					enemy.hitPlayer(player);	
-					Gdx.app.log("GameScreen::handleEnemies", "1 point de vie en moins !!!");				
+					enemy.hitPlayer(player);													
 				}								
 			}
 			if (enemy.isDeletable()) {				
@@ -401,7 +400,6 @@ public class GameScreen extends AbstractGameScreen  {
 			} else if (enemy.isVisible()) {
 				enemy.render(tilemapRenderer.getBatch());
 			}
-
 		}
 	}
 

@@ -44,7 +44,8 @@ public abstract class AbstractEnemy extends AbstractSprite {
 	public void hitPlayer(Player player) {
 		player.setAcceleration(new Vector2(0,0));					
 		player.setInvincible(true);		
-		player.setAttacking(false);									
+		player.setAttacking(false);		
+		player.setCrying(true);
 	}
 	
 	public abstract AbstractSprite generateDeadSprite(DirectionEnum directionEnum);
