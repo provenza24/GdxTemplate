@@ -42,7 +42,8 @@ public class Peak extends AbstractEnemy {
 		if (player.getState()==SpriteMoveEnum.FALLING) {
 			super.hitPlayer(player);
 			player.setState(SpriteMoveEnum.JUMPING);
-			player.setAcceleration(new Vector2(0,0.4f));		
+			player.setAcceleration(new Vector2(0,0.4f));
+			player.setMoveable(true);
 		}
 	}
 	

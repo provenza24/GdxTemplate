@@ -131,10 +131,10 @@ public class Player extends AbstractTileObjectSprite {
 	}
 	
 	public void update(TmxMap tileMap, OrthographicCamera camera, float deltaTime) {
-		if (!isCrying) {
+		if (isMoveable()) {
 			move(deltaTime);
-			tilemapCollisionHandler.collideWithTilemap(tileMap, this);
 		}
+		tilemapCollisionHandler.collideWithTilemap(tileMap, this);
 		updateBounds();
 		updateInvincibleStatus(deltaTime);
 		updateTimeCounters(deltaTime);
@@ -163,6 +163,9 @@ public class Player extends AbstractTileObjectSprite {
 				currentAnimation = cryAnimation;				
 			}						
 			isCrying = !currentAnimation.isAnimationFinished(stateTime);
+			if (!isCrying) {
+				setMoveable(true);
+			}
 		} else if (idleTimeCount>=10f) {
 			if (currentAnimation!=idleAnimation) {
 				stateTime = 0;
