@@ -31,15 +31,15 @@ public class Liana extends AbstractTileObjectItem {
 	static {
 		LEFT_ANGLES = new ArrayList<Integer>();
 		LEFT_ANGLES.add(-90);
-		LEFT_ANGLES.add(-96);
-		LEFT_ANGLES.add(-103);
-		LEFT_ANGLES.add(-109);
-		LEFT_ANGLES.add(-115);
-		LEFT_ANGLES.add(-121);
-		LEFT_ANGLES.add(-127);
-		LEFT_ANGLES.add(-133);
-		LEFT_ANGLES.add(-139);
-		LEFT_ANGLES.add(-145);
+		LEFT_ANGLES.add(-120);
+		LEFT_ANGLES.add(-124);
+		LEFT_ANGLES.add(-128);
+		LEFT_ANGLES.add(-132);
+		LEFT_ANGLES.add(-136);
+		LEFT_ANGLES.add(-140);
+		LEFT_ANGLES.add(-148);
+		LEFT_ANGLES.add(-154);
+		LEFT_ANGLES.add(-160);
 		
 		RIGHT_ANGLES = new ArrayList<Integer>();
 		RIGHT_ANGLES.add(-90);
@@ -77,8 +77,8 @@ public class Liana extends AbstractTileObjectItem {
 	@Override
 	public void move(float deltaTime) {
 		
-		if (getRotation()<-145 && balance==-1) {
-			setRotation(-145);
+		if (getRotation()<-160 && balance==-1) {
+			setRotation(-160);
 			balance = 1;
 		} else if (getRotation()>-35) {
 			setRotation(-35);
