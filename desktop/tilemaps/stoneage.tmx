@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="150" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="21">
+<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="150" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="25">
  <tileset firstgid="1" source="player.tsx"/>
  <tileset firstgid="11" source="stoneage.tsx"/>
  <tileset firstgid="411" source="candy.tsx"/>
- <tileset firstgid="412" source="caveman.tsx"/>
- <tileset firstgid="421" source="fly.tsx"/>
- <tileset firstgid="425" source="dinosaurman.tsx"/>
+ <tileset firstgid="438" source="caveman.tsx"/>
+ <tileset firstgid="447" source="fly.tsx"/>
+ <tileset firstgid="451" source="dinosaurman.tsx"/>
+ <tileset firstgid="469" source="liana.tsx"/>
  <layer id="1" name="background" width="150" height="28" visible="0">
   <properties>
    <property name="background.vertical.scrolling" value="false"/>
@@ -75,22 +76,56 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="3" name="objectsLayer" visible="0">
+ <objectgroup id="3" name="objectsLayer">
   <object id="9" name="player" type="player" gid="1" x="20" y="304" width="32" height="32"/>
-  <object id="13" name="candy" type="candy" gid="411" x="360" y="304" width="16" height="16"/>
-  <object id="14" name="candy" type="candy" gid="411" x="380" y="304" width="16" height="16"/>
-  <object id="15" name="candy" type="candy" gid="411" x="400" y="304" width="16" height="16"/>
-  <object id="16" name="candy" type="candy" gid="411" x="420" y="304" width="16" height="16"/>
-  <object id="17" name="candy" type="candy" gid="411" x="440" y="304" width="16" height="16"/>
-  <object id="18" name="candy" type="candy" gid="411" x="460" y="304" width="16" height="16"/>
-  <object id="19" name="candy" type="candy" gid="411" x="480" y="304" width="16" height="16"/>
-  <object id="20" name="candy" type="candy" gid="411" x="500" y="304" width="16" height="16"/>
-  <object id="21" name="candy" type="candy" gid="411" x="520" y="304" width="16" height="16"/>
-  <object id="22" name="candy" type="candy" gid="411" x="540" y="304" width="16" height="16"/>
-  <object id="23" name="candy" type="candy" gid="411" x="560" y="304" width="16" height="16"/>
-  <object id="14" name="candy" type="candy" gid="411" x="1096" y="182" width="16" height="16"/>
-  <object id="17" name="fly" type="fly" gid="421" x="560" y="205" width="16" height="13"/>
-  <object id="18" name="dinosaurman" type="dinosaurman" gid="425" x="832" y="336" width="32" height="40"/>
-  <object id="19" name="caveman" type="caveman" gid="412" x="224" y="304" width="26" height="40"/>
+  <object id="13" name="candy" type="candy" gid="411" x="360" y="304" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="14" name="candy" type="candy" gid="412" x="380" y="304" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="25"/>
+   </properties>
+  </object>
+  <object id="15" name="candy" type="candy" gid="413" x="400" y="304" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="15"/>
+   </properties>
+  </object>
+  <object id="17" name="candy" type="candy" gid="414" x="440" y="304" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="7"/>
+   </properties>
+  </object>
+  <object id="19" name="candy" type="candy" gid="415" x="480" y="304" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="21" name="candy" type="candy" gid="416" x="496" y="304" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="14" name="candy" type="candy" gid="417" x="1096" y="182" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="17" name="fly" type="fly" gid="447" x="560" y="205" width="16" height="13"/>
+  <object id="18" name="dinosaurman" type="dinosaurman" gid="451" x="832" y="336" width="32" height="40"/>
+  <object id="19" name="caveman" type="caveman" gid="438" x="224" y="304" width="26" height="40"/>
+  <object id="22" name="candy" type="candy" gid="418" x="460" y="304" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="23" name="candy" type="candy" gid="419" x="420" y="304" width="16" height="16">
+   <properties>
+    <property name="tileNumber" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="24" name="liana" type="liana" gid="469" x="313" y="233.667" width="7" height="7"/>
  </objectgroup>
 </map>

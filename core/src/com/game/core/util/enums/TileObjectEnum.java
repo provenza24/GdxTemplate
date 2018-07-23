@@ -6,6 +6,7 @@ import com.game.core.sprite.impl.ennemy.dinosaurman.DinosaurMan;
 import com.game.core.sprite.impl.ennemy.fly.Fly;
 import com.game.core.sprite.impl.item.Candy;
 import com.game.core.sprite.impl.item.Flag;
+import com.game.core.sprite.impl.item.Liana;
 
 public enum TileObjectEnum {
 
@@ -14,6 +15,7 @@ public enum TileObjectEnum {
 	DINOSAURMAN(DinosaurMan.class, new Vector2(0.1f,0.3f), SpriteTypeEnum.ENEMY),
 	
 	CANDY(Candy.class, new Vector2(), SpriteTypeEnum.ITEM),
+	LIANA(Liana.class, new Vector2(), SpriteTypeEnum.ITEM),
 	FLAG(Flag.class, new Vector2(), SpriteTypeEnum.ITEM);
 	
 	private TileObjectEnum(Class<?> zclass, Vector2 offset, SpriteTypeEnum spriteTypeEnum) {

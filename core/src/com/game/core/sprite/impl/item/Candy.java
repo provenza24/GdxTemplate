@@ -33,8 +33,7 @@ public class Candy extends AbstractTileObjectItem {
 	public void initializeTexture() {
 		spriteSheet = ResourcesLoader.CANDY;
 		int x = tileNumber/9;
-		int y = tileNumber%9;
-		System.out.println(x+" "+y);
+		int y = tileNumber%9;		
 		currentFrame = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/9, spriteSheet.getHeight()/3)[x][y];	
 	}
 	

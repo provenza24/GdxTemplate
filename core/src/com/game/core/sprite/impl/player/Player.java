@@ -205,8 +205,6 @@ public class Player extends AbstractTileObjectSprite {
 							state == SpriteMoveEnum.RUNNING_LEFT || state == SpriteMoveEnum.SLIDING_LEFT ? runningLeftAnimation :							
 								idleAnimationRight;
 			}
-		}{
-			
 		}		
 		currentFrame = currentAnimation.getKeyFrame(stateTime, isLoopingAnimation);		
 	}

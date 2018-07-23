@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="150" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="24">
+<map version="1.0" tiledversion="2018.06.01" orientation="orthogonal" renderorder="right-down" width="150" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="25">
  <tileset firstgid="1" source="player.tsx"/>
  <tileset firstgid="11" source="stoneage.tsx"/>
  <tileset firstgid="411" source="candy.tsx"/>
  <tileset firstgid="438" source="caveman.tsx"/>
  <tileset firstgid="447" source="fly.tsx"/>
  <tileset firstgid="451" source="dinosaurman.tsx"/>
+ <tileset firstgid="469" source="liana.tsx"/>
  <layer id="1" name="background" width="150" height="28" visible="0">
   <properties>
    <property name="background.vertical.scrolling" value="false"/>
@@ -125,5 +126,6 @@
     <property name="tileNumber" type="int" value="1"/>
    </properties>
   </object>
+  <object id="24" name="liana" type="liana" gid="469" x="313" y="233.667" width="7" height="7"/>
  </objectgroup>
 </map>

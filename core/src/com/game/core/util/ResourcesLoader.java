@@ -28,6 +28,8 @@ public class ResourcesLoader {
 	
 	public static final Texture DINOSAURMAN_MASK = new Texture(Gdx.files.internal("sprites/sfx/mask.png"));
 	
+	public static final Texture LIANA = new Texture(Gdx.files.internal("sprites/items/liana.png"));
+	
 	public static Texture BACKGROUND_FOREST;
 	
 	public static Texture getBackgroundForest() {
