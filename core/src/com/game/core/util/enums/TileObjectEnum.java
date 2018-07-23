@@ -1,4 +1,4 @@
-package com.game.core.sprite;
+package com.game.core.util.enums;
 
 import com.badlogic.gdx.math.Vector2;
 import com.game.core.sprite.impl.ennemy.caveman.Caveman;
@@ -6,13 +6,12 @@ import com.game.core.sprite.impl.ennemy.dinosaurman.DinosaurMan;
 import com.game.core.sprite.impl.ennemy.fly.Fly;
 import com.game.core.sprite.impl.item.Candy;
 import com.game.core.sprite.impl.item.Flag;
-import com.game.core.util.enums.SpriteTypeEnum;
 
 public enum TileObjectEnum {
 
-	CAVEMAN(Caveman.class, new Vector2(0.1f,0.1f), SpriteTypeEnum.ENEMY),
+	CAVEMAN(Caveman.class, new Vector2(0.1f,0.3f), SpriteTypeEnum.ENEMY),
 	FLY(Fly.class, new Vector2(), SpriteTypeEnum.ENEMY),
-	DINOSAURMAN(DinosaurMan.class, new Vector2(0.1f,0.1f), SpriteTypeEnum.ENEMY),
+	DINOSAURMAN(DinosaurMan.class, new Vector2(0.1f,0.3f), SpriteTypeEnum.ENEMY),
 	
 	CANDY(Candy.class, new Vector2(), SpriteTypeEnum.ITEM),
 	FLAG(Flag.class, new Vector2(), SpriteTypeEnum.ITEM);

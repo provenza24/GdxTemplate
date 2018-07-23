@@ -14,20 +14,29 @@ public class Candy extends AbstractTileObjectItem {
 	
 	private Vector2 origin;
 	
+	private Integer tileNumber;
+	
 	public Candy(MapObject mapObject, Vector2 offset) {
 		super(mapObject, offset);
 		collidableWithTilemap = false;
 		gravitating = false;
 		isAnimated = false;		
-		origin = new Vector2(getHalfWidth(),getHalfHeight());
-		setName("CANDY");
+		origin = new Vector2(getHalfWidth(),getHalfHeight());		
+		tileNumber = Integer.parseInt((String)mapObject.getProperties().get("tileNumber"));
+		initializeTexture();
 	}
 
 	@Override
-	public void initializeAnimations() {		
-		spriteSheet = ResourcesLoader.CANDY;
-		currentFrame = TextureRegion.split(spriteSheet, spriteSheet.getWidth(), spriteSheet.getHeight())[0][0];			
+	public void initializeAnimations() {					
 	}	
+	
+	public void initializeTexture() {
+		spriteSheet = ResourcesLoader.CANDY;
+		int x = tileNumber/9;
+		int y = tileNumber%9;
+		System.out.println(x+" "+y);
+		currentFrame = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/9, spriteSheet.getHeight()/3)[x][y];	
+	}
 	
 	@Override
 	public void move(float deltaTime) {			

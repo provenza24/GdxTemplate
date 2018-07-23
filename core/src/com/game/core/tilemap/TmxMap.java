@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.Array;
 import com.game.core.collision.math.MathFunction;
 import com.game.core.sprite.AbstractEnemy;
 import com.game.core.sprite.AbstractItem;
-import com.game.core.sprite.TileObjectEnum;
 import com.game.core.sprite.impl.ennemy.Peak;
 import com.game.core.sprite.impl.item.Flag;
 import com.game.core.sprite.impl.player.Player;
@@ -31,6 +30,7 @@ import com.game.core.util.constants.TilemapConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
 import com.game.core.util.enums.CameraEnum;
 import com.game.core.util.enums.SpriteTypeEnum;
+import com.game.core.util.enums.TileObjectEnum;
 import com.game.core.util.enums.math.MathFunctionEnum;
 
 public class TmxMap {
@@ -122,9 +122,7 @@ public class TmxMap {
                 	enemies.add(new Peak(new Vector2(x, y)));                	
                 }                
             }
-
-        }
-		
+        }		
 	}
 	
 	private void initBackgrounds() {			
@@ -172,21 +170,7 @@ public class TmxMap {
 				} catch (Exception e) {					
 					e.printStackTrace();	
 				}
-			}
-			
-			/*if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_FLAG)) {
-				flag = new Flag(mapObject, new Vector2());
-				items.add(flag);
-			}
-			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_CANDY)) {
-				items.add(new Candy(mapObject, new Vector2()));				
-			}
-			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_CAVEMAN)) {
-				enemies.add(new Caveman(mapObject, new Vector2(0.1f, 0.1f)));				
-			}
-			if (objectProperty.get("type").toString().equals(TilemapConstants.TILE_TYPE_FLY)) {
-				enemies.add(new Fly(mapObject, new Vector2()));				
-			}*/
+			}					
 		}
 	}
 
