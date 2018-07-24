@@ -1,16 +1,22 @@
 package com.game.core.sprite.impl.item;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.actions.FloatAction;
+import com.game.core.ActionBuilder;
+import com.game.core.sprite.AbstractSprite;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.sprite.tileobject.AbstractTileObjectItem;
 import com.game.core.util.ResourcesLoader;
 import com.game.core.util.constants.ScreenConstants;
+import com.game.core.util.enums.SpriteMoveEnum;
 
 public class Liana extends AbstractTileObjectItem {
 	
@@ -22,37 +28,17 @@ public class Liana extends AbstractTileObjectItem {
 		
 	private static int NB_POINTS = 10;
 	
-	private int balance = -1;		
+	private static List<Integer> LEFT_ANGLES = Arrays.asList(-90,-128,-130,-136,-138,-144,-146,-152,-154,-160);
 	
-	private static List<Integer> LEFT_ANGLES;
+	private static List<Integer> RIGHT_ANGLES = Arrays.asList(-90,-52,-50,-44,-42,-36,-34,-28,-26,-20);
 	
-	private static List<Integer> RIGHT_ANGLES;		
+	private FloatAction floatAction;
 	
-	static {
-		LEFT_ANGLES = new ArrayList<Integer>();
-		LEFT_ANGLES.add(-90);
-		LEFT_ANGLES.add(-120);
-		LEFT_ANGLES.add(-124);
-		LEFT_ANGLES.add(-128);
-		LEFT_ANGLES.add(-132);
-		LEFT_ANGLES.add(-136);
-		LEFT_ANGLES.add(-140);
-		LEFT_ANGLES.add(-148);
-		LEFT_ANGLES.add(-154);
-		LEFT_ANGLES.add(-160);
-		
-		RIGHT_ANGLES = new ArrayList<Integer>();
-		RIGHT_ANGLES.add(-90);
-		RIGHT_ANGLES.add(-83);
-		RIGHT_ANGLES.add(-77);
-		RIGHT_ANGLES.add(-71);
-		RIGHT_ANGLES.add(-65);
-		RIGHT_ANGLES.add(-59);
-		RIGHT_ANGLES.add(-53);
-		RIGHT_ANGLES.add(-47);
-		RIGHT_ANGLES.add(-41);
-		RIGHT_ANGLES.add(-35);
-	}
+	private boolean isPlayerStuck;
+	
+	private boolean stuckable;
+	
+	private float stuckTimeCount;
 	
 	public Liana(MapObject mapObject, Vector2 offset) {
 		super(mapObject, offset);
@@ -65,7 +51,11 @@ public class Liana extends AbstractTileObjectItem {
 			points.add(new Vector2(origin.x, origin.y + radius*i));
 		}		
 		setRotation(-90);
-		
+		floatAction = ActionBuilder.createFloatAction(-90, -160, 0.5f); 
+		addAction(floatAction);
+		setSize(radius, radius);
+		bounds = new Rectangle(getX(), getY(), getWidth(), getHeight());
+		stuckable = true;
 	}
 
 	@Override
@@ -77,21 +67,31 @@ public class Liana extends AbstractTileObjectItem {
 	@Override
 	public void move(float deltaTime) {
 		
-		if (getRotation()<-160 && balance==-1) {
-			setRotation(-160);
-			balance = 1;
-		} else if (getRotation()>-35) {
-			setRotation(-35);
-			balance = -1;
-		} 
+		if (!stuckable) {
+			stuckTimeCount += deltaTime;
+			if (stuckTimeCount>=1) {
+				stuckable = true;
+				stuckTimeCount = 0;
+			}
+		}
 		
+		this.act(deltaTime);
+		setRotation(floatAction.getValue());
+				
+		if (getRotation()==-160) {
+			floatAction = ActionBuilder.createFloatAction(-160, -20, 1); 
+			addAction(floatAction);			
+		} else if (getRotation()==-20) {
+			floatAction = ActionBuilder.createFloatAction(-20, -160, 1);
+			addAction(floatAction);			
+		}
+				
 		for (int i=0;i<NB_POINTS;i++) {
 			if (getRotation()>LEFT_ANGLES.get(i) && getRotation()<RIGHT_ANGLES.get(i)) {
 				points.get(i).x = origin.x + (radius*i) * (float)Math.cos(Math.toRadians(getRotation()));
 				points.get(i).y = origin.y + (radius*i) * (float)Math.sin(Math.toRadians(getRotation()));
 			}
-		}		
-		setRotation(getRotation()+2*balance);				
+		}					
 	}
 	
 	@Override
@@ -104,7 +104,49 @@ public class Liana extends AbstractTileObjectItem {
 	}			
 
 	@Override
-	public void collideWithPlayer(Player player) {				
+	public void collideWithPlayer(Player player) {
+		if (!player.isStuckToLiana()) {
+			player.setMoveable(false);
+			player.setCollidableWithTilemap(false);
+			player.setStuckToLiana(true);
+			player.setAcceleration(new Vector2());
+			player.setState(SpriteMoveEnum.STUCK_TO_LIANA);
+			setPlayerStuck(true);
+			player.storeOldPosition();
+			player.setX(points.get(NB_POINTS-1).x + 0.2f - player.getHalfWidth()-player.getOffset().x );
+			player.setY(points.get(NB_POINTS-1).y + 0.2f - player.getHalfHeight());
+			player.updateBounds();			
+		}				
+	}
+	
+	public void stuckPlayer(Player player) {
+		player.storeOldPosition();
+		player.setX(points.get(NB_POINTS-1).x + 0.2f - player.getHalfWidth()-player.getOffset().x );
+		player.setY(points.get(NB_POINTS-1).y + 0.2f - player.getHalfHeight());
+		player.updateBounds();
+	}
+	
+	public boolean overlaps(AbstractSprite sprite) {		
+		return stuckable ? this.getBounds().contains(sprite.getX()+sprite.getHalfWidth()+sprite.getOffset().x, sprite.getY()+sprite.getHalfHeight()) : false;		
+	}
+	
+	public void updateBounds() {
+		bounds.setX(points.get(NB_POINTS-1).x);
+		bounds.setY(points.get(NB_POINTS-1).y);
+	}
+
+	public boolean isPlayerStuck() {
+		return isPlayerStuck;
+	}
+
+	public void setPlayerStuck(boolean isPlayerStuck) {
+		this.isPlayerStuck = isPlayerStuck;
+	}
+	
+	public void unstuck() {
+		this.isPlayerStuck = false;
+		stuckTimeCount = 0;
+		stuckable = false;
 	}
 	
 }

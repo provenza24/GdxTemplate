@@ -12,5 +12,6 @@ public enum SpriteMoveEnum {
 	FALLING,
 	ATTACK_RIGHT,
 	ATTACK_LEFT,
-	ENEMY_HIT;
+	ENEMY_HIT,
+	STUCK_TO_LIANA;
 }

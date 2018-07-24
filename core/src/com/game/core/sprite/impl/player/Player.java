@@ -61,6 +61,8 @@ public class Player extends AbstractTileObjectSprite {
 	private Club club;
 	
 	private boolean isCrying;
+	
+	private boolean isStuckToLiana;
 
 	public Player(MapObject mapObject) {
 		super(mapObject, new Vector2(X_OFFSET,Y_OFFSET));				
@@ -134,8 +136,12 @@ public class Player extends AbstractTileObjectSprite {
 		if (isMoveable()) {
 			move(deltaTime);
 		}
-		tilemapCollisionHandler.collideWithTilemap(tileMap, this);
-		updateBounds();
+		if (isCollidableWithTilemap()) {
+			tilemapCollisionHandler.collideWithTilemap(tileMap, this);
+		}
+		if (!isStuckToLiana) {
+			updateBounds();
+		}
 		updateInvincibleStatus(deltaTime);
 		updateTimeCounters(deltaTime);
 		updateAnimation(deltaTime);
@@ -257,6 +263,14 @@ public class Player extends AbstractTileObjectSprite {
 
 	public void setCrying(boolean isCrying) {
 		this.isCrying = isCrying;
+	}
+
+	public boolean isStuckToLiana() {
+		return isStuckToLiana;
+	}
+
+	public void setStuckToLiana(boolean isStuckToLiana) {
+		this.isStuckToLiana = isStuckToLiana;
 	}		
 	
 }

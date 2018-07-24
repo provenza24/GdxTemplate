@@ -28,6 +28,7 @@ import com.game.core.sprite.AbstractEnemy;
 import com.game.core.sprite.AbstractItem;
 import com.game.core.sprite.AbstractSprite;
 import com.game.core.sprite.impl.item.Candy;
+import com.game.core.sprite.impl.item.Liana;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.tilemap.TmxMap;
 import com.game.core.util.Level;
@@ -107,7 +108,9 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private float debugFontSize = ScreenConstants.PREFERED_WIDHT * 2f / 800;
 					
-	private List<AbstractSprite> sfxSprites;			
+	private List<AbstractSprite> sfxSprites;	
+	
+	private Liana currentLiana;
 	
 	public GameScreen(Level level) {
 				
@@ -294,7 +297,7 @@ public class GameScreen extends AbstractGameScreen  {
 					
 	private void handleInput() {
 									
-		if (!player.isAttacking()) {
+		if (!player.isAttacking() && !player.isStuckToLiana()) {
 			if (Gdx.input.isKeyPressed(KEY_RIGHT)) {
 				if (player.getDirection() == DirectionEnum.LEFT) {
 					// Sliding on the right				
@@ -341,13 +344,20 @@ public class GameScreen extends AbstractGameScreen  {
 				player.setOnSlopeTile(false);
 				player.setOnCloudTile(false);
 				player.setStateTime(0);
+				if (player.isStuckToLiana()) {
+					Gdx.app.log("KEY_UP", "Jump out from liana");
+					player.setStuckToLiana(false);
+					player.setMoveable(true);
+					player.setCollidableWithTilemap(true);
+					currentLiana.unstuck();
+				}
 			}			
 			canJump = false;
 		} else {
 			canJump = true;
 		}
 		
-		if (Gdx.input.isKeyJustPressed(KEY_HIT) && !player.isAttacking()) {
+		if (Gdx.input.isKeyJustPressed(KEY_HIT) && !player.isAttacking() && !player.isStuckToLiana()) {
 			player.setStateTime(0);
 			player.setAttacking(true);
 			if (player.getState()!=SpriteMoveEnum.JUMPING && player.getState()!=SpriteMoveEnum.FALLING) {				
@@ -365,11 +375,17 @@ public class GameScreen extends AbstractGameScreen  {
 		for (int i = 0; i < items.size(); i++) {
 			AbstractItem item = items.get(i);						
 			item.update(tilemap, camera.getCamera(), deltaTime);
-			boolean collidePlayer = item.overlaps(player);						
-			if (collidePlayer) {
-				//levelFinished = true;
-				item.collideWithPlayer(player);
-			}
+			if (item instanceof Liana && ((Liana)item).isPlayerStuck()) {
+				((Liana)item).stuckPlayer(player);
+				currentLiana = (Liana)item; 
+			} else {
+				boolean collidePlayer = item.overlaps(player);						
+				if (collidePlayer) {
+					//levelFinished = true;
+					Gdx.app.log("GameScreen::handleItems", "Colliding with item");
+					item.collideWithPlayer(player);				
+				}				
+			}	
 			if (item.isDeletable()) {				
 				items.remove(i--);
 			} else if (item.isVisible()) {

@@ -198,7 +198,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		tilemapCollisionHandler.collideWithTilemap(tilemap, this);
 	}
 	
-	protected void updateBounds() {
+	public void updateBounds() {
 		bounds.setX(getX()+offset.x);
 		bounds.setY(getY());
 	}
@@ -216,7 +216,7 @@ public abstract class AbstractSprite extends Actor implements IMoveable, IDrawab
 		}				
 	}
 	
-	protected void storeOldPosition() {
+	public void storeOldPosition() {
 		oldPosition.x = getX();
 		oldPosition.y = getY();		
 		oldAcceleration.x = acceleration.x;
