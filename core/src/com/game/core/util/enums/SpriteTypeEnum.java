@@ -1,5 +1,5 @@
 package com.game.core.util.enums;
 
 public enum SpriteTypeEnum {
-	ITEM, ENEMY; 
+	ITEM, ENEMY, LIANA; 
 }

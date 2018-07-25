@@ -210,6 +210,8 @@ public class GameScreen extends AbstractGameScreen  {
 		tilemapRenderer.renderTileLayer(tilemap.getBackgroundLayer());
 		tilemapRenderer.getBatch().end();
 		
+		// Move lianas
+		handleLianas(delta);
 		// Move items, check collisions, render
 		handleItems(delta);
 		// Move enemies, check collisions, render
@@ -344,8 +346,7 @@ public class GameScreen extends AbstractGameScreen  {
 				player.setOnSlopeTile(false);
 				player.setOnCloudTile(false);
 				player.setStateTime(0);
-				if (player.isStuckToLiana()) {
-					Gdx.app.log("KEY_UP", "Jump out from liana");
+				if (player.isStuckToLiana()) {					
 					player.setStuckToLiana(false);
 					player.setMoveable(true);
 					player.setCollidableWithTilemap(true);
@@ -369,23 +370,38 @@ public class GameScreen extends AbstractGameScreen  {
 		handleDebugKeys();
 	}
 	
+	private void handleLianas(float deltaTime) {
+		List<Liana> lianaList = tilemap.getLianaList();				
+		for (int i = 0; i < lianaList.size(); i++) {
+			Liana liana = lianaList.get(i);			
+			liana.update(tilemap, camera.getCamera(), deltaTime);
+			if (liana.isPlayerStuck()) {
+				currentLiana = liana;
+				liana.stuckPlayer(player);
+			} else {								
+				if (liana.overlaps(player)) {				
+					liana.collideWithPlayer(player);				
+				}		
+			}		
+			if (liana.isDeletable()) {				
+				lianaList.remove(i--);
+			} else if (liana.isVisible()) {
+				liana.render(tilemapRenderer.getBatch());
+			}
+		}
+	}
+	
 	private void handleItems(float deltaTime) {
 		List<AbstractItem> items = tilemap.getItems();		
 		Candy.updateRotation();
 		for (int i = 0; i < items.size(); i++) {
 			AbstractItem item = items.get(i);						
-			item.update(tilemap, camera.getCamera(), deltaTime);
-			if (item instanceof Liana && ((Liana)item).isPlayerStuck()) {
-				((Liana)item).stuckPlayer(player);
-				currentLiana = (Liana)item; 
-			} else {
-				boolean collidePlayer = item.overlaps(player);						
-				if (collidePlayer) {
-					//levelFinished = true;
-					Gdx.app.log("GameScreen::handleItems", "Colliding with item");
-					item.collideWithPlayer(player);				
-				}				
-			}	
+			item.update(tilemap, camera.getCamera(), deltaTime);		
+			boolean collidePlayer = item.overlaps(player);						
+			if (collidePlayer) {
+				//levelFinished = true;				
+				item.collideWithPlayer(player);											
+			}
 			if (item.isDeletable()) {				
 				items.remove(i--);
 			} else if (item.isVisible()) {

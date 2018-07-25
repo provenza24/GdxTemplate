@@ -25,6 +25,7 @@ import com.game.core.sprite.AbstractEnemy;
 import com.game.core.sprite.AbstractItem;
 import com.game.core.sprite.impl.ennemy.Peak;
 import com.game.core.sprite.impl.item.Flag;
+import com.game.core.sprite.impl.item.Liana;
 import com.game.core.sprite.impl.player.Player;
 import com.game.core.util.constants.TilemapConstants;
 import com.game.core.util.enums.BackgroundTypeEnum;
@@ -59,6 +60,8 @@ public class TmxMap {
 	
 	private List<AbstractEnemy> enemies;
 	
+	private List<Liana> lianaList;
+	
 	private List<Integer> cloudTiles;
 	
 	private Map<Integer, MathFunction> slopeTilesFunctions;
@@ -88,7 +91,7 @@ public class TmxMap {
 		slopeTilesFunctions = new HashMap<Integer, MathFunction>();
 		cloudTiles= new ArrayList<>();
 		slopeContantTiles = new ArrayList<>();
-		peakTiles = new ArrayList<>();
+		peakTiles = new ArrayList<>();		
 		
 		TiledMapTileSet tileset = map.getTileSets().getTileSet(1);	
 		for (TiledMapTile tiledMapTile : tileset) {			
@@ -145,6 +148,7 @@ public class TmxMap {
 
 		items = new ArrayList<AbstractItem>();
 		enemies = new ArrayList<AbstractEnemy>();
+		lianaList = new ArrayList<Liana>();
 		
 		MapObjects objects = objectsLayer.getObjects();
 		
@@ -157,7 +161,7 @@ public class TmxMap {
 			} else {														
 				try {
 					TileObjectEnum tileObjectEnum = TileObjectEnum.valueOf(objectProperty.get("type").toString().toUpperCase());					
-					Constructor constructor = tileObjectEnum.getZclass().getConstructor(MapObject.class, Vector2.class);
+					Constructor<?> constructor = tileObjectEnum.getZclass().getConstructor(MapObject.class, Vector2.class);
 					Object object = constructor.newInstance(mapObject, tileObjectEnum.getOffset());
 					if (tileObjectEnum.getSpriteTypeEnum()==SpriteTypeEnum.ENEMY) {
 						enemies.add((AbstractEnemy) object);
@@ -166,7 +170,9 @@ public class TmxMap {
 							flag = (Flag)object;
 						}
 						items.add((AbstractItem) object);
-					} 
+					} else if (tileObjectEnum.getSpriteTypeEnum()==SpriteTypeEnum.LIANA) {
+						lianaList.add((Liana)object);
+					}
 				} catch (Exception e) {					
 					e.printStackTrace();	
 				}
@@ -312,6 +318,14 @@ public class TmxMap {
 
 	public void setEnemies(List<AbstractEnemy> enemies) {
 		this.enemies = enemies;
+	}
+
+	public List<Liana> getLianaList() {
+		return lianaList;
+	}
+
+	public void setLianaList(List<Liana> lianaList) {
+		this.lianaList = lianaList;
 	}
 
 

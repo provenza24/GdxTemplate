@@ -67,18 +67,11 @@ public class Liana extends AbstractTileObjectItem {
 	@Override
 	public void move(float deltaTime) {
 		
-		if (!stuckable) {
-			stuckTimeCount += deltaTime;
-			if (stuckTimeCount>=1) {
-				stuckable = true;
-				stuckTimeCount = 0;
-			}
-		}
-		
+		updateCounters(deltaTime);		
 		this.act(deltaTime);
 		setRotation(floatAction.getValue());
 				
-		if (getRotation()==-160) {
+		if (getRotation()==-160) {			
 			floatAction = ActionBuilder.createFloatAction(-160, -20, 1); 
 			addAction(floatAction);			
 		} else if (getRotation()==-20) {
@@ -93,6 +86,16 @@ public class Liana extends AbstractTileObjectItem {
 			}
 		}					
 	}
+
+	private void updateCounters(float deltaTime) {
+		if (!stuckable) {
+			stuckTimeCount += deltaTime;
+			if (stuckTimeCount>=1) {
+				stuckable = true;
+				stuckTimeCount = 0;
+			}
+		}
+	}
 	
 	@Override
 	public void render(Batch batch) {
@@ -106,12 +109,12 @@ public class Liana extends AbstractTileObjectItem {
 	@Override
 	public void collideWithPlayer(Player player) {
 		if (!player.isStuckToLiana()) {
+			setPlayerStuck(true);
 			player.setMoveable(false);
 			player.setCollidableWithTilemap(false);
 			player.setStuckToLiana(true);
 			player.setAcceleration(new Vector2());
-			player.setState(SpriteMoveEnum.STUCK_TO_LIANA);
-			setPlayerStuck(true);
+			player.setState(SpriteMoveEnum.STUCK_TO_LIANA);			
 			player.storeOldPosition();
 			player.setX(points.get(NB_POINTS-1).x + 0.2f - player.getHalfWidth()-player.getOffset().x );
 			player.setY(points.get(NB_POINTS-1).y + 0.2f - player.getHalfHeight());
@@ -126,8 +129,10 @@ public class Liana extends AbstractTileObjectItem {
 		player.updateBounds();
 	}
 	
-	public boolean overlaps(AbstractSprite sprite) {		
-		return stuckable ? this.getBounds().contains(sprite.getX()+sprite.getHalfWidth()+sprite.getOffset().x, sprite.getY()+sprite.getHalfHeight()) : false;		
+	public boolean overlaps(AbstractSprite sprite) {	
+		Rectangle playerBounds = new Rectangle(sprite.getX()+0.25f, sprite.getY()+0.25f, 0.5f, 0.5f);
+		return stuckable ? this.getBounds().overlaps(playerBounds) : false;
+		//return stuckable ? this.getBounds().contains(sprite.getX()+sprite.getHalfWidth()+sprite.getOffset().x, sprite.getY()+sprite.getHalfHeight()) : false;		
 	}
 	
 	public void updateBounds() {
@@ -144,7 +149,7 @@ public class Liana extends AbstractTileObjectItem {
 	}
 	
 	public void unstuck() {
-		this.isPlayerStuck = false;
+		isPlayerStuck = false;
 		stuckTimeCount = 0;
 		stuckable = false;
 	}

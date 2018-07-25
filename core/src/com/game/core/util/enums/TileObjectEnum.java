@@ -14,9 +14,10 @@ public enum TileObjectEnum {
 	FLY(Fly.class, new Vector2(), SpriteTypeEnum.ENEMY),
 	DINOSAURMAN(DinosaurMan.class, new Vector2(0.1f,0.3f), SpriteTypeEnum.ENEMY),
 	
-	CANDY(Candy.class, new Vector2(), SpriteTypeEnum.ITEM),
-	LIANA(Liana.class, new Vector2(), SpriteTypeEnum.ITEM),
-	FLAG(Flag.class, new Vector2(), SpriteTypeEnum.ITEM);
+	CANDY(Candy.class, new Vector2(), SpriteTypeEnum.ITEM),	
+	FLAG(Flag.class, new Vector2(), SpriteTypeEnum.ITEM),
+	
+	LIANA(Liana.class, new Vector2(), SpriteTypeEnum.LIANA);
 	
 	private TileObjectEnum(Class<?> zclass, Vector2 offset, SpriteTypeEnum spriteTypeEnum) {
 		this.zclass = zclass;
