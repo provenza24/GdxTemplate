@@ -58,100 +58,125 @@
  </tile>
  <tile id="180">
   <properties>
-   <property name="slope" value="f1"/>
+   <property name="cloud" value=""/>
   </properties>
  </tile>
  <tile id="181">
   <properties>
-   <property name="slope" value="f2"/>
+   <property name="cloud" value=""/>
   </properties>
  </tile>
  <tile id="182">
   <properties>
-   <property name="slope" value="f3"/>
+   <property name="cloud" value=""/>
   </properties>
  </tile>
  <tile id="183">
   <properties>
-   <property name="slope" value="f4"/>
+   <property name="cloud" value=""/>
   </properties>
  </tile>
  <tile id="184">
   <properties>
+   <property name="cloud" value=""/>
+  </properties>
+ </tile>
+ <tile id="200">
+  <properties>
    <property name="slope" value="f1"/>
   </properties>
  </tile>
- <tile id="185">
+ <tile id="201">
   <properties>
    <property name="slope" value="f2"/>
   </properties>
  </tile>
- <tile id="186">
+ <tile id="202">
   <properties>
    <property name="slope" value="f3"/>
   </properties>
  </tile>
- <tile id="187">
+ <tile id="203">
   <properties>
    <property name="slope" value="f4"/>
   </properties>
  </tile>
- <tile id="188">
+ <tile id="204">
+  <properties>
+   <property name="slope" value="f1"/>
+  </properties>
+ </tile>
+ <tile id="205">
+  <properties>
+   <property name="slope" value="f2"/>
+  </properties>
+ </tile>
+ <tile id="206">
+  <properties>
+   <property name="slope" value="f3"/>
+  </properties>
+ </tile>
+ <tile id="207">
+  <properties>
+   <property name="slope" value="f4"/>
+  </properties>
+ </tile>
+ <tile id="208">
   <properties>
    <property name="slope" value="f5"/>
   </properties>
  </tile>
- <tile id="189">
+ <tile id="209">
   <properties>
    <property name="slope" value="f6"/>
   </properties>
  </tile>
- <tile id="190">
+ <tile id="210">
   <properties>
    <property name="slope" value="f7"/>
   </properties>
  </tile>
- <tile id="191">
+ <tile id="211">
   <properties>
    <property name="slope" value="f8"/>
   </properties>
  </tile>
- <tile id="192">
+ <tile id="212">
   <properties>
    <property name="slope" value="f5"/>
   </properties>
  </tile>
- <tile id="193">
+ <tile id="213">
   <properties>
    <property name="slope" value="f6"/>
   </properties>
  </tile>
- <tile id="194">
+ <tile id="214">
   <properties>
    <property name="slope" value="f7"/>
   </properties>
  </tile>
- <tile id="195">
+ <tile id="215">
   <properties>
    <property name="slope" value="f8"/>
   </properties>
  </tile>
- <tile id="196">
+ <tile id="216">
   <properties>
    <property name="cloud" value=""/>
   </properties>
  </tile>
- <tile id="197">
+ <tile id="217">
   <properties>
    <property name="cloud" value=""/>
   </properties>
  </tile>
- <tile id="198">
+ <tile id="218">
   <properties>
    <property name="cloud" value=""/>
   </properties>
  </tile>
- <tile id="199">
+ <tile id="219">
   <properties>
    <property name="cloud" value=""/>
   </properties>
