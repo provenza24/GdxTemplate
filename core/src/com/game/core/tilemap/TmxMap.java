@@ -93,7 +93,7 @@ public class TmxMap {
 		slopeContantTiles = new ArrayList<>();
 		peakTiles = new ArrayList<>();		
 		
-		TiledMapTileSet tileset = map.getTileSets().getTileSet(1);	
+		TiledMapTileSet tileset = map.getTileSets().getTileSet("stoneage");	
 		for (TiledMapTile tiledMapTile : tileset) {			
 			MapProperties props = tiledMapTile.getProperties();
 			Iterator<String> keysIterator = props.getKeys();
@@ -104,6 +104,7 @@ public class TmxMap {
 					String value = valuesIterator.next().toString().toUpperCase();
 					MathFunctionEnum mathFunctionEnum = MathFunctionEnum.valueOf(value);
 					slopeTilesFunctions.put(tiledMapTile.getId(), mathFunctionEnum.getMathFunction());
+					Gdx.app.debug("SLOPE TILE", Integer.toString(tiledMapTile.getId()));
 					if (mathFunctionEnum.isConstant()) {
 						slopeContantTiles.add(tiledMapTile.getId());
 					}									
@@ -183,7 +184,7 @@ public class TmxMap {
 	public boolean isCollisioningTileAt(int x, int y) {
 		Cell cell = backgroundLayer.getCell(x, y);
 		if (cell != null) {
-			return cell.getTile().getId() >= 221;								
+			return cell.getTile().getId() >= 220;								
 		}
 		return false;
 	}

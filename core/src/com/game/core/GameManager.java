@@ -32,7 +32,7 @@ public class GameManager extends AbstractGameManager {
 		SCREENS.put(ScreenEnum.LEVEL_MENU, new LevelMenuScreen());
 		
 		currentLevelIndex=0;				
-		levels.add(new Level.Builder("stoneage.tmx").levelNumber(1).levelName("STONE AGE SUBURBS").build());
+		levels.add(new Level.Builder("stoneage/stoneage.tmx").levelNumber(1).levelName("STONE AGE SUBURBS").build());
 		//levels.add(new Level.Builder("tilemap2.tmx").levelNumber(1).levelName("FOREST").build());
 		setScreen(SCREENS.get(ScreenEnum.MAIN_MENU));				
 	}

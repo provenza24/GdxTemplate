@@ -17,6 +17,8 @@ import com.game.core.util.enums.SpriteMoveEnum;
 
 public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandler<Player> {
 
+	private static final int SLOPE_ASCENDING_TILE = 208;
+
 	private static final float COLLISION_X_CORRECTIF = 10e-5F;
 	
 	private Cell previousCell;
@@ -127,7 +129,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition-1);
 			mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;		
 			if (mathFunction!=null) {			
-				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;				
+				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=SLOPE_ASCENDING_TILE : cell.getTile().getId() > SLOPE_ASCENDING_TILE;				
 				if (!ascending) {
 					startGoingDown = true;
 					float xDiff = xPosition - (int)xPosition;
@@ -151,7 +153,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 			Cell cell = tileMap.getTileAt((int)xPosition, (int)yPosition+1);
 			mathFunction = cell!=null ? tileMap.getSlopeTilesFunctions().get(cell.getTile().getId()) : null;		
 			if (mathFunction!=null) {			
-				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;				
+				boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=SLOPE_ASCENDING_TILE : cell.getTile().getId() > SLOPE_ASCENDING_TILE;				
 				if (ascending) {
 					startGoingUp = true;
 					float xDiff = xPosition - (int)xPosition;
@@ -187,7 +189,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					autoCorrection = mathFunction!=null;
 				}
 				if (mathFunction!=null) {
-					boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
+					boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=SLOPE_ASCENDING_TILE : cell.getTile().getId() > SLOPE_ASCENDING_TILE;
 					float xDiff = xPosition - (int)xPosition;			
 					float yFunc = mathFunction.compute(xDiff);					
 					if (autoCorrection || yPosition<=((int)yPosition + yFunc + 0.1f)) {
@@ -220,7 +222,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 					autoCorrection = mathFunction!=null;
 				}
 				if (mathFunction!=null) {
-					boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=198 : cell.getTile().getId() > 198;
+					boolean ascending = sprite.getDirection()==DirectionEnum.RIGHT ? cell.getTile().getId() <=SLOPE_ASCENDING_TILE : cell.getTile().getId() > SLOPE_ASCENDING_TILE;
 					float xDiff = xPosition - (int)xPosition;			
 					float yFunc = mathFunction.compute(xDiff);					
 					if (autoCorrection || yPosition<=((int)yPosition + yFunc + 0.1f)) {
@@ -248,7 +250,7 @@ public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandl
 		boolean onFloorCorrection = false;
 		if (sprite.isOnSlopeTile() && !tilemap.isSlopeConstantTile(previousCell.getTile().getId())) {			
 			onFloorCorrection = true;
-			boolean ascending = previousCell.getTile().getId() <=198;
+			boolean ascending = previousCell.getTile().getId() <=SLOPE_ASCENDING_TILE;
 			if (sprite.getDirection()==DirectionEnum.RIGHT) {
 				sprite.setY(ascending ? (int)sprite.getOldPosition().y + 1 + COLLISION_X_CORRECTIF : (int)sprite.getY() + COLLISION_X_CORRECTIF);
 			} else {
