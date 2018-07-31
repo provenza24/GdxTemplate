@@ -184,7 +184,7 @@ public class TmxMap {
 	public boolean isCollisioningTileAt(int x, int y) {
 		Cell cell = backgroundLayer.getCell(x, y);
 		if (cell != null) {
-			return cell.getTile().getId() >= 220;								
+			return cell.getTile().getId() >= 260;								
 		}
 		return false;
 	}

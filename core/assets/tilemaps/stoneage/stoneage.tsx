@@ -1,154 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="stoneage" tilewidth="16" tileheight="16" tilecount="400" columns="20">
  <image source="../stoneage.png" width="320" height="320"/>
- <tile id="136">
-  <properties>
-   <property name="peak" value=""/>
-  </properties>
- </tile>
- <tile id="137">
-  <properties>
-   <property name="peak" value=""/>
-  </properties>
- </tile>
- <tile id="138">
-  <properties>
-   <property name="peak" value=""/>
-  </properties>
- </tile>
- <tile id="156">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="157">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="180">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="181">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="182">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="183">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="184">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="200">
+ <tile id="240">
   <properties>
    <property name="slope" value="f1"/>
   </properties>
  </tile>
- <tile id="201">
+ <tile id="241">
   <properties>
    <property name="slope" value="f2"/>
   </properties>
  </tile>
- <tile id="202">
+ <tile id="242">
   <properties>
    <property name="slope" value="f3"/>
   </properties>
  </tile>
- <tile id="203">
+ <tile id="243">
   <properties>
    <property name="slope" value="f4"/>
   </properties>
  </tile>
- <tile id="204">
+ <tile id="244">
   <properties>
    <property name="slope" value="f1"/>
   </properties>
  </tile>
- <tile id="205">
+ <tile id="245">
   <properties>
    <property name="slope" value="f2"/>
   </properties>
  </tile>
- <tile id="206">
+ <tile id="246">
   <properties>
    <property name="slope" value="f3"/>
   </properties>
  </tile>
- <tile id="207">
+ <tile id="247">
   <properties>
    <property name="slope" value="f4"/>
   </properties>
  </tile>
- <tile id="208">
+ <tile id="248">
   <properties>
    <property name="slope" value="f5"/>
   </properties>
  </tile>
- <tile id="209">
+ <tile id="249">
   <properties>
    <property name="slope" value="f6"/>
   </properties>
  </tile>
- <tile id="210">
+ <tile id="250">
   <properties>
    <property name="slope" value="f7"/>
   </properties>
  </tile>
- <tile id="211">
+ <tile id="251">
   <properties>
    <property name="slope" value="f8"/>
   </properties>
  </tile>
- <tile id="212">
+ <tile id="252">
   <properties>
    <property name="slope" value="f5"/>
   </properties>
  </tile>
- <tile id="213">
+ <tile id="253">
   <properties>
    <property name="slope" value="f6"/>
   </properties>
  </tile>
- <tile id="214">
+ <tile id="254">
   <properties>
    <property name="slope" value="f7"/>
   </properties>
  </tile>
- <tile id="215">
+ <tile id="255">
   <properties>
    <property name="slope" value="f8"/>
-  </properties>
- </tile>
- <tile id="216">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="217">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="218">
-  <properties>
-   <property name="cloud" value=""/>
-  </properties>
- </tile>
- <tile id="219">
-  <properties>
-   <property name="cloud" value=""/>
   </properties>
  </tile>
 </tileset>

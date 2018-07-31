@@ -134,7 +134,7 @@ public class CollisionEvent {
 	}
 	
 	public boolean isCollidingUpperBlock() {
-		return (collidingTopLeft || collidingTopRight) && collidingMiddleTop;
+		return (collidingTopLeft || collidingTopRight) || collidingMiddleTop;
 	}
 	
 	public boolean isBlockedBottomOnly() {

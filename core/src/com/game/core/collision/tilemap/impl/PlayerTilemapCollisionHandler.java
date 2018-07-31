@@ -17,7 +17,7 @@ import com.game.core.util.enums.SpriteMoveEnum;
 
 public class PlayerTilemapCollisionHandler extends AbstractTilemapCollisionHandler<Player> {
 
-	private static final int SLOPE_ASCENDING_TILE = 208;
+	private static final int SLOPE_ASCENDING_TILE = 248;
 
 	private static final float COLLISION_X_CORRECTIF = 10e-5F;
 	
