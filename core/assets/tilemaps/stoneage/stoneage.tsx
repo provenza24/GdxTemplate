@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="stoneage" tilewidth="16" tileheight="16" tilecount="400" columns="20">
  <image source="../stoneage.png" width="320" height="320"/>
+ <tile id="136">
+  <properties>
+   <property name="peak" value=""/>
+  </properties>
+ </tile>
+ <tile id="137">
+  <properties>
+   <property name="peak" value=""/>
+  </properties>
+ </tile>
+ <tile id="138">
+  <properties>
+   <property name="peak" value=""/>
+  </properties>
+ </tile>
  <tile id="240">
   <properties>
    <property name="slope" value="f1"/>
@@ -79,6 +94,16 @@
  <tile id="255">
   <properties>
    <property name="slope" value="f8"/>
+  </properties>
+ </tile>
+ <tile id="276">
+  <properties>
+   <property name="brick" value=""/>
+  </properties>
+ </tile>
+ <tile id="277">
+  <properties>
+   <property name="brick" value=""/>
   </properties>
  </tile>
 </tileset>

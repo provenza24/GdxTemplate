@@ -54,6 +54,10 @@ public class Player extends AbstractTileObjectSprite {
 	
 	private Animation cryAnimation;
 	
+	private Animation lianaRightAnimation;
+	
+	private Animation lianaLeftAnimation;
+	
 	private boolean attacking;
 	
 	private float idleTimeCount;
@@ -94,6 +98,8 @@ public class Player extends AbstractTileObjectSprite {
 		jumpHitLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{40,41,42,43,44,45}, 20, 0.06f);
 		cryAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{46,47,48}, 20, 0.06f);
 		idleAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{49,50,51,50,51,50,51,50}, 20, 0.3f);
+		lianaRightAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{54}, 20, 1f);
+		lianaLeftAnimation = AnimationBuilder.getInstance().build(textureRegions, new int[]{58}, 20, 1f);
 		currentAnimation = idleAnimationRight;				
 	}
 
@@ -163,6 +169,9 @@ public class Player extends AbstractTileObjectSprite {
 
 		boolean isLoopingAnimation = true;
 		
+		if (isStuckToLiana) {
+			currentAnimation = direction == DirectionEnum.RIGHT ? lianaRightAnimation : lianaLeftAnimation;	
+		} else 
 		if (isCrying) {
 			if (currentAnimation!=cryAnimation) {				
 				stateTime = 0;

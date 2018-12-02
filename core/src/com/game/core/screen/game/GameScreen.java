@@ -106,7 +106,7 @@ public class GameScreen extends AbstractGameScreen  {
 	
 	private boolean levelFinished = false;		
 	
-	private float debugFontSize = ScreenConstants.PREFERED_WIDHT * 2f / 800;
+	private float debugFontSize = ScreenConstants.PREFERED_WIDHT * 2f / 2048;
 					
 	private List<AbstractSprite> sfxSprites;	
 	
