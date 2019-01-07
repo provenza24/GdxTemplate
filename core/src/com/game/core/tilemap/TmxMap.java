@@ -170,6 +170,7 @@ public class TmxMap {
 						if (object instanceof Flag) {
 							flag = (Flag)object;
 						}
+						System.out.println(tileObjectEnum.getSpriteTypeEnum().name());
 						items.add((AbstractItem) object);
 					} else if (tileObjectEnum.getSpriteTypeEnum()==SpriteTypeEnum.LIANA) {
 						lianaList.add((Liana)object);

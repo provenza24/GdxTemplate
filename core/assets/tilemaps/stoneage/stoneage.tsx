@@ -16,6 +16,26 @@
    <property name="peak" value=""/>
   </properties>
  </tile>
+ <tile id="196">
+  <properties>
+   <property name="cloud" value=""/>
+  </properties>
+ </tile>
+ <tile id="197">
+  <properties>
+   <property name="cloud" value=""/>
+  </properties>
+ </tile>
+ <tile id="198">
+  <properties>
+   <property name="cloud" value=""/>
+  </properties>
+ </tile>
+ <tile id="199">
+  <properties>
+   <property name="cloud" value=""/>
+  </properties>
+ </tile>
  <tile id="240">
   <properties>
    <property name="slope" value="f1"/>
