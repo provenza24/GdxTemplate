@@ -35,6 +35,15 @@ public class Club extends AbstractSprite {
 	
 	private final static Map<Integer, Float> LEFT_ATTACK_ANGLES = new HashMap<>();
 	
+	private final static Map<Integer, Vector2> JUMP_RIGHT_ATTACK_POSITIONS = new HashMap<>();
+	
+	private final static Map<Integer, Float> JUMP_RIGHT_ATTACK_ANGLES = new HashMap<>();
+	
+	private final static Map<Integer, Vector2> JUMP_LEFT_ATTACK_POSITIONS = new HashMap<>();
+	
+	private final static Map<Integer, Float> JUMP_LEFT_ATTACK_ANGLES = new HashMap<>();
+	
+	
 	private Vector2 origin;
 	
 	private Vector2 attackPosition;
@@ -75,6 +84,35 @@ public class Club extends AbstractSprite {
 		LEFT_ATTACK_ANGLES.put(2, -160f);
 		LEFT_ATTACK_ANGLES.put(3, -240f);
 		LEFT_ATTACK_ANGLES.put(4, 45f);		
+		
+		
+		JUMP_RIGHT_ATTACK_POSITIONS.put(5, new Vector2(-0.9f, -0.9f));
+		JUMP_RIGHT_ATTACK_POSITIONS.put(4, new Vector2(-0.9f, -0.4f));
+		JUMP_RIGHT_ATTACK_POSITIONS.put(3, new Vector2(-0.9f, 0.1f));
+		JUMP_RIGHT_ATTACK_POSITIONS.put(2, new Vector2(-0.9f, 0.6f));
+		JUMP_RIGHT_ATTACK_POSITIONS.put(1, new Vector2(-0.9f, 0.7f));
+		JUMP_RIGHT_ATTACK_POSITIONS.put(0, new Vector2(-0.9f, 0.8f));
+		
+		JUMP_LEFT_ATTACK_POSITIONS.put(5, new Vector2(0.8f, -0.9f));
+		JUMP_LEFT_ATTACK_POSITIONS.put(4, new Vector2(0.8f, -0.4f));
+		JUMP_LEFT_ATTACK_POSITIONS.put(3, new Vector2(0.8f, 0.1f));
+		JUMP_LEFT_ATTACK_POSITIONS.put(2, new Vector2(0.8f, 0.6f));
+		JUMP_LEFT_ATTACK_POSITIONS.put(1, new Vector2(0.8f, 0.7f));
+		JUMP_LEFT_ATTACK_POSITIONS.put(0, new Vector2(0.8f, 0.8f));
+		
+		JUMP_RIGHT_ATTACK_ANGLES.put(5, 90f);
+		JUMP_RIGHT_ATTACK_ANGLES.put(4, 20f);
+		JUMP_RIGHT_ATTACK_ANGLES.put(3, -160f);
+		JUMP_RIGHT_ATTACK_ANGLES.put(2, -110f);
+		JUMP_RIGHT_ATTACK_ANGLES.put(1, -100f);
+		JUMP_RIGHT_ATTACK_ANGLES.put(0, -90f);
+		
+		JUMP_LEFT_ATTACK_ANGLES.put(0, 90f);
+		JUMP_LEFT_ATTACK_ANGLES.put(1, 100f);
+		JUMP_LEFT_ATTACK_ANGLES.put(2, 110f);
+		JUMP_LEFT_ATTACK_ANGLES.put(3, 160f);
+		JUMP_LEFT_ATTACK_ANGLES.put(4, 220f);
+		JUMP_LEFT_ATTACK_ANGLES.put(5, 290f);
 	}
 	
 	public Club(float x, float y, Player player) {
@@ -122,32 +160,64 @@ public class Club extends AbstractSprite {
 		origin.set(2, 0.5f);
 		
 		if (player.isAttacking()) {
-			int animIdx = player.getCurrentAnimation().getKeyFrameIndex(player.getStateTime());
-			if (player.getDirection()==DirectionEnum.RIGHT) {
-				setX(player.getX()+RIGHT_ATTACK_POSITIONS.get(animIdx).x);
-				setY(player.getY()+RIGHT_ATTACK_POSITIONS.get(animIdx).y);
-				setRotation(RIGHT_ATTACK_ANGLES.get(animIdx));
-				attackPosition.set(player.getX()-1.5f, player.getY());
-				attackOrigin.set(attackPosition.x + 2.5f, attackPosition.y + 0.5f);
-				attackRotation = attackRotation >= 300 ? 300 : attackRotation+16f;
+			
+			if (player.isOnFloor()) {
+				int animIdx = player.getCurrentAnimation().getKeyFrameIndex(player.getStateTime());
+				if (player.getDirection()==DirectionEnum.RIGHT) {
+					setX(player.getX()+RIGHT_ATTACK_POSITIONS.get(animIdx).x);
+					setY(player.getY()+RIGHT_ATTACK_POSITIONS.get(animIdx).y);
+					setRotation(RIGHT_ATTACK_ANGLES.get(animIdx));
+					attackPosition.set(player.getX()-1.5f, player.getY());
+					attackOrigin.set(attackPosition.x + 2.5f, attackPosition.y + 0.5f);
+					attackRotation = attackRotation >= 300 ? 300 : attackRotation+16f;
+				} else {
+					origin.set(0, 0.5f);
+					setX(player.getX()+LEFT_ATTACK_POSITIONS.get(animIdx).x);
+					setY(player.getY()+LEFT_ATTACK_POSITIONS.get(animIdx).y);
+					setRotation(LEFT_ATTACK_ANGLES.get(animIdx));		
+					attackPosition.set(player.getX()+1.5f, player.getY());
+					attackOrigin.set(attackPosition.x - 0.5f, attackPosition.y + 0.5f);
+					attackRotation = attackRotation <= -300 ? -300 : attackRotation-16;
+				}
+							
+				polygonBounds = new Polygon(new float[]{
+						attackPosition.x, attackPosition.y,
+						attackPosition.x, attackPosition.y + getHeight(), 
+						attackPosition.x + getWidth(), attackPosition.y+getHeight(),
+						attackPosition.x + getWidth(), attackPosition.y
+						});		
+				polygonBounds.setOrigin(attackOrigin.x, attackOrigin.y);
+				polygonBounds.setRotation(attackRotation);
 			} else {
-				origin.set(0, 0.5f);
-				setX(player.getX()+LEFT_ATTACK_POSITIONS.get(animIdx).x);
-				setY(player.getY()+LEFT_ATTACK_POSITIONS.get(animIdx).y);
-				setRotation(LEFT_ATTACK_ANGLES.get(animIdx));		
-				attackPosition.set(player.getX()+1.5f, player.getY());
-				attackOrigin.set(attackPosition.x - 0.5f, attackPosition.y + 0.5f);
-				attackRotation = attackRotation <= -300 ? -300 : attackRotation-16;
+				int animIdx = player.getCurrentAnimation().getKeyFrameIndex(player.getStateTime());
+				if (player.getDirection()==DirectionEnum.RIGHT) {
+					setX(player.getX()+JUMP_RIGHT_ATTACK_POSITIONS.get(animIdx).x);
+					setY(player.getY()+JUMP_RIGHT_ATTACK_POSITIONS.get(animIdx).y);
+					setRotation(JUMP_RIGHT_ATTACK_ANGLES.get(animIdx));
+					attackPosition.set(player.getX()-1.5f, player.getY());
+					attackOrigin.set(attackPosition.x + 2.5f, attackPosition.y + 0.5f);
+					attackRotation = attackRotation <= -270 ? -270 : attackRotation-16f;
+				} else {
+					origin.set(0, 0.5f);
+					setX(player.getX()+JUMP_LEFT_ATTACK_POSITIONS.get(animIdx).x);
+					setY(player.getY()+JUMP_LEFT_ATTACK_POSITIONS.get(animIdx).y);
+					setRotation(JUMP_LEFT_ATTACK_ANGLES.get(animIdx));		
+					attackPosition.set(player.getX()+1.5f, player.getY());
+					attackOrigin.set(attackPosition.x - 0.5f, attackPosition.y + 0.5f);
+					attackRotation = attackRotation >= 270 ? 270 : attackRotation+16;
+				}
+							
+				polygonBounds = new Polygon(new float[]{
+						attackPosition.x, attackPosition.y,
+						attackPosition.x, attackPosition.y + getHeight(), 
+						attackPosition.x + getWidth(), attackPosition.y+getHeight(),
+						attackPosition.x + getWidth(), attackPosition.y
+						});		
+				polygonBounds.setOrigin(attackOrigin.x, attackOrigin.y);
+				polygonBounds.setRotation(attackRotation);
 			}
-						
-			polygonBounds = new Polygon(new float[]{
-					attackPosition.x, attackPosition.y,
-					attackPosition.x, attackPosition.y + getHeight(), 
-					attackPosition.x + getWidth(), attackPosition.y+getHeight(),
-					attackPosition.x + getWidth(), attackPosition.y
-					});		
-			polygonBounds.setOrigin(attackOrigin.x, attackOrigin.y);
-			polygonBounds.setRotation(attackRotation);							
+			
+										
 		} else {
 			setRotation(0);
 			attackRotation =0;

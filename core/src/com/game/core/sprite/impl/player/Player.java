@@ -170,7 +170,8 @@ public class Player extends AbstractTileObjectSprite {
 		boolean isLoopingAnimation = true;
 		
 		if (isStuckToLiana) {
-			currentAnimation = direction == DirectionEnum.RIGHT ? lianaRightAnimation : lianaLeftAnimation;	
+			currentAnimation = direction == DirectionEnum.RIGHT ? jumpRightAnimation : jumpLeftAnimation;	
+			isLoopingAnimation = false;
 		} else 
 		if (isCrying) {
 			if (currentAnimation!=cryAnimation) {				
